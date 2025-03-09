@@ -6,6 +6,6 @@ class GetLanguagesUseCase(
     private val languageRepository: LanguageRepository
 ) {
 
-    suspend fun execute(): Flow<List<Language>> = languageRepository.getAllLanguages()
+    fun execute(): Flow<List<Language>> = languageRepository.getAllLanguages()
 
 }
