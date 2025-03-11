@@ -51,8 +51,8 @@ interface LocalUsersRepository {
             delay(3000)
             val users = _users.value.toMutableList()
             val index = users.indexOfFirst { it.id == userId }
-            throw WrongPasswordException()
-//            users[index] = users[index].copy(entered = true)
+//            throw WrongPasswordException()
+            users[index] = users[index].copy(entered = true)
             _users.value = users
         }
 

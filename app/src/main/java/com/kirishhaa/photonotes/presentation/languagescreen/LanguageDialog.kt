@@ -23,7 +23,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kirishhaa.photonotes.R
-import com.kirishhaa.photonotes.presentation.clickeffects.pulsateClick
+import com.kirishhaa.photonotes.clickeffects.pulsateClick
 
 @Composable
 fun LanguageDialog(
