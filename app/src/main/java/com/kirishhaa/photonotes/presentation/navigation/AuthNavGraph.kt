@@ -1,11 +1,9 @@
 package com.kirishhaa.photonotes.presentation.navigation
 
-import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.kirishhaa.photonotes.presentation.auth.forgotpasswordscreen.ForgotPasswordScreen
 import com.kirishhaa.photonotes.presentation.auth.localusersscreen.LocalUsersScreen
 
 fun NavGraphBuilder.AuthNavGraph(navController: NavController) {
@@ -20,9 +18,6 @@ fun NavGraphBuilder.AuthNavGraph(navController: NavController) {
                     launchSingleTop = true
                 } }
             )
-        }
-        composable(route = AuthScreen.ForgotPasswordScreen.route) {
-            ForgotPasswordScreen()
         }
     }
 }

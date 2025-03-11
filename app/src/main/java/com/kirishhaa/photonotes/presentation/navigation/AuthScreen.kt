@@ -6,6 +6,4 @@ sealed class AuthScreen(
 
     data object LoginScreen: AuthScreen(route = "LOGIN_SCREEN")
 
-    data object ForgotPasswordScreen: AuthScreen(route = "FORGOT_PASSWORD_SCREEN")
-
 }
