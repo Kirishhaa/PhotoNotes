@@ -6,9 +6,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 interface LocalUsersRepository {
+
+    fun getEnteredUser(): Flow<LocalUser?>
 
     fun getLocalUsers(): Flow<List<LocalUser>>
 
@@ -40,6 +43,8 @@ interface LocalUsersRepository {
             ) }
         )
 
+        override fun getEnteredUser(): Flow<LocalUser?> = _users.map { users -> users.firstOrNull { it.entered } }
+
         override fun getLocalUsers(): Flow<List<LocalUser>> = _users
 
         override suspend fun signIn(
@@ -48,7 +53,7 @@ interface LocalUsersRepository {
             password: String,
             remember: Boolean
         ) = withContext(Dispatchers.Default) {
-            delay(3000)
+            delay(500)
             val users = _users.value.toMutableList()
             val index = users.indexOfFirst { it.id == userId }
 //            throw WrongPasswordException()
@@ -62,7 +67,7 @@ interface LocalUsersRepository {
             password: String,
             remember: Boolean
         ) = withContext(Dispatchers.Default) {
-            delay(3000)
+            delay(500)
             throw WrongLoginException()
         }
 

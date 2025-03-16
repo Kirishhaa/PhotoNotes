@@ -41,7 +41,7 @@ class LocalUsersViewModel(
     init {
         viewModelScope.launch {
             getLocalUsersUseCase.execute().collect { users ->
-                delay(2000)
+                delay(500)
                 ensureActive()
                 val enteredUser = users.firstOrNull { it.entered }
                 if(enteredUser != null) {

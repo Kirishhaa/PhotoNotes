@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -12,33 +14,30 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import kotlinx.coroutines.flow.collectLatest
 
 fun Modifier.pulsateClick(clickable: Boolean, onClick: () -> Unit) = composed {
-    var buttonState by remember {
-        mutableStateOf(ButtonState.IDLE)
+    val interactionSource = remember { MutableInteractionSource() }
+    var pressed by remember {
+        mutableStateOf(false)
     }
-    val scale by animateFloatAsState(if(buttonState == ButtonState.IDLE) 1f else 0.7f)
+    LaunchedEffect(0) {
+        interactionSource.interactions.collectLatest { intection ->
+            when(intection) {
+                is PressInteraction.Press -> pressed = true
+                else -> pressed = false
+            }
+        }
+    }
+    val scale by animateFloatAsState(if(pressed) 0.7f else 1f)
     if(clickable) {
         this
-            .graphicsLayer {
-                scaleX = scale
-                scaleY = scale
-            }
-            .pointerInput(buttonState) {
-                awaitPointerEventScope {
-                    buttonState = if (buttonState == ButtonState.PRESSED) {
-                        waitForUpOrCancellation()
-                        ButtonState.IDLE
-                    } else {
-                        awaitFirstDown(false)
-                        ButtonState.PRESSED
-                    }
-                }
-            }
+            .scale(scale)
             .clickable(
-                interactionSource = remember { MutableInteractionSource() },
+                interactionSource = interactionSource,
                 indication = null,
                 onClick = onClick
             )
