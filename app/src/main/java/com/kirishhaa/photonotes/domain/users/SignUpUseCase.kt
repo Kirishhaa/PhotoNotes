@@ -1,4 +1,4 @@
-package com.kirishhaa.photonotes.domain
+package com.kirishhaa.photonotes.domain.users
 
 class SignUpUseCase(
     private val repository: LocalUsersRepository

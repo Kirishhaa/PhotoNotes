@@ -1,4 +1,4 @@
-package com.kirishhaa.photonotes.domain
+package com.kirishhaa.photonotes.domain.permissions
 
 class GetPermissionCountUseCase(
     private val permissionsRepository: PermissionsRepository

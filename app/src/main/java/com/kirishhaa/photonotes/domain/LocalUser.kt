@@ -4,8 +4,8 @@ data class LocalUser(
     val id: Int,
     val imagePath: String,
     val entered: Boolean,
-    val hashPassword: Long,
-    val hashLogin: Long,
+    val password: String,
+    val login: String,
     val name: String,
     val language: Language
 )

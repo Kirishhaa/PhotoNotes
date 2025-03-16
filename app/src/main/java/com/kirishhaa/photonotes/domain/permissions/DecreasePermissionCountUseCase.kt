@@ -1,4 +1,4 @@
-package com.kirishhaa.photonotes.domain
+package com.kirishhaa.photonotes.domain.permissions
 
 class DecreasePermissionCountUseCase(
     private val permissionsRepository: PermissionsRepository

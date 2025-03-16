@@ -1,5 +1,6 @@
-package com.kirishhaa.photonotes.domain
+package com.kirishhaa.photonotes.domain.language
 
+import com.kirishhaa.photonotes.domain.Language
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +13,7 @@ interface LanguageRepository {
 
     suspend fun selectLanguage(userId: Int, languageId: String)
 
-    class MockImpl: LanguageRepository {
+    object MockImpl: LanguageRepository {
 
         private val languages = MutableStateFlow(
             listOf(

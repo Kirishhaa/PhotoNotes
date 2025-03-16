@@ -1,4 +1,4 @@
-package com.kirishhaa.photonotes.domain
+package com.kirishhaa.photonotes.domain.permissions
 
 interface PermissionsRepository {
 
@@ -6,7 +6,7 @@ interface PermissionsRepository {
 
     suspend fun getPermissionsCount(name: String): Int
 
-    class Mockk: PermissionsRepository {
+    object Mockk: PermissionsRepository {
 
         val map = mutableMapOf(
             android.Manifest.permission.CAMERA to 2,

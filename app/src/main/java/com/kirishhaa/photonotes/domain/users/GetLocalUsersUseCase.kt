@@ -1,5 +1,6 @@
-package com.kirishhaa.photonotes.domain
+package com.kirishhaa.photonotes.domain.users
 
+import com.kirishhaa.photonotes.domain.LocalUser
 import kotlinx.coroutines.flow.Flow
 
 class GetLocalUsersUseCase(

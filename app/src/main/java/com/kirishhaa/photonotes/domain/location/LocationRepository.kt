@@ -1,20 +1,18 @@
-package com.kirishhaa.photonotes.domain
+package com.kirishhaa.photonotes.domain.location
 
 import android.Manifest
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import android.location.LocationRequest
 import android.util.Log
 import androidx.annotation.RequiresPermission
+import com.kirishhaa.photonotes.domain.DomainLocation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 interface LocationRepository {

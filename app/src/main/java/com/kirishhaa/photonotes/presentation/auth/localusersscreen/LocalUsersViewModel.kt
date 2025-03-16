@@ -5,15 +5,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.kirishhaa.photonotes.SingleEvent
-import com.kirishhaa.photonotes.domain.GetLocalUsersUseCase
-import com.kirishhaa.photonotes.domain.LocalUsersRepository
-import com.kirishhaa.photonotes.domain.SignInUseCase
-import com.kirishhaa.photonotes.domain.SignUpUseCase
+import com.kirishhaa.photonotes.domain.users.GetLocalUsersUseCase
+import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
+import com.kirishhaa.photonotes.domain.users.SignInUseCase
+import com.kirishhaa.photonotes.domain.users.SignUpUseCase
 import com.kirishhaa.photonotes.domain.exceptions.WrongLoginException
 import com.kirishhaa.photonotes.domain.exceptions.WrongPasswordException
 import com.kirishhaa.photonotes.domain.exceptions.WrongUsernameException
 import com.kirishhaa.photonotes.extensions.coroutineTryCatcher
-import com.kirishhaa.photonotes.hash.KeyWordsHashFunction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
@@ -189,7 +188,7 @@ class LocalUsersViewModel(
     companion object {
         val Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-                val repository = LocalUsersRepository.Mock()
+                val repository = LocalUsersRepository.Mock
                 return LocalUsersViewModel(
                     signInUseCase = SignInUseCase(repository),
                     signUpUseCase = SignUpUseCase(repository),

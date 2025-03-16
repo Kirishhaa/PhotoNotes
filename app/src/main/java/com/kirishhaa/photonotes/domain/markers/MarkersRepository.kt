@@ -1,10 +1,12 @@
-package com.kirishhaa.photonotes.domain
+package com.kirishhaa.photonotes.domain.markers
 
+import com.kirishhaa.photonotes.domain.DomainLocation
+import com.kirishhaa.photonotes.domain.Marker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
-interface ImagesRepository {
+interface MarkersRepository {
 
     suspend fun getMarkerByIdUseCase(markerId: Int): Marker
 
@@ -12,7 +14,7 @@ interface ImagesRepository {
     suspend fun onImageCaptured(userId: Int, filePath: String, location: DomainLocation?): Int
 
 
-    object Mockk: ImagesRepository {
+    object Mockk: MarkersRepository {
         private var marker: Marker? = null
 
         override suspend fun getMarkerByIdUseCase(markerId: Int): Marker = withContext(Dispatchers.IO) {

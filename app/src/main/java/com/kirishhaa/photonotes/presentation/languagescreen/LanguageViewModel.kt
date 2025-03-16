@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.kirishhaa.photonotes.domain.GetLanguagesUseCase
-import com.kirishhaa.photonotes.domain.LanguageRepository
-import com.kirishhaa.photonotes.domain.SelectLanguageUseCase
+import com.kirishhaa.photonotes.domain.language.GetLanguagesUseCase
+import com.kirishhaa.photonotes.domain.language.LanguageRepository
+import com.kirishhaa.photonotes.domain.language.SelectLanguageUseCase
 import com.kirishhaa.photonotes.presentation.languagescreen.exceptions.LanguagesAreNotExistException
 import com.kirishhaa.photonotes.presentation.languagescreen.exceptions.SelectedLanguageNotFoundException
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -87,7 +87,7 @@ class LanguageViewModel(
     companion object {
         val Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-                val repo = LanguageRepository.MockImpl()
+                val repo = LanguageRepository.MockImpl
                 return LanguageViewModel(
                     userId = 1,
                     getLanguagesUseCase = GetLanguagesUseCase(repo),

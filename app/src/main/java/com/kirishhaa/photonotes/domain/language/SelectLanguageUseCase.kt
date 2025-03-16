@@ -1,4 +1,4 @@
-package com.kirishhaa.photonotes.domain
+package com.kirishhaa.photonotes.domain.language
 
 class SelectLanguageUseCase(
     private val languageRepository: LanguageRepository

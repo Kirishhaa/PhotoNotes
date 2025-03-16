@@ -1,5 +1,6 @@
-package com.kirishhaa.photonotes.domain
+package com.kirishhaa.photonotes.domain.language
 
+import com.kirishhaa.photonotes.domain.Language
 import kotlinx.coroutines.flow.Flow
 
 class GetLanguagesUseCase(

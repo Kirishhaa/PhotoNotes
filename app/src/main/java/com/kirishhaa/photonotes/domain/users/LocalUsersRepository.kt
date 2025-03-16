@@ -1,7 +1,8 @@
-package com.kirishhaa.photonotes.domain
+package com.kirishhaa.photonotes.domain.users
 
+import com.kirishhaa.photonotes.domain.Language
+import com.kirishhaa.photonotes.domain.LocalUser
 import com.kirishhaa.photonotes.domain.exceptions.WrongLoginException
-import com.kirishhaa.photonotes.domain.exceptions.WrongPasswordException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -26,15 +27,15 @@ interface LocalUsersRepository {
     suspend fun signUp(username: String, login: String, password: String, remember: Boolean)
 
 
-    class Mock: LocalUsersRepository {
+    object Mock: LocalUsersRepository {
 
         private val _users: MutableStateFlow<List<LocalUser>> = MutableStateFlow(
             List(4) { LocalUser(
                 id = it + 1,
                 imagePath = "",
                 entered = false,
-                hashLogin = 1,
-                hashPassword = 1,
+                login = "Test@gmail.com",
+                password = "123",
                 name = "Username",
                 language = Language(
                     selected = true,

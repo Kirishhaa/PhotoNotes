@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.kirishhaa.photonotes.domain.ImagesRepository
+import com.kirishhaa.photonotes.domain.markers.GetMarkerByIdUseCase
+import com.kirishhaa.photonotes.domain.markers.MarkersRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -30,7 +31,7 @@ class MarkerDetailViewModel(
     companion object {
         fun Factory(markerId: Int) = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
-                val getMarker = GetMarkerByIdUseCase(ImagesRepository.Mockk)
+                val getMarker = GetMarkerByIdUseCase(MarkersRepository.Mockk)
                 return MarkerDetailViewModel(markerId, getMarker) as T
             }
         }

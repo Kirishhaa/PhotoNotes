@@ -10,16 +10,15 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.kirishhaa.photonotes.SingleEvent
-import com.kirishhaa.photonotes.domain.DecreasePermissionCountUseCase
+import com.kirishhaa.photonotes.domain.permissions.DecreasePermissionCountUseCase
 import com.kirishhaa.photonotes.domain.DomainLocation
-import com.kirishhaa.photonotes.domain.GetLocationUseCase
-import com.kirishhaa.photonotes.domain.GetPermissionCountUseCase
-import com.kirishhaa.photonotes.domain.ImageCapturedUseCase
-import com.kirishhaa.photonotes.domain.ImagesRepository
-import com.kirishhaa.photonotes.domain.LocalUsersRepository
-import com.kirishhaa.photonotes.domain.LocationRepository
-import com.kirishhaa.photonotes.domain.PermissionsRepository
-import com.kirishhaa.photonotes.extensions.coroutineTryCatcher
+import com.kirishhaa.photonotes.domain.location.GetLocationUseCase
+import com.kirishhaa.photonotes.domain.permissions.GetPermissionCountUseCase
+import com.kirishhaa.photonotes.domain.markers.ImageCapturedUseCase
+import com.kirishhaa.photonotes.domain.markers.MarkersRepository
+import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
+import com.kirishhaa.photonotes.domain.location.LocationRepository
+import com.kirishhaa.photonotes.domain.permissions.PermissionsRepository
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -88,9 +87,9 @@ class CameraViewModel(
         val Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
                 val application = extras[APPLICATION_KEY] as Application
-                val repoUsers = LocalUsersRepository.Mock()
-                val permsRepo = PermissionsRepository.Mockk()
-                val repoImages = ImagesRepository.Mockk
+                val repoUsers = LocalUsersRepository.Mock
+                val permsRepo = PermissionsRepository.Mockk
+                val repoImages = MarkersRepository.Mockk
                 val locationManager = application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
                 val locationRepository = LocationRepository.Mockk(locationManager)
                 val usecase = ImageCapturedUseCase(repoUsers, repoImages)
