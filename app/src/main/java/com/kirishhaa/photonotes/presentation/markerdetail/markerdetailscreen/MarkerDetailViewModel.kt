@@ -6,25 +6,33 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.kirishhaa.photonotes.domain.markers.GetMarkerByIdUseCase
 import com.kirishhaa.photonotes.domain.markers.MarkersRepository
+import com.kirishhaa.photonotes.domain.users.GetEnteredUserUseCase
+import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
 class MarkerDetailViewModel(
     private val markerId: Int,
-    private val getMarkerByIdUseCase: GetMarkerByIdUseCase
+    private val getMarkerByIdUseCase: GetMarkerByIdUseCase,
+    private val getEnteredUserUseCase: GetEnteredUserUseCase
 ): ViewModel() {
 
-    private val _state = MutableStateFlow<MarkerDetailState>(MarkerDetailState())
+    private val _state = MutableStateFlow(MarkerDetailState())
     val state = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
-            _state.value = MarkerDetailState(
-                preloading = false,
-                marker = getMarkerByIdUseCase.execute(markerId)
-            )
+            val user = getEnteredUserUseCase.execute().first()!!
+            getMarkerByIdUseCase.execute(user.id, markerId).collect { marker ->
+                _state.value = MarkerDetailState(
+                    preloading = false,
+                    marker = marker
+                )
+            }
         }
     }
 
@@ -32,7 +40,8 @@ class MarkerDetailViewModel(
         fun Factory(markerId: Int) = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
                 val getMarker = GetMarkerByIdUseCase(MarkersRepository.Mockk)
-                return MarkerDetailViewModel(markerId, getMarker) as T
+                val enteredUser = GetEnteredUserUseCase(LocalUsersRepository.Mock)
+                return MarkerDetailViewModel(markerId, getMarker, enteredUser) as T
             }
         }
     }

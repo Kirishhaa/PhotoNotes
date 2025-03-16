@@ -13,9 +13,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
+import com.kirishhaa.photonotes.R
 import com.kirishhaa.photonotes.domain.Marker
 
 @Composable
@@ -38,6 +40,8 @@ private fun MarkerDetailScreen(marker: Marker) {
         AsyncImage(
             model = marker.filePath,
             contentDescription = null,
+            error = painterResource(R.drawable.error_vector),
+            placeholder = painterResource(R.drawable.error_vector),
             modifier = Modifier.size(100.dp)
         )
         Spacer(Modifier.height(20.dp))

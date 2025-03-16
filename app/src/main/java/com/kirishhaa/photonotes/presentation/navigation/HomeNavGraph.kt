@@ -1,10 +1,13 @@
 package com.kirishhaa.photonotes.presentation.navigation
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -34,7 +37,13 @@ private fun HomeNavGraph(navController: NavHostController, paddingValues: Paddin
         modifier = Modifier.padding(paddingValues)
     ) {
         composable(route = BottomNavigationScreen.Folders.route) {
-            FoldersScreen()
+            val activity = LocalActivity.current
+            FoldersScreen(
+                onCloseApp = { activity?.finish() },
+                toMarkerDetails = { markerId ->
+                    navController.navigate(MarkerDetailScreen.MarkerDetail.route.replace("{markerId}", markerId.toString()))
+                }
+            )
         }
         composable(route = BottomNavigationScreen.Camera.route) {
             CameraScreen(
