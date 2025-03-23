@@ -9,8 +9,6 @@ data class MarkerDetailState(
     val editing: Boolean = true
 ) {
 
-    fun requireMarker() = requireNotNull(marker)
-
     fun requireRemoveTag() = requireNotNull(removeTag)
 
 }

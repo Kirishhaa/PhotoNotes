@@ -141,7 +141,8 @@ class LocalUsersViewModel(
                         username = data.username,
                         login = data.login,
                         password = data.password,
-                        remember = data.remember
+                        remember = data.remember,
+                        imagePath = data.picturePath
                     )
                 },
                 catchBlock = { exception ->

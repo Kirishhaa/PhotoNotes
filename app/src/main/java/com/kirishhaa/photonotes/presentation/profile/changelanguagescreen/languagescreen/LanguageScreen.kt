@@ -1,4 +1,4 @@
-package com.kirishhaa.photonotes.presentation.languagescreen
+package com.kirishhaa.photonotes.presentation.profile.changelanguagescreen.languagescreen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

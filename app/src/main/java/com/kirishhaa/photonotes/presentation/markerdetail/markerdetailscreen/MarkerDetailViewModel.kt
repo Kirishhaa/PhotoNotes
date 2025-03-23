@@ -71,21 +71,29 @@ class MarkerDetailViewModel(
     fun tryRemoveTag(tag: String) {
         viewModelScope.launch(tagExceptionHandler) {
             val state = _state.value
-            val marker = state.requireMarker()
-            val otherTags = marker.tags
-            val newTags = removeTagUseCase.execute(tag, otherTags)
-            _state.value = _state.value.copy(marker = marker.copy(tags = newTags), showRemoveTagDialog = false)
+            state.marker?.let { marker ->
+                val otherTags = marker.tags
+                val newTags = removeTagUseCase.execute(tag, otherTags)
+                _state.value = _state.value.copy(
+                    marker = marker.copy(tags = newTags),
+                    showRemoveTagDialog = false
+                )
+            }
         }
     }
 
     fun tryAddTag(tag: String) {
         viewModelScope.launch(tagExceptionHandler) {
             val state = _state.value
-            val marker = state.requireMarker()
-            val otherTags = marker.tags
-            validateMarkerTagUseCase.execute(tag, otherTags)
-            val newTags = marker.tags + tag
-            _state.value = _state.value.copy(marker = marker.copy(tags = newTags), showAddTagDialog = false)
+            state.marker?.let { marker ->
+                val otherTags = marker.tags
+                validateMarkerTagUseCase.execute(tag, otherTags)
+                val newTags = marker.tags + tag
+                _state.value = _state.value.copy(
+                    marker = marker.copy(tags = newTags),
+                    showAddTagDialog = false
+                )
+            }
         }
     }
 
@@ -121,6 +129,7 @@ class MarkerDetailViewModel(
     fun onDelete() {
         viewModelScope.launch {
             val marker = _state.value.marker ?: return@launch
+            _state.value = _state.value.copy(preloading = true)
             removeMarkerByIdUseCase.execute(markerId, marker.userId)
             _events.trySend(MarkerDetailEvent.GoBack)
         }

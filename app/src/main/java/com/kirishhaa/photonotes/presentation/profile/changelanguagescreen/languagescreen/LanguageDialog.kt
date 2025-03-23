@@ -1,4 +1,4 @@
-package com.kirishhaa.photonotes.presentation.languagescreen
+package com.kirishhaa.photonotes.presentation.profile.changelanguagescreen.languagescreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,10 +24,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kirishhaa.photonotes.R
 import com.kirishhaa.photonotes.clickeffects.pulsateClick
+import com.kirishhaa.photonotes.domain.Language
 
 @Composable
 fun LanguageDialog(
-    state: LanguageStateUI,
+    state: LanguageState,
     onPreviousLanguage: () -> Unit,
     onNextLanguage: () -> Unit,
     modifier: Modifier = Modifier
@@ -43,7 +44,7 @@ fun LanguageDialog(
     ) {
         when {
             state.loading -> CircularProgressIndicator()
-            else -> LanguageDialogLoaded(state.requireChosenLanguage(), onPreviousLanguage, onNextLanguage)
+            else -> LanguageDialogLoaded(state.requireLanguage(), onPreviousLanguage, onNextLanguage)
         }
     }
 }

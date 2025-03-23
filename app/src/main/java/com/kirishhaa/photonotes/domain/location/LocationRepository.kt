@@ -47,14 +47,14 @@ interface LocationRepository {
                 if(locationManager.isLocationEnabled) {
                     locationManager.requestLocationUpdates(
                         provider,
-                        1000,
-                        5_000f,
+                        20,
+                        1f,
                         locationListener
                     )
                     locationManager.requestLocationUpdates(
                         provider2,
-                        1000,
-                        5_000f,
+                        20,
+                        1f,
                         locationListener
                     )
                 }

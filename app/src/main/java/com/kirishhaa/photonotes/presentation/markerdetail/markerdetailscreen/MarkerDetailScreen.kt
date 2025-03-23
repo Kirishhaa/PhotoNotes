@@ -96,17 +96,17 @@ private fun MarkerDetailScreen(
 ) {
 
     var markerNameValue by remember {
-        mutableStateOf(state.requireMarker().name)
+        mutableStateOf(state.marker?.name)
     }
     var markerCountryValue by remember {
-        mutableStateOf(state.requireMarker().location.country)
+        mutableStateOf(state.marker?.location?.country)
     }
     var markerTownValue by remember {
-        mutableStateOf(state.requireMarker().location.town)
+        mutableStateOf(state.marker?.location?.town)
     }
 
     var markerDescriptionValue by remember {
-        mutableStateOf(state.requireMarker().description ?: "Description")
+        mutableStateOf(state.marker?.description ?: "Description")
     }
 
     Column (
@@ -119,7 +119,7 @@ private fun MarkerDetailScreen(
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             AsyncImage(
-                model = state.requireMarker().filePath,
+                model = state.marker?.filePath,
                 contentDescription = null,
                 contentScale = ContentScale.FillBounds,
                 error = painterResource(R.drawable.error_vector),
@@ -133,30 +133,30 @@ private fun MarkerDetailScreen(
             ) {
                 if (state.editing) {
                     TextField(
-                        value = markerNameValue,
+                        value = markerNameValue ?: "",
                         onValueChange = { markerNameValue = it },
                         modifier = Modifier.width(200.dp)
                     )
                 } else {
-                    Text(markerNameValue, fontSize = 24.sp)
+                    Text(markerNameValue ?: "", fontSize = 24.sp)
                 }
                 if (state.editing) {
                     TextField(
-                        value = markerCountryValue,
+                        value = markerCountryValue ?: "",
                         onValueChange = { markerCountryValue = it },
                         modifier = Modifier.width(200.dp)
                     )
                 } else {
-                    Text(markerCountryValue, fontSize = 20.sp)
+                    Text(markerCountryValue ?: "", fontSize = 20.sp)
                 }
                 if (state.editing) {
                     TextField(
-                        value = markerTownValue,
+                        value = markerTownValue ?: "",
                         onValueChange = { markerTownValue = it },
                         modifier = Modifier.width(200.dp)
                     )
                 } else {
-                    Text(markerTownValue, fontSize = 20.sp)
+                    Text(markerTownValue ?: "", fontSize = 20.sp)
                 }
             }
         }
@@ -168,7 +168,7 @@ private fun MarkerDetailScreen(
         LazyVerticalGrid(
             columns = GridCells.Adaptive(100.dp)
         ) {
-            items(items = state.requireMarker().tags, key = { it }) { tag ->
+            items(items = state.marker?.tags ?: emptyList(), key = { it }) { tag ->
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -240,7 +240,7 @@ private fun MarkerDetailScreen(
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 Button(
-                    onClick = { onSave(markerNameValue, markerCountryValue, markerTownValue, markerDescriptionValue) }
+                    onClick = { onSave(markerNameValue ?: "", markerCountryValue ?: "", markerTownValue ?: "", markerDescriptionValue) }
                 ) {
                     Text("Save")
                 }

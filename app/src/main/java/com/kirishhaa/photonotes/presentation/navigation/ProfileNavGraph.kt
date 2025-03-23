@@ -16,7 +16,26 @@ fun NavGraphBuilder.ProfileNavGraph(navController: NavHostController) {
         startDestination = ProfileScreen.Profile.route
     ) {
         composable(ProfileScreen.Profile.route) {
-            ProfileScreen()
+            ProfileScreen(
+                onChangeLanguage = {
+                    navController.navigate(ProfileScreen.ChangeLanguage.route)
+                },
+                onChangeName = {
+                    navController.navigate(ProfileScreen.ChangeUsername.route)
+                },
+                onChangeEmail = {
+                    navController.navigate(ProfileScreen.ChangeEmail.route)
+                },
+                onChangePas = {
+                    navController.navigate(ProfileScreen.ChangePassword.route)
+                },
+                toAuth = {
+                    navController.navigate(GraphRoute.AUTH) {
+                        popUpTo(GraphRoute.ROOT) { inclusive = false }
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
         composable(ProfileScreen.ChangeEmail.route) {
             ChangeEmailScreen()
@@ -30,5 +49,6 @@ fun NavGraphBuilder.ProfileNavGraph(navController: NavHostController) {
         composable(ProfileScreen.ChangeLanguage.route) {
             ChangeLanguageScreen()
         }
+        AuthNavGraph(navController)
     }
 }
