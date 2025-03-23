@@ -1,13 +1,16 @@
 package com.kirishhaa.photonotes.presentation.markerdetail.markerdetailscreen
 
-import com.kirishhaa.photonotes.domain.Marker
-
-class MarkerDetailState(
+data class MarkerDetailState(
     val preloading: Boolean = true,
-    val marker: Marker? = null
+    val marker: MarkerUI? = null,
+    val showAddTagDialog: Boolean = false,
+    val showRemoveTagDialog: Boolean = false,
+    val removeTag: String? = null,
+    val editing: Boolean = true
 ) {
 
     fun requireMarker() = requireNotNull(marker)
 
+    fun requireRemoveTag() = requireNotNull(removeTag)
 
 }

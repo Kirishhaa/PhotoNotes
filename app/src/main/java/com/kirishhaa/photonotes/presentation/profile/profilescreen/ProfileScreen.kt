@@ -6,5 +6,5 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun ProfileScreen() {
-    Text("PROFILE", fontSize = 28.sp)
+
 }

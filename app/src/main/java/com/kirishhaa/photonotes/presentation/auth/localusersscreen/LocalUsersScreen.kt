@@ -76,12 +76,13 @@ fun LocalUsersScreen(viewModel: LocalUsersViewModel = viewModel(factory = LocalU
         if(signInState != null) {
             SignInUserDialog(
                 stateUI = signInState,
-                onSignIn = viewModel::onSignIn
+                onSignIn = viewModel::onSignIn,
+                onDismiss = viewModel::hideSignInDialog
             )
         }
 
         if(signUpState != null) {
-            SignUpUserDialog(state = signUpState, onSignUp = viewModel::onSignUp)
+            SignUpUserDialog(state = signUpState, onSignUp = viewModel::onSignUp, onDismiss = viewModel::hideSignUpDialog)
         }
 
     }

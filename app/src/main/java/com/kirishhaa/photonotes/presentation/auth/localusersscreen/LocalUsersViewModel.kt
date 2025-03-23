@@ -57,6 +57,14 @@ class LocalUsersViewModel(
         }
     }
 
+    fun hideSignInDialog() {
+        _state.value = _state.value.copy(signInDialogState = null)
+    }
+
+    fun hideSignUpDialog() {
+        _state.value = _state.value.copy(signUpDialogState = null)
+    }
+
     fun showSignInDialog(user: LocalUserUI) {
         if(isDialogShowing()) return
         val signInState = SignInDialogStateUI(

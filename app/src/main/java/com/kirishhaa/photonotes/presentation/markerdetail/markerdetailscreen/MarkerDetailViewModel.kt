@@ -4,22 +4,54 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.kirishhaa.photonotes.domain.Marker
+import com.kirishhaa.photonotes.domain.exceptions.CurrentTagExistException
+import com.kirishhaa.photonotes.domain.exceptions.EmptyMarkerTagException
+import com.kirishhaa.photonotes.domain.exceptions.TooLargeMarkerTagLengthException
 import com.kirishhaa.photonotes.domain.markers.GetMarkerByIdUseCase
 import com.kirishhaa.photonotes.domain.markers.MarkersRepository
+import com.kirishhaa.photonotes.domain.markers.RemoveMarkerByIdUseCase
+import com.kirishhaa.photonotes.domain.markers.UpdateMarkerUseCase
+import com.kirishhaa.photonotes.domain.tag.RemoveTagUseCase
+import com.kirishhaa.photonotes.domain.tag.ValidateMarkerTagUseCase
 import com.kirishhaa.photonotes.domain.users.GetEnteredUserUseCase
 import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
 class MarkerDetailViewModel(
     private val markerId: Int,
     private val getMarkerByIdUseCase: GetMarkerByIdUseCase,
-    private val getEnteredUserUseCase: GetEnteredUserUseCase
+    private val getEnteredUserUseCase: GetEnteredUserUseCase,
+    private val validateMarkerTagUseCase: ValidateMarkerTagUseCase,
+    private val removeTagUseCase: RemoveTagUseCase,
+    private val updateMarkerUseCase: UpdateMarkerUseCase,
+    private val removeMarkerByIdUseCase: RemoveMarkerByIdUseCase,
+    private val markerMapper: MarkerMapper
 ): ViewModel() {
+
+    private val _events = Channel<MarkerDetailEvent>()
+    val events = _events.receiveAsFlow()
+
+    private val tagExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        when(throwable) {
+            is TooLargeMarkerTagLengthException -> {
+                _events.trySend(MarkerDetailEvent.ShowMessage("Tag length must be <= 10"))
+            }
+            is EmptyMarkerTagException -> {
+                _events.trySend(MarkerDetailEvent.ShowMessage("Tag cannot be empty"))
+            }
+            is CurrentTagExistException -> {
+                _events.trySend(MarkerDetailEvent.ShowMessage("Current tag is exist"))
+            }
+        }
+    }
 
     private val _state = MutableStateFlow(MarkerDetailState())
     val state = _state.asStateFlow()
@@ -30,9 +62,67 @@ class MarkerDetailViewModel(
             getMarkerByIdUseCase.execute(user.id, markerId).collect { marker ->
                 _state.value = MarkerDetailState(
                     preloading = false,
-                    marker = marker
+                    marker = marker?.let { value -> markerMapper.map(value) }
                 )
             }
+        }
+    }
+
+    fun tryRemoveTag(tag: String) {
+        viewModelScope.launch(tagExceptionHandler) {
+            val state = _state.value
+            val marker = state.requireMarker()
+            val otherTags = marker.tags
+            val newTags = removeTagUseCase.execute(tag, otherTags)
+            _state.value = _state.value.copy(marker = marker.copy(tags = newTags), showRemoveTagDialog = false)
+        }
+    }
+
+    fun tryAddTag(tag: String) {
+        viewModelScope.launch(tagExceptionHandler) {
+            val state = _state.value
+            val marker = state.requireMarker()
+            val otherTags = marker.tags
+            validateMarkerTagUseCase.execute(tag, otherTags)
+            val newTags = marker.tags + tag
+            _state.value = _state.value.copy(marker = marker.copy(tags = newTags), showAddTagDialog = false)
+        }
+    }
+
+    fun showAddTagDialog(show: Boolean) {
+        _state.value = _state.value.copy(showAddTagDialog = show)
+    }
+
+    fun showRemoveTagDialog(show: Boolean, tag: String?) {
+        _state.value = _state.value.copy(showRemoveTagDialog = show, removeTag = tag)
+    }
+
+    fun setEditMode(edit: Boolean) {
+        _state.value = _state.value.copy(editing = edit)
+    }
+
+    fun onSave(markerName: String, markerCountry: String, markerTown: String, markerDescription: String) {
+        viewModelScope.launch {
+            val markerUI = _state.value.marker ?: return@launch
+            val newMarker = markerUI.copy(
+                name = markerName,
+                location = markerUI.location.copy(
+                    country = markerCountry,
+                    town = markerTown
+                ),
+                description = markerDescription,
+            )
+            val domainMarker = markerMapper.map(newMarker)
+            updateMarkerUseCase.execute(domainMarker)
+            _events.trySend(MarkerDetailEvent.GoBack)
+        }
+    }
+
+    fun onDelete() {
+        viewModelScope.launch {
+            val marker = _state.value.marker ?: return@launch
+            removeMarkerByIdUseCase.execute(markerId, marker.userId)
+            _events.trySend(MarkerDetailEvent.GoBack)
         }
     }
 
@@ -41,7 +131,12 @@ class MarkerDetailViewModel(
             override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
                 val getMarker = GetMarkerByIdUseCase(MarkersRepository.Mockk)
                 val enteredUser = GetEnteredUserUseCase(LocalUsersRepository.Mock)
-                return MarkerDetailViewModel(markerId, getMarker, enteredUser) as T
+                val validateTag = ValidateMarkerTagUseCase()
+                val removeTag = RemoveTagUseCase()
+                val updateMarkerUseCase = UpdateMarkerUseCase(MarkersRepository.Mockk)
+                val removeMarkerUseCase = RemoveMarkerByIdUseCase(MarkersRepository.Mockk)
+                val mapper = MarkerMapper()
+                return MarkerDetailViewModel(markerId, getMarker, enteredUser, validateTag, removeTag, updateMarkerUseCase, removeMarkerUseCase, mapper) as T
             }
         }
     }

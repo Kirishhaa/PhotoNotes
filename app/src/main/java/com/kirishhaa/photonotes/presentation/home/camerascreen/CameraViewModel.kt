@@ -77,7 +77,6 @@ class CameraViewModel(
             _state.value = CameraState(true)
             val location: DomainLocation? = getLocationUseCase.execute()
             val markerId = imageCapturedUseCase.execute(filePath, location)
-            Log.d("CameraViewModel", "lat = ${location?.latitude}, lon = ${location?.longitude}")
             _events.emit(SingleEvent(CameraEvent.OnNewImageCaptured(markerId)))
             _state.value = CameraState(false)
         }
@@ -91,7 +90,7 @@ class CameraViewModel(
                 val permsRepo = PermissionsRepository.Mockk
                 val repoImages = MarkersRepository.Mockk
                 val locationManager = application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                val locationRepository = LocationRepository.Mockk(locationManager)
+                val locationRepository = LocationRepository.Mockk(locationManager, application)
                 val usecase = ImageCapturedUseCase(repoUsers, repoImages)
                 val locationUseCase = GetLocationUseCase(locationRepository)
                 val decreaseUseCase = DecreasePermissionCountUseCase(permsRepo)

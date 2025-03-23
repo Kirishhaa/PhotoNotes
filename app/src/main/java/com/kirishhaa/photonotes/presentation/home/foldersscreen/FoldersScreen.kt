@@ -54,10 +54,10 @@ private fun FoldersScreen(state: FoldersState, onMarkerClicked: (MarkerUI) -> Un
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
-        items(items = state.folders) { folder ->
+        items(items = state.folders, key = { it.name }) { folder ->
             FolderView(folder, onFolderClicked)
         }
-        items(items = state.markers) { marker ->
+        items(items = state.markers , key = { it.id.toString()+it.name+it.imagePath }) { marker ->
             MarkerView(marker, onMarkerClicked)
         }
     }

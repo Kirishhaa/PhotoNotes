@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 fun SignInUserDialog(
     stateUI: SignInDialogStateUI,
     onSignIn: (SignInData) -> Unit,
+    onDismiss: () -> Unit
 ) {
     var loginValue by remember {
         mutableStateOf("")
@@ -102,18 +103,26 @@ fun SignInUserDialog(
         if(stateUI.loading) {
             CircularProgressIndicator()
         } else {
-            Button(
-                onClick = {
-                    val data = SignInData(
-                        user = stateUI.chosenUser,
-                        login = loginValue,
-                        password = passwordValue,
-                        remember = rememberState
-                    )
-                    onSignIn(data)
-                }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround
             ) {
-                Text("Sign In")
+                Button(onClick = onDismiss) {
+                    Text("Cancel")
+                }
+                Button(
+                    onClick = {
+                        val data = SignInData(
+                            user = stateUI.chosenUser,
+                            login = loginValue,
+                            password = passwordValue,
+                            remember = rememberState
+                        )
+                        onSignIn(data)
+                    }
+                ) {
+                    Text("Sign In")
+                }
             }
         }
     }

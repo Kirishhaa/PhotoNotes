@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SignUpUserDialog(state: SignUpDialogStateUI, onSignUp: (SignUpData) -> Unit) {
+fun SignUpUserDialog(state: SignUpDialogStateUI, onSignUp: (SignUpData) -> Unit, onDismiss: () -> Unit) {
     var picturePathValue by remember {
         mutableStateOf("")
     }
@@ -116,19 +116,27 @@ fun SignUpUserDialog(state: SignUpDialogStateUI, onSignUp: (SignUpData) -> Unit)
         if(state.loading) {
             CircularProgressIndicator()
         } else {
-            Button(
-                onClick = {
-                    val data = SignUpData(
-                        username = usernameValue,
-                        login = loginValue,
-                        password = passwordValue,
-                        picturePath = picturePathValue,
-                        remember = true
-                    )
-                    onSignUp(data)
-                }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround
             ) {
-                Text("Sign Up")
+                Button(onDismiss) {
+                    Text("Cancel")
+                }
+                Button(
+                    onClick = {
+                        val data = SignUpData(
+                            username = usernameValue,
+                            login = loginValue,
+                            password = passwordValue,
+                            picturePath = picturePathValue,
+                            remember = true
+                        )
+                        onSignUp(data)
+                    }
+                ) {
+                    Text("Sign Up")
+                }
             }
         }
     }

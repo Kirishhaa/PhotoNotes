@@ -26,6 +26,10 @@ interface MarkersRepository {
 
     suspend fun onCreateNewFolder(folder: Folder)
 
+    suspend fun updateMarker(marker: Marker)
+
+    suspend fun removeMarkerById(markerId: Int, userId: Int)
+
     object Mockk: MarkersRepository {
 
         private val markers = MutableStateFlow<List<Marker>>(emptyList())
@@ -43,11 +47,13 @@ interface MarkersRepository {
             val marker = Marker(
                 id = idAppender.getAndIncrement(),
                 folderName = null,
-                name = "",
+                name = "Marker",
                 userId = userId,
                 filePath = filePath,
                 location = location,
-                saved = false
+                saved = false,
+                tags = emptyList(),
+                description = "DESCRIPTION"
             )
             val markers = markers.value.toMutableList()
             markers += marker
@@ -68,6 +74,22 @@ interface MarkersRepository {
             val folders = folders.value.toMutableList()
             folders += folder
             this@Mockk.folders.value = folders
+        }
+
+        override suspend fun updateMarker(marker: Marker) = withContext(Dispatchers.IO) {
+            delay(500)
+            val index = markers.value.indexOfFirst { it.id == marker.id }
+            if(index != -1) {
+                val newMarkers = markers.value.toMutableList()
+                newMarkers[index] = marker
+                markers.value = newMarkers
+            }
+        }
+
+        override suspend fun removeMarkerById(markerId: Int, userId: Int) {
+            markers.value = markers.value.toMutableList().apply {
+                removeIf { it.id == markerId }
+            }
         }
 
     }

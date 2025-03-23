@@ -1,5 +1,5 @@
 package com.kirishhaa.photonotes.presentation.home.foldersscreen
 
-class FolderUI(
+data class FolderUI(
     val name: String,
 )
