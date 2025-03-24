@@ -74,7 +74,6 @@ interface LocalUsersRepository {
                     name = "Admin",
                     remember = true,
                     language = Language(
-                        selected = true,
                         name = "Ukrainian"
                     ),
                 )
@@ -84,11 +83,9 @@ interface LocalUsersRepository {
         private val languagesGeneral =
             listOf(
                 Language(
-                    selected = false,
                     name = "Ukrainian"
                 ),
                 Language(
-                    selected = false,
                     name = "English"
                 )
             )
@@ -101,13 +98,13 @@ interface LocalUsersRepository {
         override fun getLocalUsers(): Flow<List<LocalUser>> = _users
 
         override fun getUserLanguage(userId: Int): Flow<Language> {
-            return usersLanguages.map { it[userId] ?: Language(selected = true, name = "English") }
+            return usersLanguages.map { it[userId] ?: Language(name = "English") }
         }
 
         override suspend fun selectNextLanguage(userId: Int) = withContext(Dispatchers.IO) {
             delay(1000)
-            val currentId = getUserLanguage(userId).first().id
-            val index = languagesGeneral.indexOfFirst { it.id == currentId }
+            val currentId = getUserLanguage(userId).first().name
+            val index = languagesGeneral.indexOfFirst { it.name == currentId }
             val currentMap = usersLanguages.value.toMutableMap()
             if(index + 1 == languagesGeneral.size) {
                 currentMap[userId] = languagesGeneral[0]
@@ -119,8 +116,8 @@ interface LocalUsersRepository {
 
         override suspend fun selectPreviousLanguage(userId: Int) = withContext(Dispatchers.IO) {
             delay(1000)
-            val currentId = getUserLanguage(userId).first().id
-            val index = languagesGeneral.indexOfFirst { it.id == currentId }
+            val currentId = getUserLanguage(userId).first().name
+            val index = languagesGeneral.indexOfFirst { it.name == currentId }
             val currentMap = usersLanguages.value.toMutableMap()
             if(index - 1 == -1) {
                 currentMap[userId] = languagesGeneral[languagesGeneral.size-1]
@@ -184,7 +181,6 @@ interface LocalUsersRepository {
                 login = login,
                 name = username,
                 language = Language(
-                    selected = true,
                     name = "English",
                 )
             )
