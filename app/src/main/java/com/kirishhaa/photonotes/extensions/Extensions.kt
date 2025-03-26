@@ -2,8 +2,8 @@ package com.kirishhaa.photonotes.extensions
 
 import kotlinx.coroutines.CancellationException
 
-suspend fun coroutineTryCatcher(tryBlock: suspend () -> Unit, catchBlock: suspend (Exception) -> Unit) {
-    try {
+suspend fun <T>coroutineTryCatcher(tryBlock: suspend () -> T, catchBlock: suspend (Exception) -> T): T {
+    return try {
         tryBlock()
     } catch (e: CancellationException) {
         throw e

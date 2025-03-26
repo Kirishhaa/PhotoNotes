@@ -1,8 +1,9 @@
-package com.kirishhaa.photonotes.data.entity
+package com.kirishhaa.photonotes.data.db.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import com.kirishhaa.photonotes.domain.DomainLocation
 
 @Entity(
     tableName = "locations",
@@ -22,4 +23,13 @@ class LocationEntity(
     @ColumnInfo("longitude") val longitude: Double,
     @ColumnInfo("country") val country: String,
     @ColumnInfo("town") val town: String
-)
+) {
+
+    fun toDomainLocation(): DomainLocation = DomainLocation(
+        latitude = latitude,
+        longitude = longitude,
+        country = country,
+        town = town
+    )
+
+}

@@ -9,6 +9,7 @@ import com.kirishhaa.photonotes.domain.feedback.FeedbackRepository
 import com.kirishhaa.photonotes.domain.feedback.SendFeedbackUseCase
 import com.kirishhaa.photonotes.domain.users.GetEnteredUserUseCase
 import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
+import com.kirishhaa.photonotes.toApp
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -51,9 +52,10 @@ class FeedbackViewModel(
     companion object {
         val Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-                val repo = LocalUsersRepository.Mock
+                val app = extras.toApp()
+                val repo = app.localUsersRepository
                 val usecase = GetEnteredUserUseCase(repo)
-                val usecase2 = SendFeedbackUseCase(FeedbackRepository.Mockk)
+                val usecase2 = SendFeedbackUseCase(app.feedbackRepository)
                 val mapper = LocalUserMapper()
                 return FeedbackViewModel(usecase, usecase2, mapper) as T
             }

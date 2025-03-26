@@ -16,6 +16,7 @@ import com.kirishhaa.photonotes.domain.tag.RemoveTagUseCase
 import com.kirishhaa.photonotes.domain.tag.ValidateMarkerTagUseCase
 import com.kirishhaa.photonotes.domain.users.GetEnteredUserUseCase
 import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
+import com.kirishhaa.photonotes.toApp
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -138,12 +139,13 @@ class MarkerDetailViewModel(
     companion object {
         fun Factory(markerId: Int) = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
-                val getMarker = GetMarkerByIdUseCase(MarkersRepository.Mockk)
-                val enteredUser = GetEnteredUserUseCase(LocalUsersRepository.Mock)
+                val app = extras.toApp()
+                val getMarker = GetMarkerByIdUseCase(app.markersRepository)
+                val enteredUser = GetEnteredUserUseCase(app.localUsersRepository)
                 val validateTag = ValidateMarkerTagUseCase()
                 val removeTag = RemoveTagUseCase()
-                val updateMarkerUseCase = UpdateMarkerUseCase(MarkersRepository.Mockk)
-                val removeMarkerUseCase = RemoveMarkerByIdUseCase(MarkersRepository.Mockk)
+                val updateMarkerUseCase = UpdateMarkerUseCase(app.markersRepository)
+                val removeMarkerUseCase = RemoveMarkerByIdUseCase(app.markersRepository)
                 val mapper = MarkerMapper()
                 return MarkerDetailViewModel(markerId, getMarker, enteredUser, validateTag, removeTag, updateMarkerUseCase, removeMarkerUseCase, mapper) as T
             }

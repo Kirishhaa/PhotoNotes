@@ -1,4 +1,4 @@
-package com.kirishhaa.photonotes.data.entity
+package com.kirishhaa.photonotes.data.db.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -18,7 +18,7 @@ import androidx.room.PrimaryKey
         entity = FolderEntity::class,
         parentColumns = ["name"],
         childColumns = ["folder_name"],
-        onDelete = ForeignKey.CASCADE
+        onDelete = ForeignKey.CASCADE,
     )
     ]
 )

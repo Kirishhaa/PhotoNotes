@@ -11,6 +11,7 @@ import com.kirishhaa.photonotes.domain.exceptions.WrongLoginException
 import com.kirishhaa.photonotes.domain.users.ChangeEmailUseCase
 import com.kirishhaa.photonotes.domain.users.GetEnteredUserUseCase
 import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
+import com.kirishhaa.photonotes.toApp
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -72,8 +73,9 @@ class ChangeEmailViewModel(
     companion object {
         val Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
-                val enteredUser = GetEnteredUserUseCase(LocalUsersRepository.Mock)
-                val validateAndChange = ChangeEmailUseCase(LocalUsersRepository.Mock)
+                val app  =extras.toApp()
+                val enteredUser = GetEnteredUserUseCase(app.localUsersRepository)
+                val validateAndChange = ChangeEmailUseCase(app.localUsersRepository)
                 return ChangeEmailViewModel(enteredUser, validateAndChange) as T
             }
         }

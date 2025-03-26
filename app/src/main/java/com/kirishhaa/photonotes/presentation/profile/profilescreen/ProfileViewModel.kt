@@ -9,6 +9,7 @@ import com.kirishhaa.photonotes.domain.users.DeleteProfileUseCase
 import com.kirishhaa.photonotes.domain.users.GetEnteredUserUseCase
 import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
 import com.kirishhaa.photonotes.domain.users.LogOutUseCase
+import com.kirishhaa.photonotes.toApp
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -64,9 +65,10 @@ class ProfileViewModel(
     companion object {
         val Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
-                val getEnteredUser = GetEnteredUserUseCase(LocalUsersRepository.Mock)
-                val deleteProfile = DeleteProfileUseCase(LocalUsersRepository.Mock)
-                val logOutUseCase = LogOutUseCase(LocalUsersRepository.Mock)
+                val app = extras.toApp()
+                val getEnteredUser = GetEnteredUserUseCase(app.localUsersRepository)
+                val deleteProfile = DeleteProfileUseCase(app.localUsersRepository)
+                val logOutUseCase = LogOutUseCase(app.localUsersRepository)
                 return ProfileViewModel(getEnteredUser, deleteProfile, logOutUseCase) as T
             }
         }

@@ -5,20 +5,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.kirishhaa.photonotes.SingleEvent
-import com.kirishhaa.photonotes.domain.Folder
 import com.kirishhaa.photonotes.domain.markers.GetAllFoldersUseCase
 import com.kirishhaa.photonotes.domain.markers.GetAllMarkersUseCase
-import com.kirishhaa.photonotes.domain.markers.MarkersRepository
 import com.kirishhaa.photonotes.domain.users.GetEnteredUserUseCase
-import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
-import kotlinx.coroutines.channels.Channel
+import com.kirishhaa.photonotes.toApp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class FoldersViewModel(
@@ -82,9 +78,10 @@ class FoldersViewModel(
     companion object {
         val Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-                val getEnteredUser = GetEnteredUserUseCase(LocalUsersRepository.Mock)
-                val getAllMarkers = GetAllMarkersUseCase(MarkersRepository.Mockk)
-                val getAllFolders = GetAllFoldersUseCase(MarkersRepository.Mockk)
+                val app = extras.toApp()
+                val getEnteredUser = GetEnteredUserUseCase(app.localUsersRepository)
+                val getAllMarkers = GetAllMarkersUseCase(app.markersRepository)
+                val getAllFolders = GetAllFoldersUseCase(app.markersRepository)
                 val markermapper = MarkerMapper()
                 val foldermapper = FolderMapper()
                 return FoldersViewModel(getAllFolders, getAllMarkers, getEnteredUser, foldermapper, markermapper) as T

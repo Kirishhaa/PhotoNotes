@@ -7,6 +7,8 @@ class GetAllFoldersUseCase(
     private val markersRepository: MarkersRepository
 ) {
 
-    fun execute(userId: Int): Flow<List<Folder>> = markersRepository.getAllFoldersByUserId(userId)
+    fun execute(userId: Int): Flow<List<Folder>> {
+        return markersRepository.getAllFoldersByUserId(userId)
+    }
 
 }

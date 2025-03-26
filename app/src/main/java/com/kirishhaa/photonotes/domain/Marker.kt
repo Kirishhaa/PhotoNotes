@@ -6,8 +6,8 @@ class Marker(
     val folderName: String?,
     val name: String,
     val filePath: String,
-    val location: DomainLocation?,
+    val location: DomainLocation,
     val saved: Boolean,
-    val tags: List<String>,
+    val tags: List<MarkerTag>,
     val description: String?
 )

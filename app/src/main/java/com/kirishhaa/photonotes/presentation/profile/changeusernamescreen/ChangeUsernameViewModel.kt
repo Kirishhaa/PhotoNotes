@@ -8,6 +8,7 @@ import com.kirishhaa.photonotes.domain.LocalUser
 import com.kirishhaa.photonotes.domain.users.ChangeUsernameUseCase
 import com.kirishhaa.photonotes.domain.users.GetEnteredUserUseCase
 import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
+import com.kirishhaa.photonotes.toApp
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -53,8 +54,9 @@ class ChangeUsernameViewModel(
     companion object {
         val Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-                val changeUsername = ChangeUsernameUseCase(LocalUsersRepository.Mock)
-                val enteredUserUseCase = GetEnteredUserUseCase(LocalUsersRepository.Mock)
+                val app = extras.toApp()
+                val changeUsername = ChangeUsernameUseCase(app.localUsersRepository)
+                val enteredUserUseCase = GetEnteredUserUseCase(app.localUsersRepository)
                 return ChangeUsernameViewModel(enteredUserUseCase, changeUsername) as T
             }
         }

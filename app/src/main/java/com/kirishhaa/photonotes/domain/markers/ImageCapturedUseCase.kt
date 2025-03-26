@@ -1,6 +1,6 @@
 package com.kirishhaa.photonotes.domain.markers
 
-import com.kirishhaa.photonotes.domain.DomainLocation
+import com.kirishhaa.photonotes.domain.exceptions.UserNotFoundException
 import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
 import kotlinx.coroutines.flow.first
 
@@ -10,9 +10,10 @@ class ImageCapturedUseCase(
 ) {
 
     //returns marker id
-    suspend fun execute(filePath: String, location: DomainLocation?): Int {
-        val id = localUsersRepository.getEnteredUser().first()?.id ?: 0
-        return markersRepository.onImageCaptured(id, filePath, location)
+    suspend fun execute(filePath: String): Int {
+        val userId = localUsersRepository.getEnteredUser().first()?.id ?: throw UserNotFoundException()
+        markersRepository.createMarker(userId, filePath)
+        return markersRepository.getMarkerIdByFilePath(userId, filePath)
     }
 
 }

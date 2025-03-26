@@ -13,6 +13,7 @@ import com.kirishhaa.photonotes.domain.exceptions.WrongLoginException
 import com.kirishhaa.photonotes.domain.exceptions.WrongPasswordException
 import com.kirishhaa.photonotes.domain.exceptions.WrongUsernameException
 import com.kirishhaa.photonotes.extensions.coroutineTryCatcher
+import com.kirishhaa.photonotes.toApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
@@ -197,7 +198,7 @@ class LocalUsersViewModel(
     companion object {
         val Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-                val repository = LocalUsersRepository.Mock
+                val repository = extras.toApp().localUsersRepository
                 return LocalUsersViewModel(
                     signInUseCase = SignInUseCase(repository),
                     signUpUseCase = SignUpUseCase(repository),

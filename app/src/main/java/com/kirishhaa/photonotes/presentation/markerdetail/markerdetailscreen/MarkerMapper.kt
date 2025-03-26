@@ -2,6 +2,7 @@ package com.kirishhaa.photonotes.presentation.markerdetail.markerdetailscreen
 
 import com.kirishhaa.photonotes.domain.DomainLocation
 import com.kirishhaa.photonotes.domain.Marker
+import com.kirishhaa.photonotes.domain.MarkerTag
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -15,7 +16,7 @@ class MarkerMapper {
             name = marker.name,
             filePath = marker.filePath,
             location = marker.location.toLocationUI(),
-            tags = marker.tags,
+            tags = marker.tags.map { it.name },
             saved = marker.saved,
             description = marker.description
         )
@@ -30,7 +31,7 @@ class MarkerMapper {
             filePath = markerUI.filePath,
             location = markerUI.location.toLocation(),
             saved = markerUI.saved,
-            tags = markerUI.tags,
+            tags = markerUI.tags.map { name -> MarkerTag(name) },
             description = markerUI.description
         )
     }

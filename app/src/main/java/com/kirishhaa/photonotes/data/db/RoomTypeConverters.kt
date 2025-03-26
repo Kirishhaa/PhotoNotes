@@ -1,4 +1,4 @@
-package com.kirishhaa.photonotes.data
+package com.kirishhaa.photonotes.data.db
 
 import androidx.room.TypeConverter
 import com.kirishhaa.photonotes.domain.Language

@@ -10,6 +10,14 @@ class DomainLocation(
 
     companion object {
         const val UNKNOWN = "UNKNOWN"
+
+        val NONE = DomainLocation(
+            latitude = -999.0,
+            longitude = -999.0,
+            country = UNKNOWN,
+            town = UNKNOWN
+        )
+
     }
 
 }

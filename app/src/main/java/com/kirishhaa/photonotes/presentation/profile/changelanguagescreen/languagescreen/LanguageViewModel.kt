@@ -11,6 +11,7 @@ import com.kirishhaa.photonotes.domain.users.SelectNextLanguageUseCase
 import com.kirishhaa.photonotes.domain.users.SelectPrevLanguageUseCase
 import com.kirishhaa.photonotes.presentation.profile.changelanguagescreen.languagescreen.exceptions.LanguagesAreNotExistException
 import com.kirishhaa.photonotes.presentation.profile.changelanguagescreen.languagescreen.exceptions.SelectedLanguageNotFoundException
+import com.kirishhaa.photonotes.toApp
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -46,6 +47,7 @@ class LanguageViewModel(
         viewModelScope.launch {
             val id = getEnteredUserUseCase.execute().first()?.id ?: return@launch
             getUserLanguageUseCase.execute(id).collect { lang ->
+                if(lang != null)
                 _state.value = _state.value.copy(loading = false, language = languageMapper.map(lang))
             }
         }
@@ -74,11 +76,12 @@ class LanguageViewModel(
     companion object {
         val Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                val app = extras.toApp()
                 return LanguageViewModel(
-                    getUserLanguageUseCase = GetUserLanguageUseCase(LocalUsersRepository.Mock),
-                    selectNextLanguageUseCase = SelectNextLanguageUseCase(LocalUsersRepository.Mock),
-                    selectPrevLanguageUseCase = SelectPrevLanguageUseCase(LocalUsersRepository.Mock),
-                    getEnteredUserUseCase = GetEnteredUserUseCase(LocalUsersRepository.Mock),
+                    getUserLanguageUseCase = GetUserLanguageUseCase(app.localUsersRepository),
+                    selectNextLanguageUseCase = SelectNextLanguageUseCase(app.localUsersRepository),
+                    selectPrevLanguageUseCase = SelectPrevLanguageUseCase(app.localUsersRepository),
+                    getEnteredUserUseCase = GetEnteredUserUseCase(app.localUsersRepository),
                     languageMapper = LanguageMapper()
                 ) as T
             }

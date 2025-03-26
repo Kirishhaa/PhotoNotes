@@ -12,13 +12,13 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.kirishhaa.photonotes.SingleEvent
 import com.kirishhaa.photonotes.domain.permissions.DecreasePermissionCountUseCase
 import com.kirishhaa.photonotes.domain.DomainLocation
-import com.kirishhaa.photonotes.domain.location.GetLocationUseCase
 import com.kirishhaa.photonotes.domain.permissions.GetPermissionCountUseCase
 import com.kirishhaa.photonotes.domain.markers.ImageCapturedUseCase
 import com.kirishhaa.photonotes.domain.markers.MarkersRepository
 import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
 import com.kirishhaa.photonotes.domain.location.LocationRepository
 import com.kirishhaa.photonotes.domain.permissions.PermissionsRepository
+import com.kirishhaa.photonotes.toApp
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -28,7 +28,6 @@ import kotlinx.coroutines.launch
 
 class CameraViewModel(
     private val imageCapturedUseCase: ImageCapturedUseCase,
-    private val getLocationUseCase: GetLocationUseCase,
     private val decreasePermissionCountUseCase: DecreasePermissionCountUseCase,
     private val getPermissionCountUseCase: GetPermissionCountUseCase
 ): ViewModel() {
@@ -75,8 +74,7 @@ class CameraViewModel(
     fun onImageCaptured(filePath: String) {
         viewModelScope.launch(exceptionHandler) {
             _state.value = CameraState(true)
-            val location: DomainLocation? = getLocationUseCase.execute()
-            val markerId = imageCapturedUseCase.execute(filePath, location)
+            val markerId = imageCapturedUseCase.execute(filePath)
             _events.emit(SingleEvent(CameraEvent.OnNewImageCaptured(markerId)))
             _state.value = CameraState(false)
         }
@@ -85,17 +83,14 @@ class CameraViewModel(
     companion object {
         val Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-                val application = extras[APPLICATION_KEY] as Application
-                val repoUsers = LocalUsersRepository.Mock
-                val permsRepo = PermissionsRepository.Mockk
-                val repoImages = MarkersRepository.Mockk
-                val locationManager = application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                val locationRepository = LocationRepository.Mockk(locationManager, application)
+                val app = extras.toApp()
+                val repoUsers = app.localUsersRepository
+                val permsRepo = app.permissionsRepository
+                val repoImages = app.markersRepository
                 val usecase = ImageCapturedUseCase(repoUsers, repoImages)
-                val locationUseCase = GetLocationUseCase(locationRepository)
                 val decreaseUseCase = DecreasePermissionCountUseCase(permsRepo)
                 val getNumUseCase = GetPermissionCountUseCase(permsRepo)
-                return CameraViewModel(usecase, locationUseCase, decreaseUseCase, getNumUseCase) as T
+                return CameraViewModel(usecase, decreaseUseCase, getNumUseCase) as T
             }
         }
     }

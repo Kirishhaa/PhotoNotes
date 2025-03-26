@@ -1,4 +1,4 @@
-package com.kirishhaa.photonotes.data.entity
+package com.kirishhaa.photonotes.data.db.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey

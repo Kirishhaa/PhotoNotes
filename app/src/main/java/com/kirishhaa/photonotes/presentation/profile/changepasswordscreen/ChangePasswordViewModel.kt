@@ -13,6 +13,7 @@ import com.kirishhaa.photonotes.domain.users.ChangePasswordUseCase
 import com.kirishhaa.photonotes.domain.users.GetEnteredUserUseCase
 import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
 import com.kirishhaa.photonotes.presentation.profile.changeemailscreen.ChangeEmailEvents
+import com.kirishhaa.photonotes.toApp
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -70,8 +71,9 @@ class ChangePasswordViewModel(
     companion object {
         val Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
-                val enteredUser = GetEnteredUserUseCase(LocalUsersRepository.Mock)
-                val changePassword = ChangePasswordUseCase(LocalUsersRepository.Mock)
+                val app = extras.toApp()
+                val enteredUser = GetEnteredUserUseCase(app.localUsersRepository)
+                val changePassword = ChangePasswordUseCase(app.localUsersRepository)
                 return ChangePasswordViewModel(enteredUser, changePassword) as T
             }
         }
