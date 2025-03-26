@@ -59,7 +59,7 @@ class LocationRepositoryImpl(
             val deffered = async { currentLocation.mapNotNull { it }.first() }
             val asyncLocation = async {
                 var result: DomainLocation? = null
-                var time = 5_000
+                var time = 15_000
                 while (time != 0) {
                     if (deffered.isCompleted) {
                         Log.d("LocationRepository", "completed location")

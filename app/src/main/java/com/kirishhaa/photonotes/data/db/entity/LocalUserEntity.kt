@@ -13,7 +13,8 @@ import com.kirishhaa.photonotes.domain.LocalUser
         ForeignKey(
             entity = LanguageEntity::class,
             parentColumns = ["name"],
-            childColumns = ["language_name"]
+            childColumns = ["language_name"],
+            onDelete = ForeignKey.CASCADE
         )
     ]
 )

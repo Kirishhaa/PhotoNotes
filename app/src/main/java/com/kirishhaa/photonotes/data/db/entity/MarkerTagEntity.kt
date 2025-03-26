@@ -14,12 +14,19 @@ import com.kirishhaa.photonotes.domain.MarkerTag
             parentColumns = ["id"],
             childColumns = ["marker_id"],
             onDelete = ForeignKey.CASCADE
-        )
+        ),
+    ForeignKey(
+        entity = LocalUserEntity::class,
+        parentColumns = ["id"],
+        childColumns = ["user_id"],
+        onDelete = ForeignKey.CASCADE
+    )
     ]
 )
 class MarkerTagEntity(
     @ColumnInfo("marker_id") val markerId: Int,
-    @ColumnInfo("name") val name: String
+    @ColumnInfo("name") val name: String,
+    @ColumnInfo("user_id") val userId: Int
 ) {
 
     fun toMarkerTag(): MarkerTag = MarkerTag(name)

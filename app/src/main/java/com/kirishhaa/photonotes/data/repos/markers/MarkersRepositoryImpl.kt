@@ -4,6 +4,7 @@ import com.kirishhaa.photonotes.data.db.dao.MarkerDao
 import com.kirishhaa.photonotes.data.db.entity.FolderEntity
 import com.kirishhaa.photonotes.data.db.entity.LocationEntity
 import com.kirishhaa.photonotes.data.db.entity.MarkerEntity
+import com.kirishhaa.photonotes.data.db.entity.MarkerTagEntity
 import com.kirishhaa.photonotes.domain.DomainLocation
 import com.kirishhaa.photonotes.domain.Folder
 import com.kirishhaa.photonotes.domain.Marker
@@ -130,7 +131,8 @@ class MarkersRepositoryImpl(
         coroutineTryCatcher(
             tryBlock = {
                 val markerEntity = markerEntityMapper.map(marker)
-                markerDao.updateMarker(markerEntity)
+                val markerTagsEntity = marker.tags.map { tag -> MarkerTagEntity(markerEntity.id, tag.name, marker.userId) }
+                markerDao.updateMarkerAndSetTags(markerEntity, markerTagsEntity)
             },
             catchBlock = {
                 throw ReadWriteException()
@@ -157,4 +159,32 @@ class MarkersRepositoryImpl(
         )
     }
 
+    override suspend fun selectFolder(markerId: Int, userId: Int, folderName: String?) = withContext(Dispatchers.IO) {
+        coroutineTryCatcher(
+            tryBlock = {
+                val markerEntity = markerDao.getMarkerById(userId, markerId).first() ?: throw MarkerNotFoundException()
+                val newMarkerEntity = markerEntity.copy(folderName = folderName)
+                markerDao.updateMarker(newMarkerEntity)
+            },
+            catchBlock = { throwable ->
+                if(throwable !is MarkerNotFoundException) {
+                    throw ReadWriteException()
+                } else {
+                    throw throwable
+                }
+            }
+        )
+    }
+
+    override suspend fun removeFolder(folder: Folder) = withContext(Dispatchers.IO) {
+        coroutineTryCatcher(
+            tryBlock = {
+                val folderEntity = folderEntityMapper.map(folder)
+                markerDao.removeFolder(folderEntity)
+            },
+            catchBlock = {
+                throw ReadWriteException()
+            }
+        )
+    }
 }

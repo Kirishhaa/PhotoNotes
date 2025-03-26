@@ -4,13 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.kirishhaa.photonotes.domain.Folder
 import com.kirishhaa.photonotes.domain.Marker
 import com.kirishhaa.photonotes.domain.exceptions.CurrentTagExistException
 import com.kirishhaa.photonotes.domain.exceptions.EmptyMarkerTagException
 import com.kirishhaa.photonotes.domain.exceptions.TooLargeMarkerTagLengthException
+import com.kirishhaa.photonotes.domain.markers.GetAllFoldersUseCase
 import com.kirishhaa.photonotes.domain.markers.GetMarkerByIdUseCase
 import com.kirishhaa.photonotes.domain.markers.MarkersRepository
 import com.kirishhaa.photonotes.domain.markers.RemoveMarkerByIdUseCase
+import com.kirishhaa.photonotes.domain.markers.SelectFolderUseCase
 import com.kirishhaa.photonotes.domain.markers.UpdateMarkerUseCase
 import com.kirishhaa.photonotes.domain.tag.RemoveTagUseCase
 import com.kirishhaa.photonotes.domain.tag.ValidateMarkerTagUseCase
@@ -21,6 +24,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -31,9 +35,11 @@ class MarkerDetailViewModel(
     private val getMarkerByIdUseCase: GetMarkerByIdUseCase,
     private val getEnteredUserUseCase: GetEnteredUserUseCase,
     private val validateMarkerTagUseCase: ValidateMarkerTagUseCase,
+    private val getAllFoldersUseCase: GetAllFoldersUseCase,
     private val removeTagUseCase: RemoveTagUseCase,
     private val updateMarkerUseCase: UpdateMarkerUseCase,
     private val removeMarkerByIdUseCase: RemoveMarkerByIdUseCase,
+    private val selectFolderUseCase: SelectFolderUseCase,
     private val markerMapper: MarkerMapper
 ): ViewModel() {
 
@@ -60,11 +66,17 @@ class MarkerDetailViewModel(
     init {
         viewModelScope.launch {
             val user = getEnteredUserUseCase.execute().first()!!
-            getMarkerByIdUseCase.execute(user.id, markerId).collect { marker ->
-                _state.value = MarkerDetailState(
+            combine(
+                getAllFoldersUseCase.execute(user.id),
+                getMarkerByIdUseCase.execute(user.id, markerId)
+            ) { folders, marker ->
+                MarkerDetailState(
                     preloading = false,
-                    marker = marker?.let { value -> markerMapper.map(value) }
+                    marker = marker?.let { value -> markerMapper.map(value) },
+                    folders = folders.map { FolderUI(it.name) }
                 )
+            }.collect {
+                _state.value = it
             }
         }
     }
@@ -123,6 +135,7 @@ class MarkerDetailViewModel(
             )
             val domainMarker = markerMapper.map(newMarker)
             updateMarkerUseCase.execute(domainMarker)
+            selectFolderUseCase.execute(markerId, markerUI.userId, _state.value.marker?.folderName)
             _events.trySend(MarkerDetailEvent.GoBack)
         }
     }
@@ -136,6 +149,16 @@ class MarkerDetailViewModel(
         }
     }
 
+    fun onSelectFolder(folderName: String) {
+        val newMarker = _state.value.marker?.copy(folderName = folderName)
+        _state.value = _state.value.copy(marker = newMarker)
+    }
+
+    fun onRemoveFromFolder() {
+        val newMarker = _state.value.marker?.copy(folderName = null)
+        _state.value = _state.value.copy(marker = newMarker)
+    }
+
     companion object {
         fun Factory(markerId: Int) = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
@@ -146,8 +169,10 @@ class MarkerDetailViewModel(
                 val removeTag = RemoveTagUseCase()
                 val updateMarkerUseCase = UpdateMarkerUseCase(app.markersRepository)
                 val removeMarkerUseCase = RemoveMarkerByIdUseCase(app.markersRepository)
+                val getAllFoldersUseCase = GetAllFoldersUseCase(app.markersRepository)
+                val selectFolderUseCase = SelectFolderUseCase(app.markersRepository)
                 val mapper = MarkerMapper()
-                return MarkerDetailViewModel(markerId, getMarker, enteredUser, validateTag, removeTag, updateMarkerUseCase, removeMarkerUseCase, mapper) as T
+                return MarkerDetailViewModel(markerId, getMarker, enteredUser, validateTag, getAllFoldersUseCase, removeTag, updateMarkerUseCase, removeMarkerUseCase, selectFolderUseCase, mapper) as T
             }
         }
     }

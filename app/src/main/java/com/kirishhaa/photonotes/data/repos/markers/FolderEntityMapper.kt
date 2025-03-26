@@ -12,4 +12,11 @@ class FolderEntityMapper {
         )
     }
 
+    fun map(folder: Folder): FolderEntity {
+        return FolderEntity(
+            name = folder.name,
+            userId = folder.userId
+        )
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.kirishhaa.photonotes.presentation.markerdetail.markerdetailscreen
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,6 +23,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -78,7 +81,9 @@ fun MarkerDetailScreen(markerId: Int, goBack: () -> Unit) {
             onRemoveTag = { removeTag -> viewmodel.tryRemoveTag(removeTag) },
             onEditModeChanged = { edit -> viewmodel.setEditMode(edit) },
             onSave = viewmodel::onSave,
-            onDelete = viewmodel::onDelete
+            onDelete = viewmodel::onDelete,
+            onSelectFolder = viewmodel::onSelectFolder,
+            onRemoveFromFolder = viewmodel::onRemoveFromFolder
         )
     }
 }
@@ -92,7 +97,9 @@ private fun MarkerDetailScreen(
     onRemoveTag: (String) -> Unit,
     onEditModeChanged: (Boolean) -> Unit,
     onSave: (String, String, String, String) -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onSelectFolder: (String) -> Unit,
+    onRemoveFromFolder: () -> Unit
 ) {
 
     var markerNameValue by remember {
@@ -107,6 +114,10 @@ private fun MarkerDetailScreen(
 
     var markerDescriptionValue by remember {
         mutableStateOf(state.marker?.description ?: "Description")
+    }
+
+    var showDropDownMenu by remember {
+        mutableStateOf(false)
     }
 
     Column (
@@ -233,6 +244,57 @@ private fun MarkerDetailScreen(
                 modifier = Modifier.fillMaxWidth(0.9f)
             )
         }
+        Spacer(Modifier.height(8.dp))
+        Text(
+            text = "Folder",
+            fontSize = 24.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth(0.9f)
+        )
+        Spacer(Modifier.height(8.dp))
+        Box(
+            modifier = Modifier.width(140.dp)
+                .height(30.dp)
+                .clip(RoundedCornerShape(24.dp))
+                .background(Color.Cyan)
+                .pulsateClick(
+                    clickable = state.folders.isNotEmpty() && state.editing,
+                    onClick = { showDropDownMenu = true }
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            val text = state.marker?.folderName ?: "None"
+            Text(
+                text = text,
+                fontSize = 18.sp,
+                color = Color.Black,
+            )
+
+            DropdownMenu(
+                expanded = showDropDownMenu,
+                onDismissRequest = { showDropDownMenu = false }
+            ) {
+                state.folders.forEach { folder ->
+                    DropdownMenuItem(
+                        text = { Text(folder.name) },
+                        onClick = {
+                            onSelectFolder(folder.name)
+                            showDropDownMenu = false
+                        }
+                    )
+                }
+            }
+
+        }
+
+        Spacer(Modifier.height(12.dp))
+
+        Button(
+            onClick = { onRemoveFromFolder() }
+        ) {
+            Text("Remove From Folder")
+        }
+
         Spacer(Modifier.weight(1f))
         if(state.editing.not()) {
             Row(

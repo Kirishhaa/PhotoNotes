@@ -24,6 +24,12 @@ interface MarkerDao {
     @Query("SELECT * FROM markers WHERE user_id = :userId AND file_path = :filePath")
     suspend fun getMarkerByFilePath(userId: Int, filePath: String): MarkerEntity?
 
+    @Transaction
+    suspend fun updateMarkerAndSetTags(markerEntity: MarkerEntity, markerTagsEntity: List<MarkerTagEntity>) {
+        clearAndInsertTags(markerEntity.id, markerTagsEntity)
+        updateMarker(markerEntity)
+    }
+
     @Update
     suspend fun updateMarker(markerEntity: MarkerEntity)
 
@@ -55,7 +61,7 @@ interface MarkerDao {
     suspend fun insertLocation(locationEntity: LocationEntity)
 
 
-    @Query("SELECT * FROM folders WHERE userId = :userId")
+    @Query("SELECT * FROM folders WHERE user_id = :userId")
     fun getUserFolders(userId: Int): Flow<List<FolderEntity>>
 
     @Update

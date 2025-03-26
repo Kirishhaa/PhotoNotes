@@ -1,6 +1,7 @@
 package com.kirishhaa.photonotes.data.repos.localusers
 
 import com.kirishhaa.photonotes.data.db.dao.LocalUsersDao
+import com.kirishhaa.photonotes.data.db.dao.MarkerDao
 import com.kirishhaa.photonotes.data.db.entity.LocalUserEntity
 import com.kirishhaa.photonotes.domain.Language
 import com.kirishhaa.photonotes.domain.LocalUser
@@ -28,7 +29,8 @@ class LocalUsersRepositoryImpl(
     private val passwordValidator: PasswordValidator,
     private val loginValidator: LoginValidator,
     private val usernameValidator: UsernameValidator,
-    private val localUserEntityMapper: LocalUserEntityMapper
+    private val localUserEntityMapper: LocalUserEntityMapper,
+    private val markerDao: MarkerDao
 ): LocalUsersRepository {
 
     override fun getEnteredUser(): Flow<LocalUser?> {
@@ -166,7 +168,7 @@ class LocalUsersRepositoryImpl(
                 localUsersDao.updateUser(newUserEntity)
             },
             catchBlock = { throwable ->
-                if(throwable !is UserNotFoundException && throwable !is UserAlreadyExistException) {
+                if(throwable !is UserNotFoundException && throwable !is UserAlreadyExistException && throwable !is WrongUsernameException) {
                     throw ReadWriteException()
                 } else throw throwable
             }

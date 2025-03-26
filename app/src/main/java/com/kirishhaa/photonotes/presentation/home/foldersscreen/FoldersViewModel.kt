@@ -5,8 +5,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.kirishhaa.photonotes.SingleEvent
+import com.kirishhaa.photonotes.domain.Folder
+import com.kirishhaa.photonotes.domain.exceptions.EnteredUserNotExistException
+import com.kirishhaa.photonotes.domain.exceptions.UserNotFoundException
+import com.kirishhaa.photonotes.domain.markers.CreateNewFolderUseCase
 import com.kirishhaa.photonotes.domain.markers.GetAllFoldersUseCase
 import com.kirishhaa.photonotes.domain.markers.GetAllMarkersUseCase
+import com.kirishhaa.photonotes.domain.markers.RemoveFolderUseCase
 import com.kirishhaa.photonotes.domain.users.GetEnteredUserUseCase
 import com.kirishhaa.photonotes.toApp
 import kotlinx.coroutines.flow.Flow
@@ -21,6 +26,8 @@ class FoldersViewModel(
     private val getAllFoldersUseCase: GetAllFoldersUseCase,
     private val getAllMarkersUseCase: GetAllMarkersUseCase,
     private val getEnteredUserUseCase: GetEnteredUserUseCase,
+    private val createNewFolderUseCase: CreateNewFolderUseCase,
+    private val removeFolderUseCase: RemoveFolderUseCase,
     private val folderMapper: FolderMapper,
     private val markerMapper: MarkerMapper
 ) : ViewModel() {
@@ -54,6 +61,8 @@ class FoldersViewModel(
 
                 FoldersState(
                     loadingState = false,
+                    showEditButton = selectedFolder == null,
+                    inFolder = selectedFolder != null,
                     folders = mappedFolders,
                     markers = mappedMarkers
                 )
@@ -68,10 +77,41 @@ class FoldersViewModel(
     }
 
     fun handleBackPress() {
-        if(selectedFolder.value != null) {
+        if(selectedFolder.value != null || _state.value.showAddFolderDialog) {
             selectedFolder.value = null
+            _state.value = _state.value.copy(showAddFolderDialog = false)
         } else {
             _events.tryEmit(SingleEvent(FolderEvent.CloseApp))
+        }
+    }
+
+    fun showAddFolderDialog() {
+        _state.value = _state.value.copy(showAddFolderDialog = true)
+    }
+
+    fun hideAddFolderDialog() {
+        _state.value = _state.value.copy(showAddFolderDialog = false)
+    }
+
+    fun addNewFolder(folderName: String) {
+        viewModelScope.launch {
+            val enteredUser =
+                getEnteredUserUseCase.execute().first() ?: throw EnteredUserNotExistException()
+            val folder = Folder(
+                name = folderName,
+                userId = enteredUser.id
+            )
+            createNewFolderUseCase.execute(folder)
+        }
+    }
+
+    fun onRemoveFolder() {
+        viewModelScope.launch {
+            val enteredUser =
+                getEnteredUserUseCase.execute().first() ?: throw UserNotFoundException()
+            val selectedFolder = selectedFolder.value ?: return@launch
+            removeFolderUseCase.execute(enteredUser.id, selectedFolder.name)
+            this@FoldersViewModel.selectedFolder.value = null
         }
     }
 
@@ -84,7 +124,9 @@ class FoldersViewModel(
                 val getAllFolders = GetAllFoldersUseCase(app.markersRepository)
                 val markermapper = MarkerMapper()
                 val foldermapper = FolderMapper()
-                return FoldersViewModel(getAllFolders, getAllMarkers, getEnteredUser, foldermapper, markermapper) as T
+                val createNewFolderUseCase = CreateNewFolderUseCase(app.markersRepository)
+                val removeFolderUseCase = RemoveFolderUseCase(app.markersRepository)
+                return FoldersViewModel(getAllFolders, getAllMarkers, getEnteredUser, createNewFolderUseCase, removeFolderUseCase, foldermapper, markermapper) as T
             }
         }
     }

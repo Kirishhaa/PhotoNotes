@@ -22,7 +22,7 @@ import androidx.room.PrimaryKey
     )
     ]
 )
-class MarkerEntity (
+data class MarkerEntity (
     @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo("user_id") val userId: Int,
     @ColumnInfo("folder_name") val folderName: String?,

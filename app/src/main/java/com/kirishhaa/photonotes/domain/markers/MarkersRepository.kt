@@ -23,4 +23,8 @@ interface MarkersRepository {
 
     suspend fun removeMarkerById(markerId: Int, userId: Int)
 
+    suspend fun selectFolder(markerId: Int, userId: Int, folderName: String?)
+
+    suspend fun removeFolder(folder: Folder)
+
 }
