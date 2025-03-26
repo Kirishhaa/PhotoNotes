@@ -125,7 +125,7 @@ private fun MarkerDetailScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().height(200.dp),
+            modifier = Modifier.fillMaxWidth().height(250.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceAround
         ) {
@@ -142,6 +142,7 @@ private fun MarkerDetailScreen(
                 verticalArrangement = Arrangement.SpaceAround,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Text("MarkerName", fontSize = 24.sp, color = Color.Black)
                 if (state.editing) {
                     TextField(
                         value = markerNameValue ?: "",
@@ -151,6 +152,7 @@ private fun MarkerDetailScreen(
                 } else {
                     Text(markerNameValue ?: "", fontSize = 24.sp)
                 }
+                Text("Country", fontSize = 24.sp, color = Color.Black)
                 if (state.editing) {
                     TextField(
                         value = markerCountryValue ?: "",
@@ -160,6 +162,7 @@ private fun MarkerDetailScreen(
                 } else {
                     Text(markerCountryValue ?: "", fontSize = 20.sp)
                 }
+                Text("Town", fontSize = 24.sp, color = Color.Black)
                 if (state.editing) {
                     TextField(
                         value = markerTownValue ?: "",
@@ -288,11 +291,12 @@ private fun MarkerDetailScreen(
         }
 
         Spacer(Modifier.height(12.dp))
-
-        Button(
-            onClick = { onRemoveFromFolder() }
-        ) {
-            Text("Remove From Folder")
+        if(state.marker?.folderName != null) {
+            Button(
+                onClick = { onRemoveFromFolder() }
+            ) {
+                Text("Remove From Folder")
+            }
         }
 
         Spacer(Modifier.weight(1f))

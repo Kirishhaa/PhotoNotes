@@ -50,7 +50,11 @@ private fun HomeNavGraph(navController: NavHostController, paddingValues: Paddin
             )
         }
         composable(route = BottomNavigationScreen.GoogleMap.route) {
-            GoogleMapScreen()
+            GoogleMapScreen(
+                onMarkerClicked = { markerId ->
+                    navController.navigate(MarkerDetailScr.MarkerDetail.route.replace("{markerId}", markerId.toString()))
+                }
+            )
         }
         composable(route = BottomNavigationScreen.Feedback.route) {
             FeedbackScreen()
