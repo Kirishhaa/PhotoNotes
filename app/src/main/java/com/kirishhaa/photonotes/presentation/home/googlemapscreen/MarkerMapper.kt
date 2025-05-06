@@ -30,7 +30,7 @@ class MarkerMapper(
 
     private fun toBitmapDescriptor(filePath: String): BitmapDescriptor? {
         appContext.contentResolver.openInputStream(filePath.toUri())?.use { inputStream ->
-            val bitmap = BitmapFactory.decodeStream(inputStream).scale(80,80)
+            val bitmap = BitmapFactory.decodeStream(inputStream).scale(80, 80)
             val cropped = getCroppedBitmap(bitmap)
             return BitmapDescriptorFactory.fromBitmap(cropped)
         }

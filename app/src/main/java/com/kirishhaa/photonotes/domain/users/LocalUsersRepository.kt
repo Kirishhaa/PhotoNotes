@@ -2,18 +2,7 @@ package com.kirishhaa.photonotes.domain.users
 
 import com.kirishhaa.photonotes.domain.Language
 import com.kirishhaa.photonotes.domain.LocalUser
-import com.kirishhaa.photonotes.domain.exceptions.EmailsAreNotTheSameException
-import com.kirishhaa.photonotes.domain.exceptions.PasswordsAreNotTheSameException
-import com.kirishhaa.photonotes.domain.exceptions.WrongLoginException
-import com.kirishhaa.photonotes.domain.exceptions.WrongPasswordException
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
-import java.util.concurrent.atomic.AtomicInteger
 
 interface LocalUsersRepository {
 
@@ -38,16 +27,29 @@ interface LocalUsersRepository {
     )
 
     //throws
-    //emails are not the same exception
-    //wrong login exception
-    suspend fun changeEmail(userId: Int, currentEmail: String, newEmail: String, repeatNewEmail: String)
+    //UserNotFoundException
+    //WrongLoginException
+    //WrongNewLoginException
+    //EmailsAreNotTheSameException
+    //ReadWriteException
+    suspend fun changeEmail(
+        userId: Int,
+        currentEmail: String,
+        newEmail: String,
+        repeatNewEmail: String
+    )
 
     suspend fun changeUsername(userId: Int, newUsername: String)
 
     //throws
     //passwords are not the same exception
     //wrong password exception
-    suspend fun changePassword(userId: Int, currentPassword: String, newPassword: String, repeatNewPassword: String)
+    suspend fun changePassword(
+        userId: Int,
+        currentPassword: String,
+        newPassword: String,
+        repeatNewPassword: String
+    )
 
     fun getUserLanguage(userId: Int): Flow<Language?>
 

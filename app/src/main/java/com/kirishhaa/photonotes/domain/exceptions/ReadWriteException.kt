@@ -1,4 +1,3 @@
 package com.kirishhaa.photonotes.domain.exceptions
 
-class ReadWriteException: Exception() {
-}
+class ReadWriteException : Exception()

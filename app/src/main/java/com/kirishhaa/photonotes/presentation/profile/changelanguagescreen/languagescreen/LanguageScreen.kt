@@ -1,19 +1,33 @@
 package com.kirishhaa.photonotes.presentation.profile.changelanguagescreen.languagescreen
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kirishhaa.photonotes.presentation.profile.changeemailscreen.ChangeEmailEvents
 
 @Preview
 @Composable
 fun LanguageScreen(viewModel: LanguageViewModel = viewModel(factory = LanguageViewModel.Factory)) {
     val state by viewModel.state.collectAsState()
+    val context = LocalContext.current
+    LaunchedEffect(0) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is LanguageEvent.SendMessage -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center

@@ -23,7 +23,9 @@ fun TextFieldInfo(title: String, value: String, error: Boolean, onValueChanged: 
             ),
             isError = error,
             maxLines = 1,
-            modifier = Modifier.width(140.dp).height(50.dp)
+            modifier = Modifier
+                .width(140.dp)
+                .height(50.dp)
         )
     }
 }

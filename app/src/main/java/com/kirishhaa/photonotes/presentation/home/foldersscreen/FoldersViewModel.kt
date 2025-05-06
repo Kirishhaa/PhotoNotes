@@ -73,11 +73,11 @@ class FoldersViewModel(
     }
 
     fun selectFolder(folder: FolderUI) {
-        selectedFolder.value  = folder
+        selectedFolder.value = folder
     }
 
     fun handleBackPress() {
-        if(selectedFolder.value != null || _state.value.showAddFolderDialog) {
+        if (selectedFolder.value != null || _state.value.showAddFolderDialog) {
             selectedFolder.value = null
             _state.value = _state.value.copy(showAddFolderDialog = false)
         } else {
@@ -126,7 +126,15 @@ class FoldersViewModel(
                 val foldermapper = FolderMapper()
                 val createNewFolderUseCase = CreateNewFolderUseCase(app.markersRepository)
                 val removeFolderUseCase = RemoveFolderUseCase(app.markersRepository)
-                return FoldersViewModel(getAllFolders, getAllMarkers, getEnteredUser, createNewFolderUseCase, removeFolderUseCase, foldermapper, markermapper) as T
+                return FoldersViewModel(
+                    getAllFolders,
+                    getAllMarkers,
+                    getEnteredUser,
+                    createNewFolderUseCase,
+                    removeFolderUseCase,
+                    foldermapper,
+                    markermapper
+                ) as T
             }
         }
     }

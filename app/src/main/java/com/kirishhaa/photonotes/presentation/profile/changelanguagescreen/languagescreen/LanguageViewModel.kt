@@ -4,21 +4,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.kirishhaa.photonotes.domain.exceptions.EnteredUserNotExistException
+import com.kirishhaa.photonotes.domain.exceptions.ReadWriteException
+import com.kirishhaa.photonotes.domain.exceptions.UserNotFoundException
 import com.kirishhaa.photonotes.domain.users.GetEnteredUserUseCase
 import com.kirishhaa.photonotes.domain.users.GetUserLanguageUseCase
-import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
 import com.kirishhaa.photonotes.domain.users.SelectNextLanguageUseCase
 import com.kirishhaa.photonotes.domain.users.SelectPrevLanguageUseCase
-import com.kirishhaa.photonotes.presentation.profile.changelanguagescreen.languagescreen.exceptions.LanguagesAreNotExistException
-import com.kirishhaa.photonotes.presentation.profile.changelanguagescreen.languagescreen.exceptions.SelectedLanguageNotFoundException
 import com.kirishhaa.photonotes.toApp
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class LanguageViewModel(
@@ -27,15 +26,21 @@ class LanguageViewModel(
     private val selectNextLanguageUseCase: SelectNextLanguageUseCase,
     private val selectPrevLanguageUseCase: SelectPrevLanguageUseCase,
     private val languageMapper: LanguageMapper
-): ViewModel() {
+) : ViewModel() {
+
+    private val _events = Channel<LanguageEvent>()
+    val events = _events.receiveAsFlow()
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        when(throwable) {
-            is LanguagesAreNotExistException -> {
-
+        when (throwable) {
+            is EnteredUserNotExistException -> {
+                _events.trySend(LanguageEvent.SendMessage("User Not Found"))
             }
-            is SelectedLanguageNotFoundException -> {
-
+            is UserNotFoundException -> {
+                _events.trySend(LanguageEvent.SendMessage("User Not Found"))
+            }
+            is ReadWriteException -> {
+                _events.trySend(LanguageEvent.SendMessage("IO Exception"))
             }
         }
     }
@@ -45,24 +50,23 @@ class LanguageViewModel(
 
     init {
         viewModelScope.launch {
-            val id = getEnteredUserUseCase.execute().first()?.id ?: return@launch
+            val id = getEnteredUserUseCase.execute().first()?.id ?: throw EnteredUserNotExistException()
             getUserLanguageUseCase.execute(id).collect { lang ->
-                if(lang != null)
-                _state.value = _state.value.copy(loading = false, language = languageMapper.map(lang))
+                if (lang != null)
+                    _state.value =
+                        _state.value.copy(loading = false, language = languageMapper.map(lang))
             }
         }
     }
 
     fun onNextLanguage() = changeStateOperation {
-        getEnteredUserUseCase.execute().first()?.id?.let { id ->
-            selectNextLanguageUseCase.execute(id)
-        }
+        val id = getEnteredUserUseCase.execute().first()?.id ?: throw EnteredUserNotExistException()
+        selectNextLanguageUseCase.execute(id)
     }
 
     fun onPreviousLanguage() = changeStateOperation {
-        getEnteredUserUseCase.execute().first()?.id?.let { id ->
-            selectPrevLanguageUseCase.execute(id)
-        }
+        val id = getEnteredUserUseCase.execute().first()?.id ?: throw EnteredUserNotExistException()
+        selectPrevLanguageUseCase.execute(id)
     }
 
     private fun changeStateOperation(block: suspend () -> Unit) {

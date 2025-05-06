@@ -1,7 +1,6 @@
 package com.kirishhaa.photonotes.presentation.markerdetail.markerdetailscreen
 
 import android.widget.Toast
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,7 +21,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
@@ -31,7 +29,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,18 +47,18 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.kirishhaa.photonotes.R
 import com.kirishhaa.photonotes.clickeffects.pulsateClick
-import com.kirishhaa.photonotes.domain.Marker
 import com.kirishhaa.photonotes.presentation.CommitButton
 import com.kirishhaa.photonotes.presentation.EditButton
 
 @Composable
 fun MarkerDetailScreen(markerId: Int, goBack: () -> Unit) {
-    val viewmodel: MarkerDetailViewModel = viewModel(factory = MarkerDetailViewModel.Factory(markerId))
+    val viewmodel: MarkerDetailViewModel =
+        viewModel(factory = MarkerDetailViewModel.Factory(markerId))
     val state by viewmodel.state.collectAsState()
     val context = LocalContext.current
     LaunchedEffect(0) {
         viewmodel.events.collect { event ->
-            when(event) {
+            when (event) {
                 is MarkerDetailEvent.ShowMessage -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
@@ -77,7 +74,12 @@ fun MarkerDetailScreen(markerId: Int, goBack: () -> Unit) {
             state = state,
             onShowAddTagDialog = { show -> viewmodel.showAddTagDialog(show) },
             onAddTag = viewmodel::tryAddTag,
-            onShowRemoveTagDialog = { show, removeTag -> viewmodel.showRemoveTagDialog(show, removeTag) },
+            onShowRemoveTagDialog = { show, removeTag ->
+                viewmodel.showRemoveTagDialog(
+                    show,
+                    removeTag
+                )
+            },
             onRemoveTag = { removeTag -> viewmodel.tryRemoveTag(removeTag) },
             onEditModeChanged = { edit -> viewmodel.setEditMode(edit) },
             onSave = viewmodel::onSave,
@@ -120,12 +122,14 @@ private fun MarkerDetailScreen(
         mutableStateOf(false)
     }
 
-    Column (
+    Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().height(250.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceAround
         ) {
@@ -135,7 +139,9 @@ private fun MarkerDetailScreen(
                 contentScale = ContentScale.FillBounds,
                 error = painterResource(R.drawable.error_vector),
                 placeholder = painterResource(R.drawable.error_vector),
-                modifier = Modifier.size(120.dp).clip(CircleShape)
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(CircleShape)
             )
             Column(
                 modifier = Modifier.fillMaxHeight(),
@@ -201,7 +207,7 @@ private fun MarkerDetailScreen(
                     Spacer(Modifier.height(4.dp))
                 }
             }
-            if(state.editing) {
+            if (state.editing) {
                 item {
                     Column(
                         verticalArrangement = Arrangement.Center,
@@ -235,7 +241,7 @@ private fun MarkerDetailScreen(
             modifier = Modifier.fillMaxWidth(0.9f)
         )
         Spacer(Modifier.height(4.dp))
-        if(state.editing) {
+        if (state.editing) {
             TextField(
                 value = markerDescriptionValue,
                 onValueChange = { markerDescriptionValue = it }
@@ -256,7 +262,8 @@ private fun MarkerDetailScreen(
         )
         Spacer(Modifier.height(8.dp))
         Box(
-            modifier = Modifier.width(140.dp)
+            modifier = Modifier
+                .width(140.dp)
                 .height(30.dp)
                 .clip(RoundedCornerShape(24.dp))
                 .background(Color.Cyan)
@@ -291,7 +298,7 @@ private fun MarkerDetailScreen(
         }
 
         Spacer(Modifier.height(12.dp))
-        if(state.marker?.folderName != null) {
+        if (state.marker?.folderName != null) {
             Button(
                 onClick = { onRemoveFromFolder() }
             ) {
@@ -300,13 +307,20 @@ private fun MarkerDetailScreen(
         }
 
         Spacer(Modifier.weight(1f))
-        if(state.editing.not()) {
+        if (state.editing.not()) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 Button(
-                    onClick = { onSave(markerNameValue ?: "", markerCountryValue ?: "", markerTownValue ?: "", markerDescriptionValue) }
+                    onClick = {
+                        onSave(
+                            markerNameValue ?: "",
+                            markerCountryValue ?: "",
+                            markerTownValue ?: "",
+                            markerDescriptionValue
+                        )
+                    }
                 ) {
                     Text("Save")
                 }
@@ -318,12 +332,12 @@ private fun MarkerDetailScreen(
             }
         }
     }
-    if(state.showAddTagDialog) {
+    if (state.showAddTagDialog) {
         AddTagDialog(
             onAdd = onAddTag,
             onDismiss = { onShowAddTagDialog(false) }
         )
-    } else if(state.showRemoveTagDialog) {
+    } else if (state.showRemoveTagDialog) {
         RemoveTagDialog(
             tag = state.requireRemoveTag(),
             onRemove = { removeTag -> onRemoveTag(removeTag) },
@@ -340,13 +354,17 @@ private fun MarkerDetailScreen(
                 .height(60.dp)
                 .align(Alignment.BottomCenter)
         ) {
-            if(state.editing.not()) {
+            if (state.editing.not()) {
                 EditButton(
-                    modifier = Modifier.pulsateClick(clickable = state.editing.not(), onClick = { onEditModeChanged(true) })
+                    modifier = Modifier.pulsateClick(
+                        clickable = state.editing.not(),
+                        onClick = { onEditModeChanged(true) })
                 )
             } else {
                 CommitButton(
-                    modifier = Modifier.pulsateClick(clickable = state.editing, onClick = { onEditModeChanged(false) })
+                    modifier = Modifier.pulsateClick(
+                        clickable = state.editing,
+                        onClick = { onEditModeChanged(false) })
                 )
             }
         }

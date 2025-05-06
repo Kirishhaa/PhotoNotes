@@ -45,7 +45,7 @@ class MarkerMapper {
             latitude = this?.latitude ?: 0.0,
             longitude = this?.longitude ?: 0.0,
             country = this?.country ?: DomainLocation.UNKNOWN,
-            town =  this?.town ?: DomainLocation.UNKNOWN
+            town = this?.town ?: DomainLocation.UNKNOWN
         )
     }
 

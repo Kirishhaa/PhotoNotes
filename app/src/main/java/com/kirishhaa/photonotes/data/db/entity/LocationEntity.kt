@@ -7,7 +7,7 @@ import com.kirishhaa.photonotes.domain.DomainLocation
 
 @Entity(
     tableName = "locations",
-    primaryKeys = ["marker_id","latitude","longitude"],
+    primaryKeys = ["marker_id", "latitude", "longitude"],
     foreignKeys = [
         ForeignKey(
             entity = MarkerEntity::class,

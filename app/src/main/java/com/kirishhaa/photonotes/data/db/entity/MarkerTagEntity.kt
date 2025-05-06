@@ -7,7 +7,7 @@ import com.kirishhaa.photonotes.domain.MarkerTag
 
 @Entity(
     tableName = "marker_tags",
-    primaryKeys = ["marker_id","name"],
+    primaryKeys = ["marker_id", "name"],
     foreignKeys = [
         ForeignKey(
             entity = MarkerEntity::class,
@@ -15,12 +15,12 @@ import com.kirishhaa.photonotes.domain.MarkerTag
             childColumns = ["marker_id"],
             onDelete = ForeignKey.CASCADE
         ),
-    ForeignKey(
-        entity = LocalUserEntity::class,
-        parentColumns = ["id"],
-        childColumns = ["user_id"],
-        onDelete = ForeignKey.CASCADE
-    )
+        ForeignKey(
+            entity = LocalUserEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["user_id"],
+            onDelete = ForeignKey.CASCADE
+        )
     ]
 )
 class MarkerTagEntity(

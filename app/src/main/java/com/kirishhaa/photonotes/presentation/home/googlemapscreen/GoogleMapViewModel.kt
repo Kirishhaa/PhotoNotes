@@ -22,14 +22,15 @@ class GoogleMapViewModel(
     private val getAllMarkersUseCase: GetAllMarkersUseCase,
     private val markersFilter: GoogleMapMarkersFilter,
     private val markerMapper: MarkerMapper
-): ViewModel() {
+) : ViewModel() {
 
     private val _state = MutableStateFlow(GoogleMapState())
     val state = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
-            val enteredUser = getEnteredUserUseCase.execute().first() ?: throw EnteredUserNotExistException()
+            val enteredUser =
+                getEnteredUserUseCase.execute().first() ?: throw EnteredUserNotExistException()
             getAllMarkersUseCase.execute(enteredUser.id).map { markers ->
                 val filteredMarkers = markersFilter.filter(markers)
                 val markersUI = filteredMarkers.map { marker -> markerMapper.map(marker) }
@@ -46,7 +47,12 @@ class GoogleMapViewModel(
                 val app = extras.toApp()
                 val getEnteredUserUseCase = GetEnteredUserUseCase(app.localUsersRepository)
                 val getAllMarkers = GetAllMarkersUseCase(app.markersRepository)
-                return GoogleMapViewModel(getEnteredUserUseCase, getAllMarkers, GoogleMapMarkersFilter(), MarkerMapper(app)) as T
+                return GoogleMapViewModel(
+                    getEnteredUserUseCase,
+                    getAllMarkers,
+                    GoogleMapMarkersFilter(),
+                    MarkerMapper(app)
+                ) as T
             }
         }
     }

@@ -2,7 +2,6 @@ package com.kirishhaa.photonotes.presentation.home.foldersscreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,13 +26,15 @@ import com.kirishhaa.photonotes.clickeffects.pulsateClick
 @Composable
 fun FolderView(folderUI: FolderUI, onClick: (FolderUI) -> Unit) {
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(horizontal = 10.dp)
             .pulsateClick(clickable = true, onClick = { onClick(folderUI) })
     ) {
         Spacer(Modifier.height(8.dp))
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .clip(RoundedCornerShape(20.dp))
                 .background(Color.Gray),
             verticalAlignment = Alignment.CenterVertically,

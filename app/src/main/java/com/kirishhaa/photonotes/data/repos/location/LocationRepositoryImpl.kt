@@ -25,7 +25,7 @@ import java.util.Locale
 class LocationRepositoryImpl(
     private val locationManager: LocationManager,
     private val appContext: Context
-): LocationRepository {
+) : LocationRepository {
 
     private val provider = LocationManager.NETWORK_PROVIDER
     private val provider2 = LocationManager.GPS_PROVIDER
@@ -40,7 +40,7 @@ class LocationRepositoryImpl(
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     override suspend fun getCurrentLocation(): DomainLocation? {
         withContext(Dispatchers.Main) {
-            if(locationManager.isLocationEnabled) {
+            if (locationManager.isLocationEnabled) {
                 locationManager.requestLocationUpdates(
                     provider,
                     20,
@@ -67,10 +67,20 @@ class LocationRepositoryImpl(
                         val geocoder = Geocoder(appContext, Locale.getDefault())
                         var adresses: List<Address> = emptyList()
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            geocoder.getFromLocation(location.latitude, location.longitude, 1) { adresses = it }
+                            geocoder.getFromLocation(
+                                location.latitude,
+                                location.longitude,
+                                1
+                            ) { adresses = it }
                         } else {
                             coroutineTryCatcher(
-                                tryBlock = { adresses = geocoder.getFromLocation(location.latitude, location.longitude, 1) ?: emptyList() },
+                                tryBlock = {
+                                    adresses = geocoder.getFromLocation(
+                                        location.latitude,
+                                        location.longitude,
+                                        1
+                                    ) ?: emptyList()
+                                },
                                 catchBlock = { adresses = emptyList() }
                             )
                         }
@@ -89,7 +99,7 @@ class LocationRepositoryImpl(
                     delay(1_000)
                     time -= 1_000
                 }
-                if(time == 0) {
+                if (time == 0) {
                     deffered.cancel()
                     Log.d("LocationRepository", "cancelled location")
                 }

@@ -7,12 +7,10 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.kirishhaa.photonotes.domain.LocalUser
 import com.kirishhaa.photonotes.domain.users.ChangeUsernameUseCase
 import com.kirishhaa.photonotes.domain.users.GetEnteredUserUseCase
-import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
 import com.kirishhaa.photonotes.toApp
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -20,7 +18,7 @@ import kotlinx.coroutines.launch
 class ChangeUsernameViewModel(
     private val getEnteredUserUseCase: GetEnteredUserUseCase,
     private val changeUsernameUseCase: ChangeUsernameUseCase
-): ViewModel() {
+) : ViewModel() {
 
     private val _events = Channel<ChangeUsernameEvent>()
     val events = _events.receiveAsFlow()

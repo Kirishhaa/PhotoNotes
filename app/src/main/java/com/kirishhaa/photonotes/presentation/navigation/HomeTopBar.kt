@@ -20,13 +20,14 @@ fun HomeTopBar(title: String, userImagePath: String?, navController: NavHostCont
     val backStackState by navController.currentBackStackEntryAsState()
     val currentDestination = backStackState?.destination
     val isBottomBarDestination = screens.any { it.route == currentDestination?.route }
-    if(isBottomBarDestination) {
+    if (isBottomBarDestination) {
         TopAppBar(
             title = { Text(title) },
             actions = {
                 UserImage(
                     model = userImagePath,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier
+                        .size(24.dp)
                         .pulsateClick(
                             clickable = true,
                             onClick = {

@@ -42,14 +42,18 @@ fun ProfileScreen(
 
     LaunchedEffect(0) {
         viewmodel.events.collect { event ->
-            when(event) {
+            when (event) {
                 ProfileEvent.ToAuth -> toAuth()
             }
         }
     }
 
-    when(val currentUser = state.user) {
-        null -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+    when (val currentUser = state.user) {
+        null -> Box(
+            Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) { CircularProgressIndicator() }
+
         else -> ProfileScreen(
             user = currentUser,
             onChangeEmail,

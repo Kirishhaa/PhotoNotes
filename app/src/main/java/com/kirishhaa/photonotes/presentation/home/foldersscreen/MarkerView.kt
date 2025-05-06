@@ -28,13 +28,15 @@ import com.kirishhaa.photonotes.clickeffects.pulsateClick
 @Composable
 fun MarkerView(marker: MarkerUI, onClick: (MarkerUI) -> Unit) {
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(horizontal = 10.dp)
             .pulsateClick(clickable = true, onClick = { onClick(marker) })
     ) {
         Spacer(Modifier.height(8.dp))
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .clip(RoundedCornerShape(20.dp))
                 .background(color = Color.Gray),
             verticalAlignment = Alignment.CenterVertically

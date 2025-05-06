@@ -8,7 +8,11 @@ import com.kirishhaa.photonotes.domain.Marker
 
 class MarkerEntityMapper {
 
-    fun map(markerEntity: MarkerEntity, locationEntity: LocationEntity?, tagsEntity: List<MarkerTagEntity>): Marker {
+    fun map(
+        markerEntity: MarkerEntity,
+        locationEntity: LocationEntity?,
+        tagsEntity: List<MarkerTagEntity>
+    ): Marker {
         return Marker(
             id = markerEntity.id,
             userId = markerEntity.userId,

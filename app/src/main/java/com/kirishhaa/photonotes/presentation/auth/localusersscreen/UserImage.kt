@@ -11,8 +11,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.kirishhaa.photonotes.R
-import com.kirishhaa.photonotes.presentation.EditButton
 import com.kirishhaa.photonotes.clickeffects.pulsateClick
+import com.kirishhaa.photonotes.presentation.EditButton
 
 @Composable
 fun UserImage(
@@ -20,11 +20,13 @@ fun UserImage(
     modifier: Modifier = Modifier,
     edit: Boolean = false,
     onEdit: () -> Unit = {},
-    ) {
+) {
 
     val mod = remember {
-        if(edit) {
-            Modifier.pulsateClick(true, onEdit).then(modifier)
+        if (edit) {
+            Modifier
+                .pulsateClick(true, onEdit)
+                .then(modifier)
         } else modifier
     }
 
@@ -40,7 +42,9 @@ fun UserImage(
             modifier = Modifier.fillMaxSize()
         )
         if (edit) {
-            EditButton(modifier = Modifier.align(Alignment.BottomCenter).size(20.dp))
+            EditButton(modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .size(20.dp))
         }
     }
 }

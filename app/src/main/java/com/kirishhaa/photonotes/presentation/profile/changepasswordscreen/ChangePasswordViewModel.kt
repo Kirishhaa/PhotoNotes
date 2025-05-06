@@ -5,14 +5,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.kirishhaa.photonotes.domain.LocalUser
-import com.kirishhaa.photonotes.domain.exceptions.EmailsAreNotTheSameException
 import com.kirishhaa.photonotes.domain.exceptions.PasswordsAreNotTheSameException
-import com.kirishhaa.photonotes.domain.exceptions.WrongLoginException
 import com.kirishhaa.photonotes.domain.exceptions.WrongPasswordException
 import com.kirishhaa.photonotes.domain.users.ChangePasswordUseCase
 import com.kirishhaa.photonotes.domain.users.GetEnteredUserUseCase
-import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
-import com.kirishhaa.photonotes.presentation.profile.changeemailscreen.ChangeEmailEvents
 import com.kirishhaa.photonotes.toApp
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
@@ -25,7 +21,7 @@ import kotlin.reflect.KClass
 class ChangePasswordViewModel(
     private val getEnteredUserUseCase: GetEnteredUserUseCase,
     private val changePasswordUseCase: ChangePasswordUseCase
-): ViewModel() {
+) : ViewModel() {
 
     private val _events = Channel<ChangePasswordEvent>()
     val events = _events.receiveAsFlow()
@@ -35,12 +31,21 @@ class ChangePasswordViewModel(
     val state = _state.asStateFlow()
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        when(throwable) {
+        when (throwable) {
             is PasswordsAreNotTheSameException -> {
-                _state.value = _state.value.copy(passwordsNotSameError = true, currentPasswordError = false, loading = false)
+                _state.value = _state.value.copy(
+                    passwordsNotSameError = true,
+                    currentPasswordError = false,
+                    loading = false
+                )
             }
+
             is WrongPasswordException -> {
-                _state.value = _state.value.copy(currentPasswordError = true, passwordsNotSameError = false, loading = false)
+                _state.value = _state.value.copy(
+                    currentPasswordError = true,
+                    passwordsNotSameError = false,
+                    loading = false
+                )
             }
         }
     }
@@ -62,9 +67,15 @@ class ChangePasswordViewModel(
         viewModelScope.launch(exceptionHandler) {
             val enteredUser = _enteredUser.value ?: return@launch
             _state.value = _state.value.copy(loading = true)
-            changePasswordUseCase.execute(enteredUser.id, currentPassword, newPassword, repeatNewPassword)
-            _state.value = _state.value.copy(currentPasswordError = false, passwordsNotSameError = false)
-            _events.trySend(ChangePasswordEvent.PasswordWasChanged)
+            changePasswordUseCase.execute(
+                enteredUser.id,
+                currentPassword,
+                newPassword,
+                repeatNewPassword
+            )
+            _state.value =
+                _state.value.copy(currentPasswordError = false, passwordsNotSameError = false)
+            _events.trySend(ChangePasswordEvent.SendMessage("Password was changed"))
         }
     }
 

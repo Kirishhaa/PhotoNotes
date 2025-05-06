@@ -5,10 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.kirishhaa.photonotes.domain.feedback.FeedbackEvent
-import com.kirishhaa.photonotes.domain.feedback.FeedbackRepository
 import com.kirishhaa.photonotes.domain.feedback.SendFeedbackUseCase
 import com.kirishhaa.photonotes.domain.users.GetEnteredUserUseCase
-import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
 import com.kirishhaa.photonotes.toApp
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +19,7 @@ class FeedbackViewModel(
     private val getEnteredUserUseCase: GetEnteredUserUseCase,
     private val sendFeedbackUseCase: SendFeedbackUseCase,
     private val localUserMapper: LocalUserMapper,
-): ViewModel() {
+) : ViewModel() {
 
     private val _events = Channel<FeedbackEvent>()
     val events = _events.receiveAsFlow()

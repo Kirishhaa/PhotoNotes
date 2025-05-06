@@ -26,7 +26,7 @@ class MarkersRepositoryImpl(
     private val locationRepository: LocationRepository,
     private val markerEntityMapper: MarkerEntityMapper,
     private val folderEntityMapper: FolderEntityMapper
-): MarkersRepository {
+) : MarkersRepository {
 
     override fun getMarkerById(userId: Int, markerId: Int): Flow<Marker?> {
         return combine(
@@ -34,7 +34,7 @@ class MarkersRepositoryImpl(
             markerDao.getMarkerLocation(markerId),
             markerDao.getMarkerTags(markerId)
         ) { markerEntity, markerLocationEntity, markerTagsEntity ->
-            if(markerEntity == null || markerLocationEntity == null) return@combine null
+            if (markerEntity == null || markerLocationEntity == null) return@combine null
             else markerEntityMapper.map(markerEntity, markerLocationEntity, markerTagsEntity)
         }.flowOn(Dispatchers.IO)
     }
@@ -44,7 +44,7 @@ class MarkersRepositoryImpl(
     override suspend fun createMarker(
         userId: Int,
         filePath: String
-    ) = withContext(Dispatchers.IO) {
+    ): Unit = withContext(Dispatchers.IO) {
         coroutineTryCatcher(
             tryBlock = {
                 val markerEntity = MarkerEntity(
@@ -57,7 +57,8 @@ class MarkersRepositoryImpl(
                     description = null
                 )
                 markerDao.insertMarker(markerEntity)
-                val entity = markerDao.getMarkerByFilePath(userId, filePath) ?: throw ReadWriteException()
+                val entity =
+                    markerDao.getMarkerByFilePath(userId, filePath) ?: throw ReadWriteException()
                 val markerId = entity.id
                 val location = locationRepository.getCurrentLocation() ?: DomainLocation.NONE
                 val locationEntity = LocationEntity(
@@ -68,27 +69,29 @@ class MarkersRepositoryImpl(
                     town = location.town
                 )
                 markerDao.insertLocation(locationEntity)
-                       },
+            },
             catchBlock = { throw ReadWriteException() }
         )
     }
 
     //throws
     //MarkerNotFoundException
-    override suspend fun getMarkerIdByFilePath(userId: Int, filePath: String): Int = withContext(Dispatchers.IO) {
-        coroutineTryCatcher(
-            tryBlock = {
-               markerDao.getMarkerByFilePath(userId, filePath)?.id ?: throw MarkerNotFoundException()
-            },
-            catchBlock = { throwable ->
-                if(throwable !is MarkerNotFoundException) {
-                    throw ReadWriteException()
-                } else {
-                    throw throwable
+    override suspend fun getMarkerIdByFilePath(userId: Int, filePath: String): Int =
+        withContext(Dispatchers.IO) {
+            coroutineTryCatcher(
+                tryBlock = {
+                    markerDao.getMarkerByFilePath(userId, filePath)?.id
+                        ?: throw MarkerNotFoundException()
+                },
+                catchBlock = { throwable ->
+                    if (throwable !is MarkerNotFoundException) {
+                        throw ReadWriteException()
+                    } else {
+                        throw throwable
+                    }
                 }
-            }
-        )
-    }
+            )
+        }
 
     override fun getAllFoldersByUserId(userId: Int): Flow<List<Folder>> {
         return markerDao.getUserFolders(userId).map { foldersEntity ->
@@ -131,7 +134,13 @@ class MarkersRepositoryImpl(
         coroutineTryCatcher(
             tryBlock = {
                 val markerEntity = markerEntityMapper.map(marker)
-                val markerTagsEntity = marker.tags.map { tag -> MarkerTagEntity(markerEntity.id, tag.name, marker.userId) }
+                val markerTagsEntity = marker.tags.map { tag ->
+                    MarkerTagEntity(
+                        markerEntity.id,
+                        tag.name,
+                        marker.userId
+                    )
+                }
                 markerDao.updateMarkerAndSetTags(markerEntity, markerTagsEntity)
             },
             catchBlock = {
@@ -143,38 +152,42 @@ class MarkersRepositoryImpl(
     //throws
     //MarkerNotFoundException
     //ReadWriteException
-    override suspend fun removeMarkerById(markerId: Int, userId: Int) = withContext(Dispatchers.IO) {
-        coroutineTryCatcher(
-            tryBlock = {
-                val markerEntity = markerDao.getMarkerById(userId, markerId).first() ?: throw MarkerNotFoundException()
-                markerDao.deleteMarker(markerEntity)
-            },
-            catchBlock = { throwable ->
-                if(throwable !is MarkerNotFoundException) {
-                    throw ReadWriteException()
-                } else {
-                    throw throwable
+    override suspend fun removeMarkerById(markerId: Int, userId: Int) =
+        withContext(Dispatchers.IO) {
+            coroutineTryCatcher(
+                tryBlock = {
+                    val markerEntity = markerDao.getMarkerById(userId, markerId).first()
+                        ?: throw MarkerNotFoundException()
+                    markerDao.deleteMarker(markerEntity)
+                },
+                catchBlock = { throwable ->
+                    if (throwable !is MarkerNotFoundException) {
+                        throw ReadWriteException()
+                    } else {
+                        throw throwable
+                    }
                 }
-            }
-        )
-    }
+            )
+        }
 
-    override suspend fun selectFolder(markerId: Int, userId: Int, folderName: String?) = withContext(Dispatchers.IO) {
-        coroutineTryCatcher(
-            tryBlock = {
-                val markerEntity = markerDao.getMarkerById(userId, markerId).first() ?: throw MarkerNotFoundException()
-                val newMarkerEntity = markerEntity.copy(folderName = folderName)
-                markerDao.updateMarker(newMarkerEntity)
-            },
-            catchBlock = { throwable ->
-                if(throwable !is MarkerNotFoundException) {
-                    throw ReadWriteException()
-                } else {
-                    throw throwable
+    override suspend fun selectFolder(markerId: Int, userId: Int, folderName: String?) =
+        withContext(Dispatchers.IO) {
+            coroutineTryCatcher(
+                tryBlock = {
+                    val markerEntity = markerDao.getMarkerById(userId, markerId).first()
+                        ?: throw MarkerNotFoundException()
+                    val newMarkerEntity = markerEntity.copy(folderName = folderName)
+                    markerDao.updateMarker(newMarkerEntity)
+                },
+                catchBlock = { throwable ->
+                    if (throwable !is MarkerNotFoundException) {
+                        throw ReadWriteException()
+                    } else {
+                        throw throwable
+                    }
                 }
-            }
-        )
-    }
+            )
+        }
 
     override suspend fun removeFolder(folder: Folder) = withContext(Dispatchers.IO) {
         coroutineTryCatcher(

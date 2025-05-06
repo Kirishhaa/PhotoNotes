@@ -1,23 +1,13 @@
 package com.kirishhaa.photonotes.presentation.home.camerascreen
 
-import android.app.Application
-import android.content.Context
-import android.location.LocationManager
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.kirishhaa.photonotes.SingleEvent
+import com.kirishhaa.photonotes.domain.markers.CreateMarkerUseCase
 import com.kirishhaa.photonotes.domain.permissions.DecreasePermissionCountUseCase
-import com.kirishhaa.photonotes.domain.DomainLocation
 import com.kirishhaa.photonotes.domain.permissions.GetPermissionCountUseCase
-import com.kirishhaa.photonotes.domain.markers.ImageCapturedUseCase
-import com.kirishhaa.photonotes.domain.markers.MarkersRepository
-import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
-import com.kirishhaa.photonotes.domain.location.LocationRepository
-import com.kirishhaa.photonotes.domain.permissions.PermissionsRepository
 import com.kirishhaa.photonotes.toApp
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.Flow
@@ -27,10 +17,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class CameraViewModel(
-    private val imageCapturedUseCase: ImageCapturedUseCase,
+    private val createMarkerUseCase: CreateMarkerUseCase,
     private val decreasePermissionCountUseCase: DecreasePermissionCountUseCase,
     private val getPermissionCountUseCase: GetPermissionCountUseCase
-): ViewModel() {
+) : ViewModel() {
 
     private val _events = MutableSharedFlow<SingleEvent<CameraEvent>>(replay = 1)
     val events: Flow<SingleEvent<CameraEvent>> = _events
@@ -44,8 +34,10 @@ class CameraViewModel(
 
     init {
         viewModelScope.launch {
-            val cameraRequestPermissionCount = getPermissionCountUseCase.execute(android.Manifest.permission.CAMERA)
-            val locationRequestPermissionCount = getPermissionCountUseCase.execute(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+            val cameraRequestPermissionCount =
+                getPermissionCountUseCase.execute(android.Manifest.permission.CAMERA)
+            val locationRequestPermissionCount =
+                getPermissionCountUseCase.execute(android.Manifest.permission.ACCESS_COARSE_LOCATION)
             _state.value = CameraState(
                 loadingState = false,
                 creatingNewMarker = false,
@@ -59,11 +51,11 @@ class CameraViewModel(
         viewModelScope.launch {
             decreasePermissionCountUseCase.execute(name)
             val count = getPermissionCountUseCase.execute(name)
-            if(name == android.Manifest.permission.CAMERA) {
+            if (name == android.Manifest.permission.CAMERA) {
                 _state.value = _state.value.copy(
                     requestCameraPermissionCount = count
                 )
-            } else if(name == android.Manifest.permission.ACCESS_COARSE_LOCATION) {
+            } else if (name == android.Manifest.permission.ACCESS_COARSE_LOCATION) {
                 _state.value = _state.value.copy(
                     requestLocationPermissionCount = count
                 )
@@ -74,7 +66,7 @@ class CameraViewModel(
     fun onImageCaptured(filePath: String) {
         viewModelScope.launch(exceptionHandler) {
             _state.value = CameraState(true)
-            val markerId = imageCapturedUseCase.execute(filePath)
+            val markerId = createMarkerUseCase.execute(filePath)
             _events.emit(SingleEvent(CameraEvent.OnNewImageCaptured(markerId)))
             _state.value = CameraState(false)
         }
@@ -87,7 +79,7 @@ class CameraViewModel(
                 val repoUsers = app.localUsersRepository
                 val permsRepo = app.permissionsRepository
                 val repoImages = app.markersRepository
-                val usecase = ImageCapturedUseCase(repoUsers, repoImages)
+                val usecase = CreateMarkerUseCase(repoUsers, repoImages)
                 val decreaseUseCase = DecreasePermissionCountUseCase(permsRepo)
                 val getNumUseCase = GetPermissionCountUseCase(permsRepo)
                 return CameraViewModel(usecase, decreaseUseCase, getNumUseCase) as T

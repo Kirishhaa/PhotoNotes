@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kirishhaa.photonotes.R
 import com.kirishhaa.photonotes.clickeffects.pulsateClick
-import com.kirishhaa.photonotes.domain.Language
 
 @Composable
 fun LanguageDialog(
@@ -36,7 +35,8 @@ fun LanguageDialog(
     Column(
         modifier = Modifier
             .width(300.dp)
-            .height(250.dp).then(modifier)
+            .height(250.dp)
+            .then(modifier)
             .clip(RoundedCornerShape(20.dp))
             .background(Brush.horizontalGradient(colors = listOf(Color.Gray, Color.Green))),
         verticalArrangement = Arrangement.SpaceAround,
@@ -44,13 +44,21 @@ fun LanguageDialog(
     ) {
         when {
             state.loading -> CircularProgressIndicator()
-            else -> LanguageDialogLoaded(state.requireLanguage(), onPreviousLanguage, onNextLanguage)
+            else -> LanguageDialogLoaded(
+                state.requireLanguage(),
+                onPreviousLanguage,
+                onNextLanguage
+            )
         }
     }
 }
 
 @Composable
-private fun LanguageDialogLoaded(language: LanguageUI, onPreviousLanguage: () -> Unit, onNextLanguage: () -> Unit) {
+private fun LanguageDialogLoaded(
+    language: LanguageUI,
+    onPreviousLanguage: () -> Unit,
+    onNextLanguage: () -> Unit
+) {
     Text(language.getAsStringResource(), fontSize = 16.sp)
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -60,14 +68,16 @@ private fun LanguageDialogLoaded(language: LanguageUI, onPreviousLanguage: () ->
         Image(
             imageVector = ImageVector.vectorResource(R.drawable.prev_arrow),
             contentDescription = null,
-            modifier = Modifier.size(48.dp)
+            modifier = Modifier
+                .size(48.dp)
                 .pulsateClick(clickable = true, onClick = onPreviousLanguage)
         )
 
         Image(
             imageVector = ImageVector.vectorResource(R.drawable.next_arrow),
             contentDescription = null,
-            modifier = Modifier.size(48.dp)
+            modifier = Modifier
+                .size(48.dp)
                 .pulsateClick(clickable = true, onClick = onNextLanguage)
         )
     }

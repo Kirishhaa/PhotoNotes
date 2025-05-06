@@ -1,4 +1,3 @@
 package com.kirishhaa.photonotes.domain.exceptions
 
-class TooLargeMarkerTagLengthException: Exception() {
-}
+class TooLargeMarkerTagLengthException : Exception()

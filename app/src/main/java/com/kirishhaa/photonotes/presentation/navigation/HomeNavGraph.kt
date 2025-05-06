@@ -38,21 +38,36 @@ private fun HomeNavGraph(navController: NavHostController, paddingValues: Paddin
             FoldersScreen(
                 onCloseApp = { activity?.finish() },
                 toMarkerDetails = { markerId ->
-                    navController.navigate(MarkerDetailScr.MarkerDetail.route.replace("{markerId}", markerId.toString()))
+                    navController.navigate(
+                        MarkerDetailScr.MarkerDetail.route.replace(
+                            "{markerId}",
+                            markerId.toString()
+                        )
+                    )
                 }
             )
         }
         composable(route = BottomNavigationScreen.Camera.route) {
             CameraScreen(
                 onNewImageCaptured = { markerId ->
-                    navController.navigate(MarkerDetailScr.MarkerDetail.route.replace("{markerId}", markerId.toString()))
+                    navController.navigate(
+                        MarkerDetailScr.MarkerDetail.route.replace(
+                            "{markerId}",
+                            markerId.toString()
+                        )
+                    )
                 }
             )
         }
         composable(route = BottomNavigationScreen.GoogleMap.route) {
             GoogleMapScreen(
                 onMarkerClicked = { markerId ->
-                    navController.navigate(MarkerDetailScr.MarkerDetail.route.replace("{markerId}", markerId.toString()))
+                    navController.navigate(
+                        MarkerDetailScr.MarkerDetail.route.replace(
+                            "{markerId}",
+                            markerId.toString()
+                        )
+                    )
                 }
             )
         }

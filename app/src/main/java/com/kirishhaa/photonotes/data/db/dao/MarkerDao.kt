@@ -25,7 +25,10 @@ interface MarkerDao {
     suspend fun getMarkerByFilePath(userId: Int, filePath: String): MarkerEntity?
 
     @Transaction
-    suspend fun updateMarkerAndSetTags(markerEntity: MarkerEntity, markerTagsEntity: List<MarkerTagEntity>) {
+    suspend fun updateMarkerAndSetTags(
+        markerEntity: MarkerEntity,
+        markerTagsEntity: List<MarkerTagEntity>
+    ) {
         clearAndInsertTags(markerEntity.id, markerTagsEntity)
         updateMarker(markerEntity)
     }

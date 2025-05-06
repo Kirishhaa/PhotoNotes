@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,7 +31,10 @@ fun RemoveTagDialog(
     onRemove: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxSize().alpha(0.3f).background(Color.Black))
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .alpha(0.3f)
+        .background(Color.Black))
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(
             modifier = Modifier
@@ -40,7 +42,8 @@ fun RemoveTagDialog(
                 .clip(RoundedCornerShape(20.dp))
                 .background(
                     Brush.horizontalGradient(colors = listOf(Color.Red, Color.Green))
-                ).padding(10.dp),
+                )
+                .padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(

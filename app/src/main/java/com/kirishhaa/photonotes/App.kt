@@ -26,7 +26,7 @@ import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
 
 fun CreationExtras.toApp() = this[APPLICATION_KEY] as App
 
-class App: Application() {
+class App : Application() {
 
     private val locationManager get() = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
@@ -47,8 +47,7 @@ class App: Application() {
             passwordValidator = PasswordValidator(),
             loginValidator = LoginValidator(),
             usernameValidator = UsernameValidator(),
-            localUserEntityMapper = LocalUserEntityMapper(),
-            markerDao = db.markerDao()
+            localUserEntityMapper = LocalUserEntityMapper()
         )
     }
 

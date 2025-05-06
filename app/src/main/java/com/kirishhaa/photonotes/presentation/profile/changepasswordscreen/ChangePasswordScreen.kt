@@ -25,9 +25,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.kirishhaa.photonotes.presentation.profile.changeemailscreen.ChangeEmailEvents
-import com.kirishhaa.photonotes.presentation.profile.changeemailscreen.ChangeEmailScreen
-import com.kirishhaa.photonotes.presentation.profile.changeemailscreen.ChangeEmailViewModel
 
 @Composable
 fun ChangePasswordScreen() {
@@ -36,19 +33,20 @@ fun ChangePasswordScreen() {
     val context = LocalContext.current
     LaunchedEffect(0) {
         viewmodel.events.collect { event ->
-            when(event) {
-                ChangePasswordEvent.PasswordWasChanged -> {
-                    Toast.makeText(context, "Data was changed", Toast.LENGTH_SHORT).show()
+            when (event) {
+                is ChangePasswordEvent.SendMessage -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
-    when(state.loading) {
+    when (state.loading) {
         true -> {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
         }
+
         false -> {
             ChangePasswordScreen(state, viewmodel::onChange)
         }
@@ -56,7 +54,10 @@ fun ChangePasswordScreen() {
 }
 
 @Composable
-private fun ChangePasswordScreen(state: ChangePasswordState, onChange: (String, String, String) -> Unit) {
+private fun ChangePasswordScreen(
+    state: ChangePasswordState,
+    onChange: (String, String, String) -> Unit
+) {
     var currentPasswordValue by remember {
         mutableStateOf("")
     }

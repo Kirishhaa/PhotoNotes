@@ -19,7 +19,7 @@ fun HomeBottomBar(navController: NavHostController) {
     val backStackState by navController.currentBackStackEntryAsState()
     val currentDestination = backStackState?.destination
     val isBottomBarDestination = screens.any { it.route == currentDestination?.route }
-    if(isBottomBarDestination) {
+    if (isBottomBarDestination) {
         NavigationBar {
             screens.forEach { screen ->
                 AddScreen(
@@ -33,7 +33,11 @@ fun HomeBottomBar(navController: NavHostController) {
 }
 
 @Composable
-private fun RowScope.AddScreen(screen: BottomNavigationScreen, currentDestination: NavDestination?, navController: NavHostController) {
+private fun RowScope.AddScreen(
+    screen: BottomNavigationScreen,
+    currentDestination: NavDestination?,
+    navController: NavHostController
+) {
     NavigationBarItem(
         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
         onClick = {

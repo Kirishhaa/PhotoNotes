@@ -8,7 +8,7 @@ class SingleEvent<T>(
 
     fun getValue(): T? {
         val v = currentValue
-        if(v != null) {
+        if (v != null) {
             currentValue = null
             return v
         }

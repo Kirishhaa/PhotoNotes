@@ -6,14 +6,14 @@ import androidx.core.content.FileProvider
 import com.kirishhaa.photonotes.R
 import java.io.File
 
-class ComposeFileProvider: FileProvider(R.xml.paths) {
+class ComposeFileProvider : FileProvider(R.xml.paths) {
 
     companion object {
-        fun getImageUri(context: Context) : Uri {
+        fun getImageUri(context: Context): Uri {
             val directory = File(context.filesDir, "images")
             directory.mkdirs()
             val file = File.createTempFile(
-                "image_"+System.currentTimeMillis().toString(),
+                "image_" + System.currentTimeMillis().toString(),
                 ".jpg",
                 directory
             )

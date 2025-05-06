@@ -17,7 +17,7 @@ import com.kirishhaa.photonotes.data.db.entity.MarkerTagEntity
     version = 1
 )
 @TypeConverters(RoomTypeConverters::class)
-abstract class AppDatabase: RoomDatabase() {
+abstract class AppDatabase : RoomDatabase() {
 
     abstract fun localUsersDao(): LocalUsersDao
 

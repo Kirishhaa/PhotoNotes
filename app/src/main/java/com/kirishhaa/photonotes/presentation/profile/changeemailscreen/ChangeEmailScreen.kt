@@ -1,7 +1,6 @@
 package com.kirishhaa.photonotes.presentation.profile.changeemailscreen
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -34,20 +33,21 @@ fun ChangeEmailScreen() {
     val context = LocalContext.current
     LaunchedEffect(0) {
         viewmodel.events.collect { event ->
-            when(event) {
-                ChangeEmailEvents.DataWasChanged -> {
-                    Toast.makeText(context, "Data was changed", Toast.LENGTH_SHORT).show()
+            when (event) {
+                is ChangeEmailEvents.SendMessage -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
-    when(state.loading) {
+    when (state.loading) {
         true -> {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
         }
+
         false -> {
             ChangeEmailScreen(state, viewmodel::onChange)
         }

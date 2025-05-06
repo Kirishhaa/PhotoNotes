@@ -4,6 +4,6 @@ sealed class AuthScreen(
     val route: String
 ) {
 
-    data object LoginScreen: AuthScreen(route = "LOGIN_SCREEN")
+    data object LoginScreen : AuthScreen(route = "LOGIN_SCREEN")
 
 }

@@ -1,6 +1,5 @@
 package com.kirishhaa.photonotes.presentation.home.foldersscreen
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
@@ -78,7 +77,7 @@ private fun FoldersScreen(
             key = { it.id.toString() + it.name + it.imagePath }) { marker ->
             MarkerView(marker, onMarkerClicked)
         }
-        if(state.inFolder) {
+        if (state.inFolder) {
             item {
                 Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     Button(

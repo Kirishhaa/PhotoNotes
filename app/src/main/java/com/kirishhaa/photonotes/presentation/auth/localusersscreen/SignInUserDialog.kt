@@ -2,11 +2,9 @@ package com.kirishhaa.photonotes.presentation.auth.localusersscreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -28,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -52,7 +49,9 @@ fun SignInUserDialog(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier.width(300.dp).height(400.dp)
+        modifier = Modifier
+            .width(300.dp)
+            .height(400.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(Brush.horizontalGradient(colors = listOf(Color.Cyan, Color.Green)))
             .verticalScroll(rememberScrollState())
@@ -71,23 +70,35 @@ fun SignInUserDialog(
             )
 
             Column(
-                modifier = Modifier.height(260.dp).width(140.dp),
+                modifier = Modifier
+                    .height(260.dp)
+                    .width(140.dp),
                 verticalArrangement = Arrangement.SpaceAround,
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(stateUI.chosenUser.username, fontSize = 24.sp)
-                TextFieldInfo("Login", error = stateUI.errorLogin, value = loginValue, onValueChanged = {
-                    val valid = loginValue.length < 10
-                    if(valid) loginValue = it
-                })
-                TextFieldInfo("Password", error = stateUI.errorPassword, value = passwordValue, onValueChanged = {
-                    val valid = passwordValue.length < 10
-                    if(valid) passwordValue = it
-                })
+                TextFieldInfo(
+                    "Login",
+                    error = stateUI.errorLogin,
+                    value = loginValue,
+                    onValueChanged = {
+                        val valid = loginValue.length < 10
+                        if (valid) loginValue = it
+                    })
+                TextFieldInfo(
+                    "Password",
+                    error = stateUI.errorPassword,
+                    value = passwordValue,
+                    onValueChanged = {
+                        val valid = passwordValue.length < 10
+                        if (valid) passwordValue = it
+                    })
             }
         }
         Row(
-            modifier = Modifier.fillMaxWidth().height(30.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(30.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
@@ -100,7 +111,7 @@ fun SignInUserDialog(
             )
         }
 
-        if(stateUI.loading) {
+        if (stateUI.loading) {
             CircularProgressIndicator()
         } else {
             Row(

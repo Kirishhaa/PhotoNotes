@@ -21,9 +21,11 @@ import com.kirishhaa.photonotes.R
 @Preview
 @Composable
 fun EditButton(modifier: Modifier = Modifier) {
-    Box(modifier = modifier.size(48.dp)
-        .clip(CircleShape)
-        .background(brush = Brush.horizontalGradient(colors = listOf(Color.Red, Color.Blue)))
+    Box(
+        modifier = modifier
+            .size(48.dp)
+            .clip(CircleShape)
+            .background(brush = Brush.horizontalGradient(colors = listOf(Color.Red, Color.Blue)))
     ) {
         Image(
             imageVector = ImageVector.vectorResource(R.drawable.edit_vector),

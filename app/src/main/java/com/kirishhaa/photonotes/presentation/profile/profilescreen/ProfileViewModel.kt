@@ -7,7 +7,6 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.kirishhaa.photonotes.domain.LocalUser
 import com.kirishhaa.photonotes.domain.users.DeleteProfileUseCase
 import com.kirishhaa.photonotes.domain.users.GetEnteredUserUseCase
-import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
 import com.kirishhaa.photonotes.domain.users.LogOutUseCase
 import com.kirishhaa.photonotes.toApp
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -22,7 +21,7 @@ class ProfileViewModel(
     private val getEnteredUserUseCase: GetEnteredUserUseCase,
     private val deleteProfileUseCase: DeleteProfileUseCase,
     private val logOutUseCase: LogOutUseCase
-): ViewModel() {
+) : ViewModel() {
 
     private val _events = Channel<ProfileEvent>()
     val events = _events.receiveAsFlow()

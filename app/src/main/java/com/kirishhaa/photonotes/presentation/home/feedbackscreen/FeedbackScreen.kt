@@ -28,7 +28,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.kirishhaa.photonotes.domain.LocalUser
 import com.kirishhaa.photonotes.domain.feedback.FeedbackEvent
 
 @Composable
@@ -38,7 +37,7 @@ fun FeedbackScreen() {
     val context = LocalContext.current
     LaunchedEffect(0) {
         viewmodel.events.collect { event ->
-            when(event) {
+            when (event) {
                 FeedbackEvent.SentMessage -> {
                     Toast.makeText(context, "Your question was sent", Toast.LENGTH_SHORT).show()
                 }
@@ -46,9 +45,13 @@ fun FeedbackScreen() {
         }
     }
 
-    when(state.loadingState) {
+    when (state.loadingState) {
         true -> LoadingScreen()
-        false -> FeedbackUserScreen(user = state.requireLocalUser(), sendingFeedback = state.sendingFeedback, onSend = viewmodel::send)
+        false -> FeedbackUserScreen(
+            user = state.requireLocalUser(),
+            sendingFeedback = state.sendingFeedback,
+            onSend = viewmodel::send
+        )
     }
 }
 
@@ -63,7 +66,11 @@ private fun LoadingScreen() {
 }
 
 @Composable
-private fun FeedbackUserScreen(user: LocalUserUI, sendingFeedback: Boolean, onSend: (String, String, String) -> Unit) {
+private fun FeedbackUserScreen(
+    user: LocalUserUI,
+    sendingFeedback: Boolean,
+    onSend: (String, String, String) -> Unit
+) {
 
     var usernameValue by remember {
         mutableStateOf(user.name)
@@ -78,7 +85,10 @@ private fun FeedbackUserScreen(user: LocalUserUI, sendingFeedback: Boolean, onSe
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -97,7 +107,9 @@ private fun FeedbackUserScreen(user: LocalUserUI, sendingFeedback: Boolean, onSe
         OutlinedTextField(
             value = questionValue,
             onValueChange = { questionValue = it },
-            modifier = Modifier.width(300.dp).height(500.dp)
+            modifier = Modifier
+                .width(300.dp)
+                .height(500.dp)
         )
         Spacer(Modifier.height(12.dp))
         Text("Way to feedback")

@@ -14,25 +14,25 @@ sealed class BottomNavigationScreen(
     val icon: ImageVector
 ) {
 
-    data object Folders: BottomNavigationScreen(
+    data object Folders : BottomNavigationScreen(
         route = "FOLDERS_SCREEN",
         title = "Folders",
         icon = Icons.Default.Menu
     )
 
-    data object Camera: BottomNavigationScreen(
+    data object Camera : BottomNavigationScreen(
         route = "CAMERA_SCREEN",
         title = "Camera",
         icon = Icons.Default.Add
     )
 
-    data object GoogleMap: BottomNavigationScreen(
+    data object GoogleMap : BottomNavigationScreen(
         route = "GOOGLE_MAP_SCREEN",
         title = "GoogleMap",
         icon = Icons.Default.LocationOn
     )
 
-    data object Feedback: BottomNavigationScreen(
+    data object Feedback : BottomNavigationScreen(
         route = "FEEDBACK_SCREEN",
         title = "Feedback",
         icon = Icons.Default.Email

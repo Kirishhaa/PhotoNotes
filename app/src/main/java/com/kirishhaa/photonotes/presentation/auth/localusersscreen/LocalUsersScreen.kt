@@ -22,13 +22,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.kirishhaa.photonotes.presentation.EditButton
 import com.kirishhaa.photonotes.clickeffects.pulsateClick
+import com.kirishhaa.photonotes.presentation.EditButton
 
 
 @Composable
-fun LocalUsersScreen(viewModel: LocalUsersViewModel = viewModel(factory = LocalUsersViewModel.Factory),
-                     toHomeScreen: () -> Unit) {
+fun LocalUsersScreen(
+    viewModel: LocalUsersViewModel = viewModel(factory = LocalUsersViewModel.Factory),
+    toHomeScreen: () -> Unit
+) {
     val state by viewModel.state.collectAsState()
     val signInState = state.signInDialogState
     val signUpState = state.signUpDialogState
@@ -36,21 +38,25 @@ fun LocalUsersScreen(viewModel: LocalUsersViewModel = viewModel(factory = LocalU
     val context = LocalContext.current
     LaunchedEffect(0) {
         viewModel.events.collect { event ->
-            when(event.getValue()) {
+            when (event.getValue()) {
                 LocalUsersEvent.WrongPasswordException -> {
                     Toast.makeText(context, "Wrong password", Toast.LENGTH_SHORT).show()
                 }
+
                 LocalUsersEvent.WrongLoginException -> {
                     Toast.makeText(context, "Wrong login", Toast.LENGTH_SHORT).show()
                 }
+
                 LocalUsersEvent.WrongUsernameException -> {
                     Toast.makeText(context, "Wrong username", Toast.LENGTH_SHORT).show()
                 }
+
                 LocalUsersEvent.EnteredUserExist -> toHomeScreen()
 
                 LocalUsersEvent.CloseApp -> {
                     (context as? Activity)?.finish()
                 }
+
                 null -> {}
             }
         }
@@ -73,7 +79,7 @@ fun LocalUsersScreen(viewModel: LocalUsersViewModel = viewModel(factory = LocalU
             )
         }
 
-        if(signInState != null) {
+        if (signInState != null) {
             SignInUserDialog(
                 stateUI = signInState,
                 onSignIn = viewModel::onSignIn,
@@ -81,21 +87,30 @@ fun LocalUsersScreen(viewModel: LocalUsersViewModel = viewModel(factory = LocalU
             )
         }
 
-        if(signUpState != null) {
-            SignUpUserDialog(state = signUpState, onSignUp = viewModel::onSignUp, onDismiss = viewModel::hideSignUpDialog)
+        if (signUpState != null) {
+            SignUpUserDialog(
+                state = signUpState,
+                onSignUp = viewModel::onSignUp,
+                onDismiss = viewModel::hideSignUpDialog
+            )
         }
 
     }
 }
 
 @Composable
-private fun BoxScope.LocalUsersScreen(state: LocalUsersScreenStateUI, clickable: Boolean, onUserClick: (LocalUserUI) -> Unit, onEdit: () -> Unit) {
+private fun BoxScope.LocalUsersScreen(
+    state: LocalUsersScreenStateUI,
+    clickable: Boolean,
+    onUserClick: (LocalUserUI) -> Unit,
+    onEdit: () -> Unit
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(state.users ?: emptyList()) { user ->
-            LocalUserView(localUser = user, clickable = clickable, onClick = {  onUserClick(user) })
+            LocalUserView(localUser = user, clickable = clickable, onClick = { onUserClick(user) })
         }
     }
     Column(
@@ -104,7 +119,8 @@ private fun BoxScope.LocalUsersScreen(state: LocalUsersScreenStateUI, clickable:
         modifier = Modifier
             .width(48.dp)
             .height(60.dp)
-            .align(Alignment.BottomCenter)) {
+            .align(Alignment.BottomCenter)
+    ) {
         EditButton(
             modifier = Modifier.pulsateClick(clickable = clickable, onClick = onEdit)
         )

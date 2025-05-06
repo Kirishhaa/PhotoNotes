@@ -1,16 +1,17 @@
 package com.kirishhaa.photonotes.data.repos.permissions
 
 import android.content.Context
-import com.kirishhaa.photonotes.domain.permissions.PermissionsRepository
 import androidx.core.content.edit
+import com.kirishhaa.photonotes.domain.permissions.PermissionsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class PermissionsRepositoryImpl(
     appContext: Context
-): PermissionsRepository {
+) : PermissionsRepository {
 
-    private val preferences = appContext.getSharedPreferences("PermissionsStorage", Context.MODE_PRIVATE)
+    private val preferences =
+        appContext.getSharedPreferences("PermissionsStorage", Context.MODE_PRIVATE)
 
     override suspend fun decreasePermissionsCount(name: String) = withContext(Dispatchers.IO) {
         val permCount = getPermissionsCount(name)

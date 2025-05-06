@@ -14,15 +14,15 @@ import androidx.room.PrimaryKey
             childColumns = ["user_id"],
             onDelete = ForeignKey.CASCADE
         ),
-    ForeignKey(
-        entity = FolderEntity::class,
-        parentColumns = ["name"],
-        childColumns = ["folder_name"],
-        onDelete = ForeignKey.CASCADE,
-    )
+        ForeignKey(
+            entity = FolderEntity::class,
+            parentColumns = ["name"],
+            childColumns = ["folder_name"],
+            onDelete = ForeignKey.CASCADE,
+        )
     ]
 )
-data class MarkerEntity (
+data class MarkerEntity(
     @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo("user_id") val userId: Int,
     @ColumnInfo("folder_name") val folderName: String?,

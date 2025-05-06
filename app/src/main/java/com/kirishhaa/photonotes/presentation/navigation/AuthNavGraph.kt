@@ -13,10 +13,12 @@ fun NavGraphBuilder.AuthNavGraph(navController: NavController) {
     ) {
         composable(route = AuthScreen.LoginScreen.route) {
             LocalUsersScreen(
-                toHomeScreen = { navController.navigate(GraphRoute.HOME) {
-                    popUpTo(GraphRoute.HOME) { inclusive = true }
-                    launchSingleTop = true
-                } }
+                toHomeScreen = {
+                    navController.navigate(GraphRoute.HOME) {
+                        popUpTo(GraphRoute.HOME) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
             )
         }
     }

@@ -1,3 +1,3 @@
 package com.kirishhaa.photonotes.domain.exceptions
 
-class EnteredUserNotExistException: Exception()
+class EnteredUserNotExistException : Exception()

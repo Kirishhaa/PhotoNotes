@@ -4,21 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.kirishhaa.photonotes.domain.Folder
-import com.kirishhaa.photonotes.domain.Marker
 import com.kirishhaa.photonotes.domain.exceptions.CurrentTagExistException
 import com.kirishhaa.photonotes.domain.exceptions.EmptyMarkerTagException
 import com.kirishhaa.photonotes.domain.exceptions.TooLargeMarkerTagLengthException
 import com.kirishhaa.photonotes.domain.markers.GetAllFoldersUseCase
 import com.kirishhaa.photonotes.domain.markers.GetMarkerByIdUseCase
-import com.kirishhaa.photonotes.domain.markers.MarkersRepository
 import com.kirishhaa.photonotes.domain.markers.RemoveMarkerByIdUseCase
 import com.kirishhaa.photonotes.domain.markers.SelectFolderUseCase
 import com.kirishhaa.photonotes.domain.markers.UpdateMarkerUseCase
 import com.kirishhaa.photonotes.domain.tag.RemoveTagUseCase
 import com.kirishhaa.photonotes.domain.tag.ValidateMarkerTagUseCase
 import com.kirishhaa.photonotes.domain.users.GetEnteredUserUseCase
-import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
 import com.kirishhaa.photonotes.toApp
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
@@ -41,19 +37,21 @@ class MarkerDetailViewModel(
     private val removeMarkerByIdUseCase: RemoveMarkerByIdUseCase,
     private val selectFolderUseCase: SelectFolderUseCase,
     private val markerMapper: MarkerMapper
-): ViewModel() {
+) : ViewModel() {
 
     private val _events = Channel<MarkerDetailEvent>()
     val events = _events.receiveAsFlow()
 
     private val tagExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        when(throwable) {
+        when (throwable) {
             is TooLargeMarkerTagLengthException -> {
                 _events.trySend(MarkerDetailEvent.ShowMessage("Tag length must be <= 10"))
             }
+
             is EmptyMarkerTagException -> {
                 _events.trySend(MarkerDetailEvent.ShowMessage("Tag cannot be empty"))
             }
+
             is CurrentTagExistException -> {
                 _events.trySend(MarkerDetailEvent.ShowMessage("Current tag is exist"))
             }
@@ -122,7 +120,12 @@ class MarkerDetailViewModel(
         _state.value = _state.value.copy(editing = edit)
     }
 
-    fun onSave(markerName: String, markerCountry: String, markerTown: String, markerDescription: String) {
+    fun onSave(
+        markerName: String,
+        markerCountry: String,
+        markerTown: String,
+        markerDescription: String
+    ) {
         viewModelScope.launch {
             val markerUI = _state.value.marker ?: return@launch
             val newMarker = markerUI.copy(
@@ -172,7 +175,18 @@ class MarkerDetailViewModel(
                 val getAllFoldersUseCase = GetAllFoldersUseCase(app.markersRepository)
                 val selectFolderUseCase = SelectFolderUseCase(app.markersRepository)
                 val mapper = MarkerMapper()
-                return MarkerDetailViewModel(markerId, getMarker, enteredUser, validateTag, getAllFoldersUseCase, removeTag, updateMarkerUseCase, removeMarkerUseCase, selectFolderUseCase, mapper) as T
+                return MarkerDetailViewModel(
+                    markerId,
+                    getMarker,
+                    enteredUser,
+                    validateTag,
+                    getAllFoldersUseCase,
+                    removeTag,
+                    updateMarkerUseCase,
+                    removeMarkerUseCase,
+                    selectFolderUseCase,
+                    mapper
+                ) as T
             }
         }
     }

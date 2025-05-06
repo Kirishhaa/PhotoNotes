@@ -1,7 +1,5 @@
 package com.kirishhaa.photonotes.domain.markers
 
-import com.kirishhaa.photonotes.domain.Folder
-
 class SelectFolderUseCase(
     private val markersRepository: MarkersRepository
 ) {

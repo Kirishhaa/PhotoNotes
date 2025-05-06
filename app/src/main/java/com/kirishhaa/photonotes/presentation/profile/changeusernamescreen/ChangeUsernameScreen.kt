@@ -34,19 +34,20 @@ fun ChangeUsernameScreen() {
     val context = LocalContext.current
     LaunchedEffect(0) {
         viewmodel.events.collect { event ->
-            when(event) {
+            when (event) {
                 ChangeUsernameEvent.UsernameWasChanged -> {
                     Toast.makeText(context, "Data was changed", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
-    when(state.loading) {
+    when (state.loading) {
         true -> {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
         }
+
         false -> {
             ChangeUsernameScreen(state, onChange = viewmodel::changeName)
         }

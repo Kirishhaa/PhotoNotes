@@ -33,7 +33,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SignUpUserDialog(state: SignUpDialogStateUI, onSignUp: (SignUpData) -> Unit, onDismiss: () -> Unit) {
+fun SignUpUserDialog(
+    state: SignUpDialogStateUI,
+    onSignUp: (SignUpData) -> Unit,
+    onDismiss: () -> Unit
+) {
     var picturePathValue by remember {
         mutableStateOf("")
     }
@@ -60,7 +64,9 @@ fun SignUpUserDialog(state: SignUpDialogStateUI, onSignUp: (SignUpData) -> Unit,
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier.width(300.dp).height(400.dp)
+        modifier = Modifier
+            .width(300.dp)
+            .height(400.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(Brush.horizontalGradient(colors = listOf(Color.Cyan, Color.Green)))
             .verticalScroll(rememberScrollState())
@@ -81,26 +87,42 @@ fun SignUpUserDialog(state: SignUpDialogStateUI, onSignUp: (SignUpData) -> Unit,
             )
 
             Column(
-                modifier = Modifier.height(260.dp).width(140.dp),
+                modifier = Modifier
+                    .height(260.dp)
+                    .width(140.dp),
                 verticalArrangement = Arrangement.SpaceAround,
                 horizontalAlignment = Alignment.Start
             ) {
-                TextFieldInfo("Username", error = state.errorUsername, value = usernameValue, onValueChanged = {
-                    val valid = usernameValue.length < 10
-                    if(valid) usernameValue = it
-                })
-                TextFieldInfo("Login", error = state.errorLogin, value = loginValue, onValueChanged = {
-                    val valid = loginValue.length < 10
-                    if(valid) loginValue = it
-                })
-                TextFieldInfo("Password", error = state.errorPassword, value = passwordValue, onValueChanged = {
-                    val valid = passwordValue.length < 10
-                    if(valid) passwordValue = it
-                })
+                TextFieldInfo(
+                    "Username",
+                    error = state.errorUsername,
+                    value = usernameValue,
+                    onValueChanged = {
+                        val valid = usernameValue.length < 10
+                        if (valid) usernameValue = it
+                    })
+                TextFieldInfo(
+                    "Login",
+                    error = state.errorLogin,
+                    value = loginValue,
+                    onValueChanged = {
+                        val valid = loginValue.length < 10
+                        if (valid) loginValue = it
+                    })
+                TextFieldInfo(
+                    "Password",
+                    error = state.errorPassword,
+                    value = passwordValue,
+                    onValueChanged = {
+                        val valid = passwordValue.length < 10
+                        if (valid) passwordValue = it
+                    })
             }
         }
         Row(
-            modifier = Modifier.fillMaxWidth().height(30.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(30.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
@@ -113,7 +135,7 @@ fun SignUpUserDialog(state: SignUpDialogStateUI, onSignUp: (SignUpData) -> Unit,
             )
         }
 
-        if(state.loading) {
+        if (state.loading) {
             CircularProgressIndicator()
         } else {
             Row(

@@ -19,9 +19,11 @@ import com.kirishhaa.photonotes.R
 
 @Composable
 fun CommitButton(modifier: Modifier = Modifier) {
-    Box(modifier = modifier.size(48.dp)
-        .clip(CircleShape)
-        .background(brush = Brush.horizontalGradient(colors = listOf(Color.Red, Color.Blue)))
+    Box(
+        modifier = modifier
+            .size(48.dp)
+            .clip(CircleShape)
+            .background(brush = Brush.horizontalGradient(colors = listOf(Color.Red, Color.Blue)))
     ) {
         Image(
             imageVector = ImageVector.vectorResource(R.drawable.commit_vector),

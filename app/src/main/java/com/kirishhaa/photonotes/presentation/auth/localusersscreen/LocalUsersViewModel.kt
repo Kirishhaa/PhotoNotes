@@ -5,18 +5,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.kirishhaa.photonotes.SingleEvent
-import com.kirishhaa.photonotes.domain.users.GetLocalUsersUseCase
-import com.kirishhaa.photonotes.domain.users.LocalUsersRepository
-import com.kirishhaa.photonotes.domain.users.SignInUseCase
-import com.kirishhaa.photonotes.domain.users.SignUpUseCase
 import com.kirishhaa.photonotes.domain.exceptions.WrongLoginException
 import com.kirishhaa.photonotes.domain.exceptions.WrongPasswordException
 import com.kirishhaa.photonotes.domain.exceptions.WrongUsernameException
+import com.kirishhaa.photonotes.domain.users.GetLocalUsersUseCase
+import com.kirishhaa.photonotes.domain.users.SignInUseCase
+import com.kirishhaa.photonotes.domain.users.SignUpUseCase
 import com.kirishhaa.photonotes.extensions.coroutineTryCatcher
 import com.kirishhaa.photonotes.toApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -30,7 +28,7 @@ class LocalUsersViewModel(
     private val signUpUseCase: SignUpUseCase,
     private val getLocalUsersUseCase: GetLocalUsersUseCase,
     private val localUserMapper: LocalUserMapper
-): ViewModel() {
+) : ViewModel() {
 
     private val _events = MutableSharedFlow<SingleEvent<LocalUsersEvent>>(replay = 1)
     val events: Flow<SingleEvent<LocalUsersEvent>> = _events
@@ -43,7 +41,7 @@ class LocalUsersViewModel(
             getLocalUsersUseCase.execute().collect { users ->
                 ensureActive()
                 val enteredUser = users.firstOrNull { it.entered }
-                if(enteredUser != null) {
+                if (enteredUser != null) {
                     onEnterUserExist()
                     cancel()
                 } else {
@@ -66,7 +64,7 @@ class LocalUsersViewModel(
     }
 
     fun showSignInDialog(user: LocalUserUI) {
-        if(isDialogShowing()) return
+        if (isDialogShowing()) return
         val signInState = SignInDialogStateUI(
             chosenUser = user,
             loading = false,
@@ -77,7 +75,7 @@ class LocalUsersViewModel(
     }
 
     fun onEdit() {
-        if(isDialogShowing()) return
+        if (isDialogShowing()) return
         val signUpState = SignUpDialogStateUI(
             loading = false,
             errorPassword = false,
@@ -87,7 +85,7 @@ class LocalUsersViewModel(
         _state.value = _state.value.copy(signUpDialogState = signUpState, signInDialogState = null)
     }
 
-    fun onSignIn(data: SignInData)  {
+    fun onSignIn(data: SignInData) {
         viewModelScope.launch {
             val signInInitialState = SignInDialogStateUI(
                 loading = true,
@@ -106,7 +104,7 @@ class LocalUsersViewModel(
                     )
                 },
                 catchBlock = { exception ->
-                    if(isShowingSignInDialog()) {
+                    if (isShowingSignInDialog()) {
                         val errorPassword = exception is WrongPasswordException
                         val errorLogin = exception is WrongLoginException
                         val signInFinalState = SignInDialogStateUI(
@@ -146,7 +144,7 @@ class LocalUsersViewModel(
                     )
                 },
                 catchBlock = { exception ->
-                    if(isShowingSignUpDialog()) {
+                    if (isShowingSignUpDialog()) {
                         val errorPassword = exception is WrongPasswordException
                         val errorLogin = exception is WrongLoginException
                         val errorUsername = exception is WrongUsernameException
@@ -173,8 +171,9 @@ class LocalUsersViewModel(
             if (isDialogShowing().not()) {
                 emitEvent(LocalUsersEvent.CloseApp)
             } else {
-                if(_state.value.signInDialogState?.loading != true && _state.value.signUpDialogState?.loading != true) {
-                    _state.value = _state.value.copy(signInDialogState = null, signUpDialogState = null)
+                if (_state.value.signInDialogState?.loading != true && _state.value.signUpDialogState?.loading != true) {
+                    _state.value =
+                        _state.value.copy(signInDialogState = null, signUpDialogState = null)
                 }
             }
         }

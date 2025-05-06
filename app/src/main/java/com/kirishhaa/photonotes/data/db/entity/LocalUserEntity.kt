@@ -4,8 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.kirishhaa.photonotes.domain.Language
-import com.kirishhaa.photonotes.domain.LocalUser
 
 @Entity(
     tableName = "local_users",
