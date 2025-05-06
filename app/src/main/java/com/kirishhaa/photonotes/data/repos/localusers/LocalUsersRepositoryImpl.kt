@@ -1,5 +1,7 @@
 package com.kirishhaa.photonotes.data.repos.localusers
 
+import android.content.Context
+import android.net.Uri
 import com.kirishhaa.photonotes.data.db.dao.LocalUsersDao
 import com.kirishhaa.photonotes.data.db.entity.LocalUserEntity
 import com.kirishhaa.photonotes.domain.Language
@@ -22,13 +24,15 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import java.io.File
 
 class LocalUsersRepositoryImpl(
     private val localUsersDao: LocalUsersDao,
     private val passwordValidator: PasswordValidator,
     private val loginValidator: LoginValidator,
     private val usernameValidator: UsernameValidator,
-    private val localUserEntityMapper: LocalUserEntityMapper
+    private val localUserEntityMapper: LocalUserEntityMapper,
+    private val context: Context
 ) : LocalUsersRepository {
 
     override fun getEnteredUser(): Flow<LocalUser?> {
@@ -90,10 +94,11 @@ class LocalUsersRepositoryImpl(
         login: String,
         password: String,
         remember: Boolean,
-        imagePath: String?
+        imagePath: Uri?
     ) = withContext(Dispatchers.IO) {
         coroutineTryCatcher(
             tryBlock = {
+                val path = imagePath?.let { getPathFromUri(it) }
                 val usersEntity = localUsersDao.getAllUsers().first()
                 if (usersEntity.any { it.name == username }) throw UserAlreadyExistException()
                 if (usernameValidator.validate(username).not()) throw WrongUsernameException()
@@ -101,7 +106,7 @@ class LocalUsersRepositoryImpl(
                 if (passwordValidator.validate(password).not()) throw WrongPasswordException()
                 val newUser = LocalUserEntity(
                     id = 0,
-                    imagePath = imagePath ?: "",
+                    imagePath = path ?: "",
                     entered = true,
                     password = password,
                     login = login,
@@ -116,6 +121,24 @@ class LocalUsersRepositoryImpl(
                 } else {
                     throw throwable
                 }
+            }
+        )
+    }
+
+    private suspend fun getPathFromUri(uri: Uri): String? = withContext(Dispatchers.IO) {
+        coroutineTryCatcher(tryBlock =  {
+            val fileToWrite = File(context.cacheDir, "file_in${System.currentTimeMillis()}")
+            fileToWrite.createNewFile()
+            context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                val bytes = inputStream.readBytes()
+                fileToWrite.outputStream().use { outputStream ->
+                    outputStream.write(bytes)
+                }
+                fileToWrite.absolutePath
+            }
+        },
+            catchBlock = {
+                null
             }
         )
     }
@@ -320,6 +343,21 @@ class LocalUsersRepositoryImpl(
                 if (throwable !is UserNotFoundException) {
                     throw ReadWriteException()
                 } else throw throwable
+            }
+        )
+    }
+
+    override suspend fun changeUserPhoto(userId: Int, uri: Uri?) {
+        coroutineTryCatcher(
+            tryBlock = {
+                val path = uri?.let { getPathFromUri(it) }
+                val userEntity = localUsersDao.getUser(userId).first()
+                userEntity?.copy(imagePath = path)?.let { newUserEntity ->
+                    localUsersDao.updateUser(newUserEntity)
+                }
+            },
+            catchBlock = {
+                throw ReadWriteException()
             }
         )
     }

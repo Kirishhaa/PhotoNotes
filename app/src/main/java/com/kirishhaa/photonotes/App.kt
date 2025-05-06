@@ -47,7 +47,8 @@ class App : Application() {
             passwordValidator = PasswordValidator(),
             loginValidator = LoginValidator(),
             usernameValidator = UsernameValidator(),
-            localUserEntityMapper = LocalUserEntityMapper()
+            localUserEntityMapper = LocalUserEntityMapper(),
+            context = this
         )
     }
 

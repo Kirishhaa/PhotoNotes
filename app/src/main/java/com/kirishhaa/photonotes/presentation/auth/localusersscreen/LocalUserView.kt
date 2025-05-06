@@ -38,7 +38,7 @@ fun LocalUserView(localUser: LocalUserUI, clickable: Boolean, onClick: (LocalUse
     ) {
         Spacer(Modifier.width(20.dp))
         UserImage(
-            model = null,
+            model = localUser.picturePath,
             modifier = Modifier.size(40.dp)
         )
         Row(

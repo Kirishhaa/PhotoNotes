@@ -1,5 +1,7 @@
 package com.kirishhaa.photonotes.domain.users
 
+import android.net.Uri
+
 class SignUpUseCase(
     private val repository: LocalUsersRepository
 ) {
@@ -9,7 +11,7 @@ class SignUpUseCase(
         login: String,
         password: String,
         remember: Boolean,
-        imagePath: String?
+        imagePath: Uri?
     ) {
         repository.signUp(username, login, password, remember, imagePath)
     }

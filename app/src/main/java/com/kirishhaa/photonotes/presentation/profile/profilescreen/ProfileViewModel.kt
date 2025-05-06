@@ -1,10 +1,12 @@
 package com.kirishhaa.photonotes.presentation.profile.profilescreen
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.kirishhaa.photonotes.domain.LocalUser
+import com.kirishhaa.photonotes.domain.users.ChangeUserPhotoUseCase
 import com.kirishhaa.photonotes.domain.users.DeleteProfileUseCase
 import com.kirishhaa.photonotes.domain.users.GetEnteredUserUseCase
 import com.kirishhaa.photonotes.domain.users.LogOutUseCase
@@ -20,7 +22,8 @@ import kotlin.reflect.KClass
 class ProfileViewModel(
     private val getEnteredUserUseCase: GetEnteredUserUseCase,
     private val deleteProfileUseCase: DeleteProfileUseCase,
-    private val logOutUseCase: LogOutUseCase
+    private val logOutUseCase: LogOutUseCase,
+    private val changeUserPhotoUseCase: ChangeUserPhotoUseCase
 ) : ViewModel() {
 
     private val _events = Channel<ProfileEvent>()
@@ -39,6 +42,14 @@ class ProfileViewModel(
             getEnteredUserUseCase.execute().collect { enteredUser ->
                 _enteredUser.value = enteredUser
                 _state.value = _state.value.copy(user = enteredUser, loading = false)
+            }
+        }
+    }
+
+    fun onChangePhoto(uri: Uri?) {
+        viewModelScope.launch(exceptionHandler) {
+            _enteredUser.value?.id?.let { userId ->
+                changeUserPhotoUseCase.execute(uri, userId)
             }
         }
     }
@@ -68,7 +79,8 @@ class ProfileViewModel(
                 val getEnteredUser = GetEnteredUserUseCase(app.localUsersRepository)
                 val deleteProfile = DeleteProfileUseCase(app.localUsersRepository)
                 val logOutUseCase = LogOutUseCase(app.localUsersRepository)
-                return ProfileViewModel(getEnteredUser, deleteProfile, logOutUseCase) as T
+                val changeUserPhotoUseCase = ChangeUserPhotoUseCase(app.localUsersRepository)
+                return ProfileViewModel(getEnteredUser, deleteProfile, logOutUseCase, changeUserPhotoUseCase) as T
             }
         }
     }

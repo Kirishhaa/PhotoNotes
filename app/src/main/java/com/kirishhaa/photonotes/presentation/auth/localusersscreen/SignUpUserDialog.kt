@@ -1,5 +1,6 @@
 package com.kirishhaa.photonotes.presentation.auth.localusersscreen
 
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -38,14 +39,14 @@ fun SignUpUserDialog(
     onSignUp: (SignUpData) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var picturePathValue by remember {
-        mutableStateOf("")
+    var picturePathValue: Uri? by remember {
+        mutableStateOf(null)
     }
 
     val pickPhotoLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
-        picturePathValue = uri?.toString() ?: ""
+        picturePathValue = uri
     }
 
     var usernameValue by remember {

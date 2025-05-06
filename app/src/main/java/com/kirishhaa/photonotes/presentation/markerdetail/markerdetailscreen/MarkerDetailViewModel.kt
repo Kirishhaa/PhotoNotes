@@ -153,12 +153,18 @@ class MarkerDetailViewModel(
     }
 
     fun onSelectFolder(folderId: Int) {
-        val newMarker = _state.value.marker?.copy(folderId = folderId)
-        _state.value = _state.value.copy(marker = newMarker)
+        viewModelScope.launch {
+            getEnteredUserUseCase.execute().first()?.id?.let { userId ->
+                val name =
+                    getAllFoldersUseCase.execute(userId).first().find { it.id == folderId }?.name
+                val newMarker = _state.value.marker?.copy(folderId = folderId, folderName = name)
+                _state.value = _state.value.copy(marker = newMarker)
+            }
+        }
     }
 
     fun onRemoveFromFolder() {
-        val newMarker = _state.value.marker?.copy(folderId = null)
+        val newMarker = _state.value.marker?.copy(folderId = null, folderName = null)
         _state.value = _state.value.copy(marker = newMarker)
     }
 

@@ -1,5 +1,6 @@
 package com.kirishhaa.photonotes.presentation.profile.profilescreen
 
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -56,6 +57,7 @@ fun ProfileScreen(
 
         else -> ProfileScreen(
             user = currentUser,
+            onChangePhoto = viewmodel::onChangePhoto,
             onChangeEmail,
             onChangeName,
             onChangePas,
@@ -69,6 +71,7 @@ fun ProfileScreen(
 @Composable
 private fun ProfileScreen(
     user: LocalUser,
+    onChangePhoto: (Uri?) -> Unit,
     onChangeEmail: () -> Unit,
     onChangeName: () -> Unit,
     onChangePas: () -> Unit,
@@ -80,7 +83,7 @@ private fun ProfileScreen(
     val pickPhotoLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
-
+        uri?.let { onChangePhoto(it) }
     }
 
     Column(

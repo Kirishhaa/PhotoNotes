@@ -1,5 +1,6 @@
 package com.kirishhaa.photonotes.domain.users
 
+import android.net.Uri
 import com.kirishhaa.photonotes.domain.Language
 import com.kirishhaa.photonotes.domain.LocalUser
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +24,7 @@ interface LocalUsersRepository {
         login: String,
         password: String,
         remember: Boolean,
-        imagePath: String?
+        imagePath: Uri?
     )
 
     //throws
@@ -60,5 +61,7 @@ interface LocalUsersRepository {
     suspend fun deleteProfile(userId: Int)
 
     suspend fun logOut(userId: Int)
+
+    suspend fun changeUserPhoto(userId: Int, uri: Uri?)
 
 }
