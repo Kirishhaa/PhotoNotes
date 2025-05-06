@@ -4,8 +4,8 @@ class SelectFolderUseCase(
     private val markersRepository: MarkersRepository
 ) {
 
-    suspend fun execute(markerId: Int, userId: Int, folderName: String?) {
-        markersRepository.selectFolder(markerId, userId, folderName)
+    suspend fun execute(markerId: Int, userId: Int, folderId: Int?) {
+        markersRepository.selectFolder(markerId, userId, folderId)
     }
 
 }

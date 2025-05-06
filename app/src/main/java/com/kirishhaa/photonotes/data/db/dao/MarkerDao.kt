@@ -1,5 +1,6 @@
 package com.kirishhaa.photonotes.data.db.dao
 
+import android.icu.text.CaseMap.Fold
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -15,13 +16,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface MarkerDao {
 
-    @Query("SELECT * FROM markers WHERE user_id = :userId")
+    @Query("SELECT * FROM photo WHERE user_id = :userId")
     fun getUserMarkers(userId: Int): Flow<List<MarkerEntity>>
 
-    @Query("SELECT * FROM markers WHERE user_id = :userId AND id = :markerId")
+    @Query("SELECT * FROM photo WHERE user_id = :userId AND id = :markerId")
     fun getMarkerById(userId: Int, markerId: Int): Flow<MarkerEntity?>
 
-    @Query("SELECT * FROM markers WHERE user_id = :userId AND file_path = :filePath")
+    @Query("SELECT * FROM photo WHERE user_id = :userId AND photo_path = :filePath")
     suspend fun getMarkerByFilePath(userId: Int, filePath: String): MarkerEntity?
 
     @Transaction
@@ -29,7 +30,8 @@ interface MarkerDao {
         markerEntity: MarkerEntity,
         markerTagsEntity: List<MarkerTagEntity>
     ) {
-        clearAndInsertTags(markerEntity.id, markerTagsEntity)
+        clearTags(markerEntity.id)
+        insertTags(markerTagsEntity)
         updateMarker(markerEntity)
     }
 
@@ -42,7 +44,7 @@ interface MarkerDao {
     @Insert
     suspend fun insertMarker(markerEntity: MarkerEntity)
 
-    @Query("SELECT * FROM marker_tags WHERE marker_id = :markerId")
+    @Query("SELECT * FROM phototag WHERE photo_id = :markerId")
     fun getMarkerTags(markerId: Int): Flow<List<MarkerTagEntity>>
 
     @Transaction
@@ -54,18 +56,21 @@ interface MarkerDao {
     @Insert
     suspend fun insertTags(tags: List<MarkerTagEntity>)
 
-    @Query("DELETE FROM marker_tags WHERE marker_id = :markerId")
+    @Query("DELETE FROM phototag WHERE photo_id = :markerId")
     suspend fun clearTags(markerId: Int)
 
-    @Query("SELECT * FROM locations WHERE marker_id = :markerId")
+    @Query("SELECT * FROM location WHERE id = :markerId")
     fun getMarkerLocation(markerId: Int): Flow<LocationEntity?>
 
     @Insert
     suspend fun insertLocation(locationEntity: LocationEntity)
 
 
-    @Query("SELECT * FROM folders WHERE user_id = :userId")
+    @Query("SELECT * FROM folder WHERE user_id = :userId")
     fun getUserFolders(userId: Int): Flow<List<FolderEntity>>
+
+    @Query("SELECT * FROM folder WHERE id =:folderId")
+    suspend fun getFolderById(folderId: Int): FolderEntity?
 
     @Update
     suspend fun updateFolder(folder: FolderEntity)

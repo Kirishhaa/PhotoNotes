@@ -15,7 +15,7 @@ interface LocalUsersDao {
     @Insert
     suspend fun insertUser(user: LocalUserEntity)
 
-    @Query("SELECT * FROM local_users")
+    @Query("SELECT * FROM user")
     fun getAllUsers(): Flow<List<LocalUserEntity>>
 
     @Update
@@ -24,13 +24,13 @@ interface LocalUsersDao {
     @Delete
     suspend fun deleteUser(user: LocalUserEntity)
 
-    @Query("SELECT * FROM local_users WHERE id = :userId")
+    @Query("SELECT * FROM user WHERE id = :userId")
     fun getUser(userId: Int): Flow<LocalUserEntity?>
 
-    @Query("SELECT * FROM languages")
+    @Query("SELECT * FROM language")
     suspend fun getAllLanguages(): List<LanguageEntity>
 
-    @Query("SELECT * FROM languages WHERE name = :name")
-    suspend fun getLanguageByName(name: String): LanguageEntity
+    @Query("SELECT * FROM language WHERE id = :id")
+    suspend fun getLanguageById(id: Int): LanguageEntity
 
 }

@@ -3,32 +3,26 @@ package com.kirishhaa.photonotes.data.db.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 import com.kirishhaa.photonotes.domain.MarkerTag
 
 @Entity(
-    tableName = "marker_tags",
-    primaryKeys = ["marker_id", "name"],
+    tableName = "phototag",
     foreignKeys = [
         ForeignKey(
             entity = MarkerEntity::class,
             parentColumns = ["id"],
-            childColumns = ["marker_id"],
+            childColumns = ["photo_id"],
             onDelete = ForeignKey.CASCADE
         ),
-        ForeignKey(
-            entity = LocalUserEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["user_id"],
-            onDelete = ForeignKey.CASCADE
-        )
     ]
 )
 class MarkerTagEntity(
-    @ColumnInfo("marker_id") val markerId: Int,
+    @PrimaryKey val id: Int,
+    @ColumnInfo("photo_id") val markerId: Int,
     @ColumnInfo("name") val name: String,
-    @ColumnInfo("user_id") val userId: Int
 ) {
 
-    fun toMarkerTag(): MarkerTag = MarkerTag(name)
+    fun toMarkerTag(): MarkerTag = MarkerTag(name = name, id = id)
 
 }

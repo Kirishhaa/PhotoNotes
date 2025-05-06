@@ -66,7 +66,7 @@ class App : Application() {
 
     val db by lazy {
         Room.databaseBuilder(this, AppDatabase::class.java, "app-db")
-            .createFromAsset("test.db")
+            .createFromAsset("mydb.db")
             .build()
     }
 

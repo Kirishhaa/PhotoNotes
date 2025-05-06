@@ -6,7 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "markers",
+    tableName = "photo",
     foreignKeys = [
         ForeignKey(
             entity = LocalUserEntity::class,
@@ -16,8 +16,8 @@ import androidx.room.PrimaryKey
         ),
         ForeignKey(
             entity = FolderEntity::class,
-            parentColumns = ["name"],
-            childColumns = ["folder_name"],
+            parentColumns = ["id"],
+            childColumns = ["folder_id"],
             onDelete = ForeignKey.CASCADE,
         )
     ]
@@ -25,9 +25,8 @@ import androidx.room.PrimaryKey
 data class MarkerEntity(
     @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo("user_id") val userId: Int,
-    @ColumnInfo("folder_name") val folderName: String?,
-    @ColumnInfo("name") val name: String,
-    @ColumnInfo("file_path") val filePath: String,
-    @ColumnInfo("saved") val saved: Boolean,
+    @ColumnInfo("folder_id") val folderId: Int?,
+    @ColumnInfo("title") val name: String,
+    @ColumnInfo("photo_path") val filePath: String,
     @ColumnInfo("description") val description: String?
 )

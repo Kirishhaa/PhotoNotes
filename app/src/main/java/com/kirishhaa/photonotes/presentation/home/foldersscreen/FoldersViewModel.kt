@@ -49,9 +49,9 @@ class FoldersViewModel(
             ) { selectedFolder, folders, markers ->
                 val stateMarkers = markers.mapNotNull {
                     if (selectedFolder == null) {
-                        if (it.folderName == null) it else null
+                        if (it.folderId == null) it else null
                     } else {
-                        if (it.folderName == selectedFolder.name) it else null
+                        if (it.folderId == selectedFolder.id) it else null
                     }
                 }
                 val stateFolders = if (selectedFolder == null) folders else emptyList()
@@ -98,6 +98,7 @@ class FoldersViewModel(
             val enteredUser =
                 getEnteredUserUseCase.execute().first() ?: throw EnteredUserNotExistException()
             val folder = Folder(
+                id = 0,
                 name = folderName,
                 userId = enteredUser.id
             )
@@ -110,7 +111,7 @@ class FoldersViewModel(
             val enteredUser =
                 getEnteredUserUseCase.execute().first() ?: throw UserNotFoundException()
             val selectedFolder = selectedFolder.value ?: return@launch
-            removeFolderUseCase.execute(enteredUser.id, selectedFolder.name)
+            removeFolderUseCase.execute(id = selectedFolder.id, enteredUser.id, selectedFolder.name)
             this@FoldersViewModel.selectedFolder.value = null
         }
     }

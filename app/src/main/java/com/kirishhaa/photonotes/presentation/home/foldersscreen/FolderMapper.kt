@@ -7,7 +7,7 @@ import kotlinx.coroutines.withContext
 class FolderMapper {
 
     suspend fun map(folder: Folder): FolderUI = withContext(Dispatchers.Default) {
-        return@withContext FolderUI(folder.name)
+        return@withContext FolderUI(folder.name, folder.id)
     }
 
 }

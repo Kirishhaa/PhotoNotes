@@ -35,7 +35,10 @@ class MarkersRepositoryImpl(
             markerDao.getMarkerTags(markerId)
         ) { markerEntity, markerLocationEntity, markerTagsEntity ->
             if (markerEntity == null || markerLocationEntity == null) return@combine null
-            else markerEntityMapper.map(markerEntity, markerLocationEntity, markerTagsEntity)
+            else {
+                val folderName = markerDao.getFolderById(markerId)?.title
+                markerEntityMapper.map(markerEntity, markerLocationEntity, markerTagsEntity, folderName)
+            }
         }.flowOn(Dispatchers.IO)
     }
 
@@ -50,10 +53,9 @@ class MarkersRepositoryImpl(
                 val markerEntity = MarkerEntity(
                     id = 0,
                     userId = userId,
-                    folderName = null,
+                    folderId = null,
                     name = "Marker_${System.currentTimeMillis()}",
                     filePath = filePath,
-                    saved = false,
                     description = null
                 )
                 markerDao.insertMarker(markerEntity)
@@ -62,7 +64,7 @@ class MarkersRepositoryImpl(
                 val markerId = entity.id
                 val location = locationRepository.getCurrentLocation() ?: DomainLocation.NONE
                 val locationEntity = LocationEntity(
-                    markerId = markerId,
+                    id = markerId,
                     latitude = location.latitude,
                     longitude = location.longitude,
                     country = location.country,
@@ -106,7 +108,8 @@ class MarkersRepositoryImpl(
             markersEntity.map { markerEntity ->
                 val markerTagsEntity = markerDao.getMarkerTags(markerEntity.id).first()
                 val markerLocationEntity = markerDao.getMarkerLocation(markerEntity.id).first()
-                markerEntityMapper.map(markerEntity, markerLocationEntity, markerTagsEntity)
+                val folderName = markerEntity.folderId?.let { markerDao.getFolderById(it) }?.title
+                markerEntityMapper.map(markerEntity, markerLocationEntity, markerTagsEntity, folderName)
             }
         }.flowOn(Dispatchers.IO)
     }
@@ -117,8 +120,9 @@ class MarkersRepositoryImpl(
         coroutineTryCatcher(
             tryBlock = {
                 val folderEntity = FolderEntity(
-                    name = folder.name,
-                    userId = folder.userId
+                    title = folder.name,
+                    userId = folder.userId,
+                    id = folder.id
                 )
                 markerDao.insertFolder(folderEntity)
             },
@@ -136,9 +140,9 @@ class MarkersRepositoryImpl(
                 val markerEntity = markerEntityMapper.map(marker)
                 val markerTagsEntity = marker.tags.map { tag ->
                     MarkerTagEntity(
-                        markerEntity.id,
-                        tag.name,
-                        marker.userId
+                        id = tag.id,
+                        markerId = markerEntity.id,
+                        name = tag.name
                     )
                 }
                 markerDao.updateMarkerAndSetTags(markerEntity, markerTagsEntity)
@@ -170,13 +174,13 @@ class MarkersRepositoryImpl(
             )
         }
 
-    override suspend fun selectFolder(markerId: Int, userId: Int, folderName: String?) =
+    override suspend fun selectFolder(markerId: Int, userId: Int, folderId: Int?) =
         withContext(Dispatchers.IO) {
             coroutineTryCatcher(
                 tryBlock = {
                     val markerEntity = markerDao.getMarkerById(userId, markerId).first()
                         ?: throw MarkerNotFoundException()
-                    val newMarkerEntity = markerEntity.copy(folderName = folderName)
+                    val newMarkerEntity = markerEntity.copy(folderId = folderId)
                     markerDao.updateMarker(newMarkerEntity)
                 },
                 catchBlock = { throwable ->

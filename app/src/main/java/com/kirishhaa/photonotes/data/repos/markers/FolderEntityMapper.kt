@@ -7,14 +7,16 @@ class FolderEntityMapper {
 
     fun map(folderEntity: FolderEntity): Folder {
         return Folder(
-            name = folderEntity.name,
-            userId = folderEntity.userId
+            name = folderEntity.title,
+            userId = folderEntity.userId,
+            id = folderEntity.id
         )
     }
 
     fun map(folder: Folder): FolderEntity {
         return FolderEntity(
-            name = folder.name,
+            id = folder.id,
+            title = folder.name,
             userId = folder.userId
         )
     }

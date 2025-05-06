@@ -6,8 +6,8 @@ class RemoveFolderUseCase(
     private val markersRepository: MarkersRepository
 ) {
 
-    suspend fun execute(userId: Int, folderName: String) {
-        val folder = Folder(folderName, userId)
+    suspend fun execute(id: Int, userId: Int, folderName: String) {
+        val folder = Folder(id, folderName, userId)
         markersRepository.removeFolder(folder)
     }
 

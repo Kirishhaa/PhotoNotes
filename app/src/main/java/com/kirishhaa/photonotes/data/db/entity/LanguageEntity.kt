@@ -6,11 +6,11 @@ import androidx.room.PrimaryKey
 import com.kirishhaa.photonotes.domain.Language
 
 @Entity(
-    tableName = "languages"
+    tableName = "language"
 )
 class LanguageEntity(
-    @ColumnInfo("name")
-    @PrimaryKey val name: String
+    @PrimaryKey(autoGenerate = true) val id: Int,
+    @ColumnInfo("name") val name: String
 ) {
 
     fun toLanguage(): Language = Language(name)

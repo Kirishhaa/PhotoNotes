@@ -71,7 +71,7 @@ class MarkerDetailViewModel(
                 MarkerDetailState(
                     preloading = false,
                     marker = marker?.let { value -> markerMapper.map(value) },
-                    folders = folders.map { FolderUI(it.name) }
+                    folders = folders.map { FolderUI(it.name, it.id) }
                 )
             }.collect {
                 _state.value = it
@@ -99,7 +99,7 @@ class MarkerDetailViewModel(
             state.marker?.let { marker ->
                 val otherTags = marker.tags
                 validateMarkerTagUseCase.execute(tag, otherTags)
-                val newTags = marker.tags + tag
+                val newTags = marker.tags + MarkerTagUI(tag,0)
                 _state.value = _state.value.copy(
                     marker = marker.copy(tags = newTags),
                     showAddTagDialog = false
@@ -138,7 +138,7 @@ class MarkerDetailViewModel(
             )
             val domainMarker = markerMapper.map(newMarker)
             updateMarkerUseCase.execute(domainMarker)
-            selectFolderUseCase.execute(markerId, markerUI.userId, _state.value.marker?.folderName)
+            selectFolderUseCase.execute(markerId, markerUI.userId, _state.value.marker?.folderId)
             _events.trySend(MarkerDetailEvent.GoBack)
         }
     }
@@ -152,13 +152,13 @@ class MarkerDetailViewModel(
         }
     }
 
-    fun onSelectFolder(folderName: String) {
-        val newMarker = _state.value.marker?.copy(folderName = folderName)
+    fun onSelectFolder(folderId: Int) {
+        val newMarker = _state.value.marker?.copy(folderId = folderId)
         _state.value = _state.value.copy(marker = newMarker)
     }
 
     fun onRemoveFromFolder() {
-        val newMarker = _state.value.marker?.copy(folderName = null)
+        val newMarker = _state.value.marker?.copy(folderId = null)
         _state.value = _state.value.copy(marker = newMarker)
     }
 

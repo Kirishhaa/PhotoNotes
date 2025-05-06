@@ -11,7 +11,6 @@ class LocalUserEntityMapper {
             id = localUserEntity.id,
             imagePath = localUserEntity.imagePath,
             entered = localUserEntity.entered,
-            remember = localUserEntity.remember,
             password = localUserEntity.password,
             login = localUserEntity.login,
             name = localUserEntity.name,

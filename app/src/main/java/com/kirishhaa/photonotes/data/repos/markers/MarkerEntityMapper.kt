@@ -11,16 +11,17 @@ class MarkerEntityMapper {
     fun map(
         markerEntity: MarkerEntity,
         locationEntity: LocationEntity?,
-        tagsEntity: List<MarkerTagEntity>
+        tagsEntity: List<MarkerTagEntity>,
+        folderName: String?,
     ): Marker {
         return Marker(
             id = markerEntity.id,
             userId = markerEntity.userId,
-            folderName = markerEntity.folderName,
+            folderId = markerEntity.folderId,
+            folderName = folderName,
             name = markerEntity.name,
             filePath = markerEntity.filePath,
             location = locationEntity?.toDomainLocation() ?: DomainLocation.NONE,
-            saved = markerEntity.saved,
             tags = tagsEntity.map { it.toMarkerTag() },
             description = markerEntity.description
         )
@@ -29,10 +30,9 @@ class MarkerEntityMapper {
     fun map(marker: Marker): MarkerEntity = MarkerEntity(
         id = marker.id,
         userId = marker.userId,
-        folderName = marker.folderName,
+        folderId = marker.folderId,
         name = marker.name,
         filePath = marker.filePath,
-        saved = marker.saved,
         description = marker.description
     )
 

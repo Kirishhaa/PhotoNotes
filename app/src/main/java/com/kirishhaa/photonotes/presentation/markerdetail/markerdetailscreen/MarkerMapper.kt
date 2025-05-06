@@ -12,12 +12,12 @@ class MarkerMapper {
         MarkerUI(
             id = marker.id,
             userId = marker.userId,
+            folderId = marker.folderId,
             folderName = marker.folderName,
             name = marker.name,
             filePath = marker.filePath,
             location = marker.location.toLocationUI(),
-            tags = marker.tags.map { it.name },
-            saved = marker.saved,
+            tags = marker.tags.map { MarkerTagUI(it.name, it.id) },
             description = marker.description
         )
     }
@@ -26,12 +26,12 @@ class MarkerMapper {
         Marker(
             id = markerUI.id,
             userId = markerUI.userId,
+            folderId = markerUI.folderId,
             folderName = markerUI.folderName,
             name = markerUI.name,
             filePath = markerUI.filePath,
             location = markerUI.location.toLocation(),
-            saved = markerUI.saved,
-            tags = markerUI.tags.map { name -> MarkerTag(name) },
+            tags = markerUI.tags.map { tag -> MarkerTag(tag.name, tag.id) },
             description = markerUI.description
         )
     }

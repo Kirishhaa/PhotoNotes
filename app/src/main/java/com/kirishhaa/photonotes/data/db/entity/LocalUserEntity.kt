@@ -6,23 +6,22 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "local_users",
+    tableName = "user",
     foreignKeys = [
         ForeignKey(
             entity = LanguageEntity::class,
-            parentColumns = ["name"],
-            childColumns = ["language_name"],
+            parentColumns = ["id"],
+            childColumns = ["lang_id"],
             onDelete = ForeignKey.CASCADE
         )
     ]
 )
 data class LocalUserEntity(
     @PrimaryKey(autoGenerate = true) val id: Int,
-    @ColumnInfo("image_path") val imagePath: String,
+    @ColumnInfo("lang_id") val langId: Int,
+    @ColumnInfo("photo_path") val imagePath: String?,
     @ColumnInfo("entered") val entered: Boolean,
-    @ColumnInfo("remember") val remember: Boolean,
     @ColumnInfo("password") val password: String,
     @ColumnInfo("login") val login: String,
-    @ColumnInfo("name") val name: String,
-    @ColumnInfo("language_name") val languageName: String
+    @ColumnInfo("username") val name: String,
 )

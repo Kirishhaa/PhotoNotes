@@ -100,7 +100,7 @@ private fun MarkerDetailScreen(
     onEditModeChanged: (Boolean) -> Unit,
     onSave: (String, String, String, String) -> Unit,
     onDelete: () -> Unit,
-    onSelectFolder: (String) -> Unit,
+    onSelectFolder: (Int) -> Unit,
     onRemoveFromFolder: () -> Unit
 ) {
 
@@ -193,14 +193,14 @@ private fun MarkerDetailScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
-                        .pulsateClick(state.editing, { onShowRemoveTagDialog(true, tag) })
+                        .pulsateClick(state.editing, { onShowRemoveTagDialog(true, tag.name) })
                         .padding(5.dp)
                         .clip(RoundedCornerShape(24.dp))
                         .background(Color.White)
                 ) {
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        text = tag,
+                        text = tag.name,
                         fontSize = 22.sp,
                         color = Color.Black
                     )
@@ -288,7 +288,7 @@ private fun MarkerDetailScreen(
                     DropdownMenuItem(
                         text = { Text(folder.name) },
                         onClick = {
-                            onSelectFolder(folder.name)
+                            onSelectFolder(folder.id)
                             showDropDownMenu = false
                         }
                     )

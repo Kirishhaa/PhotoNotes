@@ -34,9 +34,9 @@ class LocalUsersRepositoryImpl(
     override fun getEnteredUser(): Flow<LocalUser?> {
         return localUsersDao.getAllUsers().map { users ->
             val localUserEntity =
-                users.firstOrNull { userEntity -> userEntity.entered || userEntity.remember }
+                users.firstOrNull { userEntity -> userEntity.entered }
             if (localUserEntity != null) {
-                val languageEntity = localUsersDao.getLanguageByName(localUserEntity.languageName)
+                val languageEntity = localUsersDao.getLanguageById(localUserEntity.langId)
                 localUserEntityMapper.map(localUserEntity, languageEntity)
             } else {
                 null
@@ -47,7 +47,7 @@ class LocalUsersRepositoryImpl(
     override fun getLocalUsers(): Flow<List<LocalUser>> {
         return localUsersDao.getAllUsers().map { users ->
             users.map { userEntity ->
-                val languageEntity = localUsersDao.getLanguageByName(userEntity.languageName)
+                val languageEntity = localUsersDao.getLanguageById(userEntity.langId)
                 localUserEntityMapper.map(userEntity, languageEntity)
             }
         }.flowOn(Dispatchers.IO)
@@ -68,7 +68,6 @@ class LocalUsersRepositoryImpl(
                     if (entity.login != login) throw WrongLoginException()
                     val newEntity = entity.copy(
                         entered = true,
-                        remember = remember
                     )
                     localUsersDao.updateUser(newEntity)
                 },
@@ -104,11 +103,10 @@ class LocalUsersRepositoryImpl(
                     id = 0,
                     imagePath = imagePath ?: "",
                     entered = true,
-                    remember = remember,
                     password = password,
                     login = login,
                     name = username,
-                    languageName = localUsersDao.getAllLanguages().first().name
+                    langId = localUsersDao.getAllLanguages().first().id
                 )
                 localUsersDao.insertUser(newUser)
             },
@@ -214,7 +212,7 @@ class LocalUsersRepositoryImpl(
     override fun getUserLanguage(userId: Int): Flow<Language?> {
         return localUsersDao.getUser(userId).map { userEntity ->
             if (userEntity != null) {
-                localUsersDao.getLanguageByName(userEntity.languageName).toLanguage()
+                localUsersDao.getLanguageById(userEntity.langId).toLanguage()
             } else {
                 null
             }
@@ -230,18 +228,18 @@ class LocalUsersRepositoryImpl(
             tryBlock = {
                 val userEntity =
                     localUsersDao.getUser(userId).first() ?: throw UserNotFoundException()
-                val languageEntity = localUsersDao.getLanguageByName(userEntity.languageName)
+                val languageEntity = localUsersDao.getLanguageById(userEntity.langId)
                 val languagesEntity = localUsersDao.getAllLanguages()
                 val index = languagesEntity.indexOfFirst { it.name == languageEntity.name }
                 if (index == -1) {
                     //unsupported language
                     val firstEntity = languagesEntity.first()
-                    val newUserEntity = userEntity.copy(languageName = firstEntity.name)
+                    val newUserEntity = userEntity.copy(langId = firstEntity.id)
                     localUsersDao.updateUser(newUserEntity)
                 } else {
                     val nextLanguageIndex = (index + 1) % languagesEntity.size
                     val newLanguageEntity = languagesEntity[nextLanguageIndex]
-                    val newUserEntity = userEntity.copy(languageName = newLanguageEntity.name)
+                    val newUserEntity = userEntity.copy(langId = newLanguageEntity.id)
                     localUsersDao.updateUser(newUserEntity)
                 }
             },
@@ -263,19 +261,19 @@ class LocalUsersRepositoryImpl(
             tryBlock = {
                 val userEntity =
                     localUsersDao.getUser(userId).first() ?: throw UserNotFoundException()
-                val languageEntity = localUsersDao.getLanguageByName(userEntity.languageName)
+                val languageEntity = localUsersDao.getLanguageById(userEntity.langId)
                 val languagesEntity = localUsersDao.getAllLanguages()
                 val index = languagesEntity.indexOfFirst { it.name == languageEntity.name }
                 if (index == -1) {
                     //unsupported language
                     val firstEntity = languagesEntity.first()
-                    val newUserEntity = userEntity.copy(languageName = firstEntity.name)
+                    val newUserEntity = userEntity.copy(langId = firstEntity.id)
                     localUsersDao.updateUser(newUserEntity)
                 } else {
                     var prevLanguageIndex = (index - 1)
                     if (prevLanguageIndex < 0) prevLanguageIndex = languagesEntity.size - 1
                     val newLanguageEntity = languagesEntity[prevLanguageIndex]
-                    val newUserEntity = userEntity.copy(languageName = newLanguageEntity.name)
+                    val newUserEntity = userEntity.copy(langId = newLanguageEntity.id)
                     localUsersDao.updateUser(newUserEntity)
                 }
             },
@@ -314,7 +312,6 @@ class LocalUsersRepositoryImpl(
                 val userEntity =
                     localUsersDao.getUser(userId).first() ?: throw UserNotFoundException()
                 val newUserEntity = userEntity.copy(
-                    remember = false,
                     entered = false
                 )
                 localUsersDao.updateUser(newUserEntity)
