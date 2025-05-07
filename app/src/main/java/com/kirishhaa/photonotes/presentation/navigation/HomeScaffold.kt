@@ -8,9 +8,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.kirishhaa.photonotes.MainActivity
+import com.kirishhaa.photonotes.R
 
 @Composable
 fun HomeScaffold(navController: NavHostController, content: @Composable (PaddingValues) -> Unit) {
@@ -34,7 +36,7 @@ fun HomeScaffold(navController: NavHostController, content: @Composable (Padding
             )
         },
         bottomBar = { HomeBottomBar(navController = navController) },
-        containerColor = Color.LightGray
+        containerColor = colorResource(R.color.surface_color)
     ) { paddingValues ->
         content(paddingValues)
     }

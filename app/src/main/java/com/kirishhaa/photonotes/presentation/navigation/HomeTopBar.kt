@@ -4,12 +4,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.kirishhaa.photonotes.R
 import com.kirishhaa.photonotes.clickeffects.pulsateClick
 import com.kirishhaa.photonotes.presentation.auth.localusersscreen.UserImage
 
@@ -22,12 +27,19 @@ fun HomeTopBar(title: String, userImagePath: String?, navController: NavHostCont
     val isBottomBarDestination = screens.any { it.route == currentDestination?.route }
     if (isBottomBarDestination) {
         TopAppBar(
-            title = { Text(title) },
+            title = { Text(
+                text = title,
+                fontFamily = FontFamily(Font(R.font.comic)),
+                color = colorResource(R.color.on_surface)
+            ) },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = colorResource(R.color.surface_color)
+            ),
             actions = {
                 UserImage(
                     model = userImagePath,
                     modifier = Modifier
-                        .size(24.dp)
+                        .size(48.dp)
                         .pulsateClick(
                             clickable = true,
                             onClick = {

@@ -89,7 +89,7 @@ fun LocalUsersScreen(
     ) {
 
         when {
-            state.screenState.loading -> CircularProgressIndicator()
+            state.screenState.loading -> CircularProgressIndicator(color = colorResource(R.color.primary_color))
             else -> LocalUsersScreen(
                 state = state.screenState,
                 clickable = signInState == null && signUpState == null,

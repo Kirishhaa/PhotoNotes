@@ -12,5 +12,8 @@
     <color name="tertiary_container">#f3daff</color>
     <color name="tertiary_color">#6b5778</color>
     <color name="error_color">#ba1a1a</color>
+    <color name="surface_color">#f8f9ff</color>
+    <color name="surface_content_color">#eceef4</color>
+    <color name="on_surface">#191c20</color>
 
 </resources>

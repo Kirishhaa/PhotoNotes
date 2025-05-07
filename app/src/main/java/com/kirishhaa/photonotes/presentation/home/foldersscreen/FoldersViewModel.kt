@@ -14,6 +14,7 @@ import com.kirishhaa.photonotes.domain.markers.GetAllMarkersUseCase
 import com.kirishhaa.photonotes.domain.markers.RemoveFolderUseCase
 import com.kirishhaa.photonotes.domain.users.GetEnteredUserUseCase
 import com.kirishhaa.photonotes.toApp
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,6 +40,10 @@ class FoldersViewModel(
     private val _state = MutableStateFlow(FoldersState())
     val state = _state.asStateFlow()
 
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+
+    }
+
     init {
         viewModelScope.launch {
             val userId = getEnteredUserUseCase.execute().first()!!.id
@@ -62,7 +67,7 @@ class FoldersViewModel(
                 FoldersState(
                     loadingState = false,
                     showEditButton = selectedFolder == null,
-                    inFolder = selectedFolder != null,
+                    selectedFolder = selectedFolder,
                     folders = mappedFolders,
                     markers = mappedMarkers
                 )
@@ -94,7 +99,7 @@ class FoldersViewModel(
     }
 
     fun addNewFolder(folderName: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             val enteredUser =
                 getEnteredUserUseCase.execute().first() ?: throw EnteredUserNotExistException()
             val folder = Folder(
@@ -107,7 +112,7 @@ class FoldersViewModel(
     }
 
     fun onRemoveFolder() {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             val enteredUser =
                 getEnteredUserUseCase.execute().first() ?: throw UserNotFoundException()
             val selectedFolder = selectedFolder.value ?: return@launch

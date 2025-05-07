@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -23,11 +25,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kirishhaa.photonotes.R
+import com.kirishhaa.photonotes.clickeffects.pulsateClick
 import com.kirishhaa.photonotes.domain.LocalUser
 import com.kirishhaa.photonotes.presentation.auth.localusersscreen.UserImage
 
@@ -111,35 +118,119 @@ private fun ProfileScreen(
         }
 
         Spacer(Modifier.weight(1f))
-        Button(
-            onChangeEmail,
-            modifier = Modifier.width(200.dp)
-        ) { Text(stringResource(R.string.change_email)) }
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .width(240.dp)
+                .height(50.dp)
+                .pulsateClick(clickable = true, onClick = { onChangeEmail() })
+                .background(
+                    color = colorResource(R.color.on_secondary_container),
+                    shape = RoundedCornerShape(24.dp)
+                )
+        ) {
+            Text(
+                text = stringResource(R.string.change_email),
+                fontFamily = FontFamily(Font(R.font.comic)),
+                fontSize = 24.sp,
+                color = Color.White
+            )
+        }
         Spacer(Modifier.height(8.dp))
-        Button(
-            onChangeName,
-            modifier = Modifier.width(200.dp)
-        ) { Text(stringResource(R.string.change_username)) }
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .width(240.dp)
+                .height(50.dp)
+                .pulsateClick(clickable = true, onClick = { onChangePas() })
+                .background(
+                    color = colorResource(R.color.on_secondary_container),
+                    shape = RoundedCornerShape(24.dp)
+                )
+        ) {
+            Text(
+                text = stringResource(R.string.change_password),
+                fontFamily = FontFamily(Font(R.font.comic)),
+                fontSize = 24.sp,
+                color = Color.White
+            )
+        }
         Spacer(Modifier.height(8.dp))
-        Button(
-            onChangePas,
-            modifier = Modifier.width(200.dp)
-        ) { Text(stringResource(R.string.change_password)) }
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .width(240.dp)
+                .height(50.dp)
+                .pulsateClick(clickable = true, onClick = { onChangeName() })
+                .background(
+                    color = colorResource(R.color.on_secondary_container),
+                    shape = RoundedCornerShape(24.dp)
+                )
+        ) {
+            Text(
+                text = stringResource(R.string.change_username),
+                fontFamily = FontFamily(Font(R.font.comic)),
+                fontSize = 24.sp,
+                color = Color.White
+            )
+        }
         Spacer(Modifier.height(8.dp))
-        Button(
-            onChangeLanguage,
-            modifier = Modifier.width(200.dp)
-        ) { Text(stringResource(R.string.change_language)) }
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .width(240.dp)
+                .height(50.dp)
+                .pulsateClick(clickable = true, onClick = { onChangeLanguage() })
+                .background(
+                    color = colorResource(R.color.on_secondary_container),
+                    shape = RoundedCornerShape(24.dp)
+                )
+        ) {
+            Text(
+                text = stringResource(R.string.change_language),
+                fontFamily = FontFamily(Font(R.font.comic)),
+                fontSize = 24.sp,
+                color = Color.White
+            )
+        }
         Spacer(Modifier.height(8.dp))
-        Button(
-            onDelete,
-            modifier = Modifier.width(200.dp)
-        ) { Text(stringResource(R.string.delete_profile)) }
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .width(240.dp)
+                .height(50.dp)
+                .pulsateClick(clickable = true, onClick = { onDelete() })
+                .background(
+                    color = colorResource(R.color.on_secondary_container),
+                    shape = RoundedCornerShape(24.dp)
+                )
+        ) {
+            Text(
+                text = stringResource(R.string.delete_profile),
+                fontFamily = FontFamily(Font(R.font.comic)),
+                fontSize = 24.sp,
+                color = Color.White
+            )
+        }
         Spacer(Modifier.height(8.dp))
-        Button(
-            onLogOut,
-            modifier = Modifier.width(200.dp)
-        ) { Text(stringResource(R.string.log_out)) }
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .width(240.dp)
+                .height(50.dp)
+                .pulsateClick(clickable = true, onClick = { onLogOut() })
+                .background(
+                    color = colorResource(R.color.on_secondary_container),
+                    shape = RoundedCornerShape(24.dp)
+                )
+        ) {
+            Text(
+                text = stringResource(R.string.log_out),
+                fontFamily = FontFamily(Font(R.font.comic)),
+                fontSize = 24.sp,
+                color = Color.White
+            )
+        }
         Spacer(Modifier.height(16.dp))
     }
 }
