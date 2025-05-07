@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -30,6 +31,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -159,7 +161,14 @@ private fun CameraScreen(
             }
 
             state.requestCameraPermissionCount == 0 && cameraGranted.not() -> {
-                Text(stringResource(R.string.to_take_a_photo_you_need_a_permission))
+                Text(
+                    text = stringResource(R.string.to_take_a_photo_you_need_a_permission),
+                    fontSize = 24.sp,
+                    color = colorResource(R.color.on_surface),
+                    fontFamily = FontFamily(Font(R.font.comic)),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
             }
 
             resumed -> {

@@ -11,14 +11,19 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
@@ -26,6 +31,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -39,8 +45,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,6 +59,7 @@ import com.kirishhaa.photonotes.R
 import com.kirishhaa.photonotes.clickeffects.pulsateClick
 import com.kirishhaa.photonotes.presentation.CommitButton
 import com.kirishhaa.photonotes.presentation.EditButton
+import com.kirishhaa.photonotes.presentation.home.camerascreen.ComposeFileProvider
 
 @Composable
 fun MarkerDetailScreen(markerId: Int, goBack: () -> Unit) {
@@ -126,13 +136,13 @@ private fun MarkerDetailScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(250.dp),
+                .height(300.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceAround
         ) {
@@ -149,138 +159,197 @@ private fun MarkerDetailScreen(
             Column(
                 modifier = Modifier.fillMaxHeight(),
                 verticalArrangement = Arrangement.SpaceAround,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Text(stringResource(R.string.markername), fontSize = 24.sp, color = Color.Black)
+                Text(
+                    text = stringResource(R.string.markername),
+                    fontSize = 28.sp,
+                    color = colorResource(R.color.on_surface),
+                    fontFamily = FontFamily(Font(R.font.comic))
+                )
                 if (state.editing) {
                     TextField(
                         value = markerNameValue ?: "",
                         onValueChange = { markerNameValue = it },
-                        modifier = Modifier.width(200.dp)
+                        modifier = Modifier.width(200.dp),
+                        colors = TextFieldDefaults.colors(
+                            cursorColor = colorResource(R.color.primary_color),
+                            focusedIndicatorColor = colorResource(R.color.primary_color)
+                        )
                     )
                 } else {
-                    Text(markerNameValue ?: "", fontSize = 24.sp)
+                    Text(
+                        text = markerNameValue ?: "",
+                        fontSize = 24.sp,
+                        fontFamily = FontFamily(Font(R.font.comic)),
+                        color = colorResource(R.color.on_surface)
+                    )
                 }
-                Text(stringResource(R.string.country), fontSize = 24.sp, color = Color.Black)
+                Text(
+                    text = stringResource(R.string.country),
+                    fontSize = 28.sp,
+                    color = colorResource(R.color.on_surface),
+                    fontFamily = FontFamily(Font(R.font.comic))
+                )
                 if (state.editing) {
                     TextField(
                         value = markerCountryValue ?: "",
                         onValueChange = { markerCountryValue = it },
-                        modifier = Modifier.width(200.dp)
+                        modifier = Modifier.width(200.dp),
+                        colors = TextFieldDefaults.colors(
+                            cursorColor = colorResource(R.color.primary_color),
+                            focusedIndicatorColor = colorResource(R.color.primary_color)
+                        )
                     )
                 } else {
-                    Text(markerCountryValue ?: "", fontSize = 20.sp)
+                    Text(
+                        text = markerCountryValue ?: "",
+                        fontSize = 20.sp,
+                        fontFamily = FontFamily(Font(R.font.comic)),
+                        color = colorResource(R.color.on_surface)
+                    )
                 }
-                Text(stringResource(R.string.town), fontSize = 24.sp, color = Color.Black)
+                Text(
+                    text = stringResource(R.string.town),
+                    fontSize = 28.sp,
+                    color = Color.Black,
+                    fontFamily = FontFamily(Font(R.font.comic))
+                )
                 if (state.editing) {
                     TextField(
                         value = markerTownValue ?: "",
                         onValueChange = { markerTownValue = it },
-                        modifier = Modifier.width(200.dp)
+                        modifier = Modifier.width(200.dp),
+                        colors = TextFieldDefaults.colors(
+                            cursorColor = colorResource(R.color.primary_color),
+                            focusedIndicatorColor = colorResource(R.color.primary_color)
+                        )
                     )
                 } else {
-                    Text(markerTownValue ?: "", fontSize = 20.sp)
+                    Text(
+                        text = markerTownValue ?: "",
+                        fontSize = 20.sp,
+                        fontFamily = FontFamily(Font(R.font.comic)),
+                        color = colorResource(R.color.on_surface)
+                    )
                 }
             }
         }
+        if(state.marker?.tags?.isNotEmpty() == true || state.editing) {
+            Spacer(Modifier.height(20.dp))
+            HorizontalDivider(Modifier.fillMaxWidth(0.9f), color = Color.Black, thickness = 2.dp)
+            Spacer(Modifier.height(20.dp))
+        }
 
-        Spacer(Modifier.height(4.dp))
-        HorizontalDivider(Modifier.fillMaxWidth(0.9f), color = Color.Black, thickness = 2.dp)
-        Spacer(Modifier.height(4.dp))
-
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(100.dp)
-        ) {
-            items(items = state.marker?.tags ?: emptyList(), key = { it }) { tag ->
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .pulsateClick(state.editing, { onShowRemoveTagDialog(true, tag.name) })
-                        .padding(5.dp)
-                        .clip(RoundedCornerShape(24.dp))
-                        .background(Color.White)
-                ) {
-                    Spacer(Modifier.height(4.dp))
-                    Text(
-                        text = tag.name,
-                        fontSize = 22.sp,
-                        color = Color.Black
-                    )
-                    Spacer(Modifier.height(4.dp))
-                }
-            }
-            if (state.editing) {
-                item {
-                    Column(
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally,
+        if(state.marker?.tags?.isNotEmpty() == true || state.editing) {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                modifier = Modifier.fillMaxWidth().height(300.dp),
+            ) {
+                items(items = state.marker?.tags ?: emptyList(), key = { it.toString() }) { tag ->
+                    Box(
+                        contentAlignment = Alignment.Center,
                         modifier = Modifier
-                            .pulsateClick(state.editing, { onShowAddTagDialog(true) })
-                            .padding(5.dp)
+                            .width(130.dp)
+                            .height(46.dp)
+                            .pulsateClick(state.editing, { onShowRemoveTagDialog(true, tag.name) })
                             .clip(RoundedCornerShape(24.dp))
-                            .background(Color.Yellow)
+                            .background(color = colorResource(R.color.secondary_container))
                     ) {
-                        Spacer(Modifier.height(4.dp))
                         Text(
-                            text = stringResource(R.string.add_tag),
-                            fontSize = 22.sp,
-                            color = Color.Black
+                            text = tag.name,
+                            fontSize = 24.sp,
+                            color = colorResource(R.color.on_surface),
+                            fontFamily = FontFamily(Font(R.font.comic))
                         )
-                        Spacer(Modifier.height(4.dp))
+                    }
+                }
+                if (state.editing) {
+                    item {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .height(46.dp)
+                                .pulsateClick(true, { onShowAddTagDialog(true) })
+                                .background(
+                                    color = colorResource(R.color.secondary_container),
+                                    shape = RoundedCornerShape(24.dp)
+                                )
+                        ) {
+                            Text(
+                                text = stringResource(R.string.add_tag),
+                                fontSize = 24.sp,
+                                color = colorResource(R.color.on_surface),
+                                fontFamily = FontFamily(Font(R.font.comic))
+                            )
+                        }
                     }
                 }
             }
         }
-
-        Spacer(Modifier.height(4.dp))
-        HorizontalDivider(Modifier.fillMaxWidth(0.9f), color = Color.Black, thickness = 2.dp)
-        Spacer(Modifier.height(4.dp))
+        if(state.marker?.tags?.isNotEmpty() == true || state.editing) {
+            Spacer(Modifier.height(20.dp))
+            HorizontalDivider(Modifier.fillMaxWidth(0.9f), color = Color.Black, thickness = 2.dp)
+            Spacer(Modifier.height(20.dp))
+        }
 
         Text(
             text = stringResource(R.string.description),
             fontSize = 24.sp,
             textAlign = TextAlign.Center,
+            fontFamily = FontFamily(Font(R.font.comic)),
+            color = colorResource(R.color.on_surface),
             modifier = Modifier.fillMaxWidth(0.9f)
         )
         Spacer(Modifier.height(4.dp))
         if (state.editing) {
             TextField(
                 value = markerDescriptionValue,
-                onValueChange = { markerDescriptionValue = it }
+                onValueChange = { markerDescriptionValue = it },
+                colors = TextFieldDefaults.colors(
+                    cursorColor = colorResource(R.color.primary_color),
+                    focusedIndicatorColor = colorResource(R.color.primary_color)
+                )
             )
         } else {
             Text(
                 text = markerDescriptionValue,
                 fontSize = 20.sp,
-                modifier = Modifier.fillMaxWidth(0.9f)
+                modifier = Modifier.fillMaxWidth(0.9f),
+                fontFamily = FontFamily(Font(R.font.comic)),
+                color = colorResource(R.color.on_surface),
             )
         }
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(20.dp))
         Text(
             text = stringResource(R.string.folder),
             fontSize = 24.sp,
             textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth(0.9f)
+            modifier = Modifier.fillMaxWidth(0.9f),
+            fontFamily = FontFamily(Font(R.font.comic)),
+            color = colorResource(R.color.on_surface),
         )
         Spacer(Modifier.height(8.dp))
         Box(
             modifier = Modifier
-                .width(140.dp)
-                .height(30.dp)
+                .width(150.dp)
+                .height(50.dp)
                 .clip(RoundedCornerShape(24.dp))
-                .background(Color.Cyan)
                 .pulsateClick(
                     clickable = state.folders.isNotEmpty() && state.editing,
                     onClick = { showDropDownMenu = true }
-                ),
+                )
+                .background(color = colorResource(R.color.secondary_container)),
             contentAlignment = Alignment.Center
         ) {
             val text = state.marker?.folderName ?: stringResource(R.string.none)
             Text(
                 text = text,
-                fontSize = 18.sp,
-                color = Color.Black,
+                fontSize = 24.sp,
+                fontFamily = FontFamily(Font(R.font.comic)),
+                color = colorResource(R.color.on_surface),
             )
 
             DropdownMenu(
@@ -289,7 +358,11 @@ private fun MarkerDetailScreen(
             ) {
                 state.folders.forEach { folder ->
                     DropdownMenuItem(
-                        text = { Text(folder.name) },
+                        text = { Text(
+                            text = folder.name,
+                            fontFamily = FontFamily(Font(R.font.comic)),
+                            color = colorResource(R.color.on_surface),
+                        ) },
                         onClick = {
                             onSelectFolder(folder.id)
                             showDropDownMenu = false
@@ -300,39 +373,98 @@ private fun MarkerDetailScreen(
 
         }
 
-        Spacer(Modifier.height(12.dp))
-        if (state.marker?.folderName != null) {
-            Button(
-                onClick = { onRemoveFromFolder() }
+        Spacer(Modifier.height(16.dp))
+        if (state.marker?.folderName != null && state.editing) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .width(250.dp)
+                    .height(50.dp)
+                    .pulsateClick(clickable = true, onClick = {
+                        onRemoveFromFolder()
+                    })
+                    .background(
+                        color = colorResource(R.color.on_secondary_container),
+                        shape = RoundedCornerShape(24.dp)
+                    )
             ) {
-                Text(stringResource(R.string.remove_from_folder))
+                Text(
+                    text = stringResource(R.string.remove_from_folder),
+                    fontFamily = FontFamily(Font(R.font.comic)),
+                    fontSize = 24.sp,
+                    color = Color.White
+                )
             }
         }
 
-        Spacer(Modifier.weight(1f))
-        if (state.editing.not()) {
+        Spacer(Modifier.height(20.dp))
+        if (state.editing) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                Button(
-                    onClick = {
-                        onSave(
-                            markerNameValue ?: "",
-                            markerCountryValue ?: "",
-                            markerTownValue ?: "",
-                            markerDescriptionValue
+
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .width(130.dp)
+                        .height(50.dp)
+                        .pulsateClick(clickable = true, onClick = {
+                            onSave(
+                                markerNameValue ?: "",
+                                markerCountryValue ?: "",
+                                markerTownValue ?: "",
+                                markerDescriptionValue
+                            )
+                        })
+                        .background(
+                            color = colorResource(R.color.on_secondary_container),
+                            shape = RoundedCornerShape(24.dp)
                         )
-                    }
                 ) {
-                    Text(stringResource(R.string.save))
+                    Text(
+                        text = stringResource(R.string.save),
+                        fontFamily = FontFamily(Font(R.font.comic)),
+                        fontSize = 24.sp,
+                        color = Color.White
+                    )
                 }
-                Button(
-                    onClick = { onDelete() }
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .width(150.dp)
+                        .height(50.dp)
+                        .pulsateClick(clickable = true, onClick = {
+                            onDelete()
+                        })
+                        .background(
+                            color = colorResource(R.color.on_secondary_container),
+                            shape = RoundedCornerShape(24.dp)
+                        )
                 ) {
-                    Text(stringResource(R.string.delete))
+                    Text(
+                        text = stringResource(R.string.delete),
+                        fontFamily = FontFamily(Font(R.font.comic)),
+                        fontSize = 24.sp,
+                        color = Color.White
+                    )
                 }
             }
+        }
+
+        Spacer(Modifier.height(20.dp))
+        if (state.editing.not()) {
+            EditButton(
+                modifier = Modifier.pulsateClick(
+                    clickable = state.editing.not(),
+                    onClick = { onEditModeChanged(true) })
+            )
+        } else {
+            CommitButton(
+                modifier = Modifier.pulsateClick(
+                    clickable = state.editing,
+                    onClick = { onEditModeChanged(false) })
+            )
         }
     }
     if (state.showAddTagDialog) {
@@ -347,32 +479,6 @@ private fun MarkerDetailScreen(
             onDismiss = { onShowRemoveTagDialog(false, null) }
         )
     }
-
-    Box(Modifier.fillMaxSize()) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top,
-            modifier = Modifier
-                .width(48.dp)
-                .height(60.dp)
-                .align(Alignment.BottomCenter)
-        ) {
-            if (state.editing.not()) {
-                EditButton(
-                    modifier = Modifier.pulsateClick(
-                        clickable = state.editing.not(),
-                        onClick = { onEditModeChanged(true) })
-                )
-            } else {
-                CommitButton(
-                    modifier = Modifier.pulsateClick(
-                        clickable = state.editing,
-                        onClick = { onEditModeChanged(false) })
-                )
-            }
-        }
-    }
-
 }
 
 @Composable
@@ -381,6 +487,6 @@ private fun LoadingScreen() {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator()
+        CircularProgressIndicator(color = colorResource(R.color.primary_color))
     }
 }

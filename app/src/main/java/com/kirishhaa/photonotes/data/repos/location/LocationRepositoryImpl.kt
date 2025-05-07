@@ -10,6 +10,7 @@ import android.location.LocationManager
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresPermission
+import com.google.android.gms.location.LocationServices
 import com.kirishhaa.photonotes.domain.DomainLocation
 import com.kirishhaa.photonotes.domain.location.LocationRepository
 import com.kirishhaa.photonotes.extensions.coroutineTryCatcher

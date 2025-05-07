@@ -64,11 +64,11 @@ class MarkersRepositoryImpl(
                     filePath = filePath,
                     description = null
                 )
+                val location = locationRepository.getCurrentLocation() ?: DomainLocation.NONE
                 markerDao.insertMarker(markerEntity)
                 val entity =
                     markerDao.getMarkerByFilePath(userId, filePath) ?: throw ReadWriteException()
                 val markerId = entity.id
-                val location = locationRepository.getCurrentLocation() ?: DomainLocation.NONE
                 val locationEntity = LocationEntity(
                     id = markerId,
                     latitude = location.latitude,
@@ -159,6 +159,7 @@ class MarkersRepositoryImpl(
                 markerDao.updateMarkerAndSetTags(markerEntity, markerTagsEntity)
             },
             catchBlock = {
+                it.printStackTrace()
                 throw ReadWriteException()
             }
         )

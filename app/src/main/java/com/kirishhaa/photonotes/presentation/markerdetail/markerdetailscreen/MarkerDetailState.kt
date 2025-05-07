@@ -7,7 +7,7 @@ data class MarkerDetailState(
     val showAddTagDialog: Boolean = false,
     val showRemoveTagDialog: Boolean = false,
     val removeTag: String? = null,
-    val editing: Boolean = true
+    val editing: Boolean = false
 ) {
 
     fun requireRemoveTag() = requireNotNull(removeTag)

@@ -13,6 +13,7 @@ import com.kirishhaa.photonotes.data.repos.localusers.LocalUsersRepositoryImpl
 import com.kirishhaa.photonotes.data.repos.localusers.LoginValidator
 import com.kirishhaa.photonotes.data.repos.localusers.PasswordValidator
 import com.kirishhaa.photonotes.data.repos.localusers.UsernameValidator
+import com.kirishhaa.photonotes.data.repos.location.LocationRepository2
 import com.kirishhaa.photonotes.data.repos.location.LocationRepositoryImpl
 import com.kirishhaa.photonotes.data.repos.markers.FolderEntityMapper
 import com.kirishhaa.photonotes.data.repos.markers.MarkerEntityMapper
@@ -28,16 +29,13 @@ fun CreationExtras.toApp() = this[APPLICATION_KEY] as App
 
 class App : Application() {
 
-    private val locationManager get() = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
     val feedbackRepository: FeedbackRepository by lazy {
         FeedbackRepositoryImpl(this)
     }
 
     val locationRepository: LocationRepository by lazy {
-        LocationRepositoryImpl(
-            locationManager = locationManager,
-            appContext = this
+        LocationRepository2(
+            this
         )
     }
 
