@@ -62,7 +62,7 @@ class LocalUsersRepositoryImpl(
     //wrong password exception
     //wrong login exception
     //ReadWriteException
-    override suspend fun signIn(userId: Int, login: String, password: String, remember: Boolean) =
+    override suspend fun signIn(userId: Int, login: String, password: String) =
         withContext(Dispatchers.IO) {
             coroutineTryCatcher(
                 tryBlock = {

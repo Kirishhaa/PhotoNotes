@@ -4,8 +4,8 @@ class SignInUseCase(
     private val repository: LocalUsersRepository
 ) {
 
-    suspend fun execute(userId: Int, login: String, password: String, remember: Boolean) {
-        repository.signIn(userId, login, password, remember)
+    suspend fun execute(userId: Int, login: String, password: String) {
+        repository.signIn(userId, login, password)
     }
 
 }

@@ -100,7 +100,6 @@ class LocalUsersViewModel(
                         userId = data.user.id,
                         login = data.login,
                         password = data.password,
-                        remember = data.remember
                     )
                 },
                 catchBlock = { exception ->

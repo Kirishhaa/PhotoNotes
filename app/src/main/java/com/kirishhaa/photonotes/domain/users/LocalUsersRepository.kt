@@ -13,7 +13,7 @@ interface LocalUsersRepository {
 
     //throws exception if unsuccessful operation
     //wrong password or login
-    suspend fun signIn(userId: Int, login: String, password: String, remember: Boolean)
+    suspend fun signIn(userId: Int, login: String, password: String)
 
     //throws
     //wrong username exception

@@ -18,7 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kirishhaa.photonotes.R
 
-@Preview
 @Composable
 fun EditButton(modifier: Modifier = Modifier) {
     Box(

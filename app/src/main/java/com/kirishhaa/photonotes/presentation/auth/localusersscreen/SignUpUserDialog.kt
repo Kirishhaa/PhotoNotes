@@ -6,11 +6,15 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -30,8 +34,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kirishhaa.photonotes.R
+import com.kirishhaa.photonotes.clickeffects.pulsateClick
 
 @Composable
 fun SignUpUserDialog(
@@ -58,110 +67,142 @@ fun SignUpUserDialog(
     var passwordValue by remember {
         mutableStateOf("")
     }
-    var rememberState by remember {
-        mutableStateOf(true)
-    }
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier
-            .width(300.dp)
-            .height(400.dp)
-            .clip(RoundedCornerShape(20.dp))
-            .background(Brush.horizontalGradient(colors = listOf(Color.Cyan, Color.Green)))
-            .verticalScroll(rememberScrollState())
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
 
-        Row(
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .fillMaxWidth()
-                .height(260.dp)
+                .width(300.dp)
+                .height(390.dp)
+                .clip(RoundedCornerShape(20.dp))
+                .background(color = colorResource(R.color.secondary_container))
+                .verticalScroll(rememberScrollState())
         ) {
-            UserImage(
-                model = picturePathValue,
-                modifier = Modifier.size(100.dp),
-                edit = true,
-                onEdit = { pickPhotoLauncher.launch(PickVisualMediaRequest()) }
-            )
 
-            Column(
+            Row(
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
+                    .fillMaxWidth()
                     .height(260.dp)
-                    .width(140.dp),
-                verticalArrangement = Arrangement.SpaceAround,
-                horizontalAlignment = Alignment.Start
             ) {
-                TextFieldInfo(
-                    "Username",
-                    error = state.errorUsername,
-                    value = usernameValue,
-                    onValueChanged = {
-                        val valid = usernameValue.length < 10
-                        if (valid) usernameValue = it
-                    })
-                TextFieldInfo(
-                    "Login",
-                    error = state.errorLogin,
-                    value = loginValue,
-                    onValueChanged = {
-                        val valid = loginValue.length < 10
-                        if (valid) loginValue = it
-                    })
-                TextFieldInfo(
-                    "Password",
-                    error = state.errorPassword,
-                    value = passwordValue,
-                    onValueChanged = {
-                        val valid = passwordValue.length < 10
-                        if (valid) passwordValue = it
-                    })
+                UserImage(
+                    model = picturePathValue,
+                    modifier = Modifier.size(100.dp),
+                    edit = true,
+                    onEdit = { pickPhotoLauncher.launch(PickVisualMediaRequest()) }
+                )
+
+                Column(
+                    modifier = Modifier
+                        .height(260.dp)
+                        .width(140.dp),
+                    verticalArrangement = Arrangement.SpaceAround,
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    TextFieldInfo(
+                        "Username",
+                        error = state.errorUsername,
+                        value = usernameValue,
+                        onValueChanged = {
+                            val valid = usernameValue.length < 10
+                            if (valid) usernameValue = it
+                        })
+                    TextFieldInfo(
+                        "Login",
+                        error = state.errorLogin,
+                        value = loginValue,
+                        onValueChanged = {
+                            val valid = loginValue.length < 10
+                            if (valid) loginValue = it
+                        })
+                    TextFieldInfo(
+                        "Password",
+                        error = state.errorPassword,
+                        value = passwordValue,
+                        onValueChanged = {
+                            val valid = passwordValue.length < 10
+                            if (valid) passwordValue = it
+                        })
+                }
             }
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(30.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text("Remember", fontSize = 16.sp)
-            Spacer(Modifier.width(30.dp))
-            Checkbox(
-                checked = rememberState,
-                onCheckedChange = { rememberState = it },
-                modifier = Modifier.size(30.dp)
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = "Password cannot be empty and must be in range 8..16 symbols.",
+                fontFamily = FontFamily.Serif,
+                color = colorResource(R.color.error_color),
+                fontSize = 18.sp,
+                modifier = Modifier.align(Alignment.Start).padding(horizontal = 12.dp)
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = "Username cannot be empty.",
+                fontFamily = FontFamily.Serif,
+                color = colorResource(R.color.error_color),
+                fontSize = 18.sp,
+                modifier = Modifier.align(Alignment.Start).padding(horizontal = 12.dp)
             )
         }
 
         if (state.loading) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(
+                modifier = Modifier.offset(y = 200.dp),
+                color = colorResource(R.color.primary_color)
+            )
         } else {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.width(300.dp)
+                    .offset(y = 200.dp),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                Button(onDismiss) {
-                    Text("Cancel")
-                }
-                Button(
-                    onClick = {
-                        val data = SignUpData(
-                            username = usernameValue,
-                            login = loginValue,
-                            password = passwordValue,
-                            picturePath = picturePathValue,
-                            remember = true
+
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.width(135.dp).height(50.dp)
+                        .pulsateClick(clickable = true, onClick = { onDismiss() })
+                        .background(
+                            color = colorResource(R.color.on_secondary_container),
+                            shape = RoundedCornerShape(24.dp)
                         )
-                        onSignUp(data)
-                    }
                 ) {
-                    Text("Sign Up")
+                    Text(
+                        text = "Cancel",
+                        fontFamily = FontFamily(Font(R.font.comic)),
+                        fontSize = 24.sp,
+                        color = Color.White
+                    )
+                }
+
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.width(135.dp).height(50.dp)
+                        .pulsateClick(clickable = true, onClick = { onSignUp(
+                            SignUpData(
+                                username = usernameValue,
+                                login = loginValue,
+                                password = passwordValue,
+                                picturePath = picturePathValue,
+                                remember = true
+                            )
+                        ) })
+                        .background(
+                            color = colorResource(R.color.on_secondary_container),
+                            shape = RoundedCornerShape(24.dp)
+                        )
+                ) {
+                    Text(
+                        text = "Sign Up",
+                        fontFamily = FontFamily(Font(R.font.comic)),
+                        fontSize = 24.sp,
+                        color = Color.White
+                    )
                 }
             }
         }
-    }
 
+    }
 }

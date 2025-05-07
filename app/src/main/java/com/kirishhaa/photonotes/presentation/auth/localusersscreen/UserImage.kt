@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -37,6 +38,7 @@ fun UserImage(
         AsyncImage(
             model = model,
             contentDescription = null,
+            contentScale = ContentScale.Crop,
             error = painterResource(R.drawable.empty_user_mock),
             placeholder = painterResource(R.drawable.empty_user_mock),
             modifier = Modifier.fillMaxSize()

@@ -20,7 +20,7 @@
         android:name=".App"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.PhotoNotes"
+        android:theme="@style/Theme.SplashScreenTh"
         tools:targetApi="31" >
 
         <provider
@@ -40,7 +40,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.PhotoNotes" >
+            android:theme="@style/Theme.SplashScreenTh" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
