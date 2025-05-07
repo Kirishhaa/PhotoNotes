@@ -13,7 +13,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kirishhaa.photonotes.R
-import com.kirishhaa.photonotes.presentation.profile.changeemailscreen.ChangeEmailEvents
 
 @Preview
 @Composable
@@ -24,11 +23,19 @@ fun LanguageScreen(viewModel: LanguageViewModel = viewModel(factory = LanguageVi
         viewModel.events.collect { event ->
             when (event) {
                 is LanguageEvent.UserNotFound -> {
-                    Toast.makeText(context, context.getString(R.string.user_not_found), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.user_not_found),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 
                 LanguageEvent.ReadWrite -> {
-                    Toast.makeText(context, context.getString(R.string.read_write_exception), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.read_write_exception),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }

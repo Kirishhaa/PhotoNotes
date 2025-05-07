@@ -42,9 +42,11 @@ fun UserImage(
             modifier = Modifier.fillMaxSize()
         )
         if (edit) {
-            EditButton(modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .size(20.dp))
+            EditButton(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .size(20.dp)
+            )
         }
     }
 }

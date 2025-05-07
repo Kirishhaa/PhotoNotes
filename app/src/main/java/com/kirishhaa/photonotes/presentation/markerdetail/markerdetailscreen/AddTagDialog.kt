@@ -41,10 +41,12 @@ fun AddTagDialog(
         mutableStateOf("")
     }
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .alpha(0.3f)
-        .background(Color.Black))
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .alpha(0.3f)
+            .background(Color.Black)
+    )
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(
             modifier = Modifier

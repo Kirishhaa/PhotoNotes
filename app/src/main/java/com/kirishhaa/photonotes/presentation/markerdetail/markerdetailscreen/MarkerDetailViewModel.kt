@@ -99,7 +99,7 @@ class MarkerDetailViewModel(
             state.marker?.let { marker ->
                 val otherTags = marker.tags
                 validateMarkerTagUseCase.execute(tag, otherTags)
-                val newTags = marker.tags + MarkerTagUI(tag,0)
+                val newTags = marker.tags + MarkerTagUI(tag, 0)
                 _state.value = _state.value.copy(
                     marker = marker.copy(tags = newTags),
                     showAddTagDialog = false

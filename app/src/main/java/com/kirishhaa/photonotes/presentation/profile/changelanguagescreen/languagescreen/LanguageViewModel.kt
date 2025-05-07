@@ -36,9 +36,11 @@ class LanguageViewModel(
             is EnteredUserNotExistException -> {
                 _events.trySend(LanguageEvent.UserNotFound)
             }
+
             is UserNotFoundException -> {
                 _events.trySend(LanguageEvent.UserNotFound)
             }
+
             is ReadWriteException -> {
                 _events.trySend(LanguageEvent.ReadWrite)
             }
@@ -50,7 +52,8 @@ class LanguageViewModel(
 
     init {
         viewModelScope.launch {
-            val id = getEnteredUserUseCase.execute().first()?.id ?: throw EnteredUserNotExistException()
+            val id =
+                getEnteredUserUseCase.execute().first()?.id ?: throw EnteredUserNotExistException()
             getUserLanguageUseCase.execute(id).collect { lang ->
                 if (lang != null)
                     _state.value =

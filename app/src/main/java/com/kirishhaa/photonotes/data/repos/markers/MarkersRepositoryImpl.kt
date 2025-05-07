@@ -36,8 +36,14 @@ class MarkersRepositoryImpl(
         ) { markerEntity, markerLocationEntity, markerTagsEntity ->
             if (markerEntity == null || markerLocationEntity == null) return@combine null
             else {
-                val folderName = markerEntity.folderId?.let { folderId -> markerDao.getFolderById(folderId)?.title }
-                markerEntityMapper.map(markerEntity, markerLocationEntity, markerTagsEntity, folderName)
+                val folderName =
+                    markerEntity.folderId?.let { folderId -> markerDao.getFolderById(folderId)?.title }
+                markerEntityMapper.map(
+                    markerEntity,
+                    markerLocationEntity,
+                    markerTagsEntity,
+                    folderName
+                )
             }
         }.flowOn(Dispatchers.IO)
     }
@@ -109,7 +115,12 @@ class MarkersRepositoryImpl(
                 val markerTagsEntity = markerDao.getMarkerTags(markerEntity.id).first()
                 val markerLocationEntity = markerDao.getMarkerLocation(markerEntity.id).first()
                 val folderName = markerEntity.folderId?.let { markerDao.getFolderById(it) }?.title
-                markerEntityMapper.map(markerEntity, markerLocationEntity, markerTagsEntity, folderName)
+                markerEntityMapper.map(
+                    markerEntity,
+                    markerLocationEntity,
+                    markerTagsEntity,
+                    folderName
+                )
             }
         }.flowOn(Dispatchers.IO)
     }

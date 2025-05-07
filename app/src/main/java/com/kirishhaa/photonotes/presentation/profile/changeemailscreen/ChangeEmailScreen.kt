@@ -37,18 +37,33 @@ fun ChangeEmailScreen() {
         viewmodel.events.collect { event ->
             when (event) {
                 ChangeEmailEvents.EmailChanged -> {
-                    Toast.makeText(context,
-                        context.getString(R.string.email_was_changed), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.email_was_changed), Toast.LENGTH_SHORT
+                    ).show()
                 }
+
                 ChangeEmailEvents.ReadWrite -> {
-                    Toast.makeText(context, context.getString(R.string.read_write_exception), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.read_write_exception),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
+
                 ChangeEmailEvents.UserNotFound -> {
-                    Toast.makeText(context, context.getString(R.string.user_not_found), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.user_not_found),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
+
                 ChangeEmailEvents.WrongEmail -> {
-                    Toast.makeText(context,
-                        context.getString(R.string.wrong_email), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.wrong_email), Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }

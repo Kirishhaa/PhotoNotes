@@ -5,7 +5,7 @@ class Language(
 ) {
 
     fun getCode(): String {
-        return when(name) {
+        return when (name) {
             "Ukrainian" -> "uk"
             "English" -> "en"
             else -> throw IllegalStateException()

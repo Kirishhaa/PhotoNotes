@@ -51,15 +51,19 @@ class ChangeEmailViewModel(
                     loading = false
                 )
             }
+
             is EnteredUserNotExistException -> {
                 _events.trySend(ChangeEmailEvents.UserNotFound)
             }
+
             is UserNotFoundException -> {
                 _events.trySend(ChangeEmailEvents.UserNotFound)
             }
+
             is WrongNewLoginException -> {
                 _events.trySend(ChangeEmailEvents.WrongEmail)
             }
+
             is ReadWriteException -> {
                 _events.trySend(ChangeEmailEvents.ReadWrite)
             }

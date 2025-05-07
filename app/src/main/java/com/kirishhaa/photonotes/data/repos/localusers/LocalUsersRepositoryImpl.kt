@@ -126,17 +126,18 @@ class LocalUsersRepositoryImpl(
     }
 
     private suspend fun getPathFromUri(uri: Uri): String? = withContext(Dispatchers.IO) {
-        coroutineTryCatcher(tryBlock =  {
-            val fileToWrite = File(context.cacheDir, "file_in${System.currentTimeMillis()}")
-            fileToWrite.createNewFile()
-            context.contentResolver.openInputStream(uri)?.use { inputStream ->
-                val bytes = inputStream.readBytes()
-                fileToWrite.outputStream().use { outputStream ->
-                    outputStream.write(bytes)
+        coroutineTryCatcher(
+            tryBlock = {
+                val fileToWrite = File(context.cacheDir, "file_in${System.currentTimeMillis()}")
+                fileToWrite.createNewFile()
+                context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                    val bytes = inputStream.readBytes()
+                    fileToWrite.outputStream().use { outputStream ->
+                        outputStream.write(bytes)
+                    }
+                    fileToWrite.absolutePath
                 }
-                fileToWrite.absolutePath
-            }
-        },
+            },
             catchBlock = {
                 null
             }

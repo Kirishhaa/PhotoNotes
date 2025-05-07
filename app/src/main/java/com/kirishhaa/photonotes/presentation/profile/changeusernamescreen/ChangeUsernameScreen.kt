@@ -38,24 +38,38 @@ fun ChangeUsernameScreen() {
         viewmodel.events.collect { event ->
             when (event) {
                 ChangeUsernameEvent.UsernameWasChanged -> {
-                    Toast.makeText(context,
-                        context.getString(R.string.data_was_changed), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.data_was_changed), Toast.LENGTH_SHORT
+                    ).show()
                 }
+
                 ChangeUsernameEvent.ReadWrite -> {
-                    Toast.makeText(context,
-                        context.getString(R.string.read_write_exception), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.read_write_exception), Toast.LENGTH_SHORT
+                    ).show()
                 }
+
                 ChangeUsernameEvent.UserAlreadyExist -> {
-                    Toast.makeText(context,
-                        context.getString(R.string.user_already_exist), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.user_already_exist), Toast.LENGTH_SHORT
+                    ).show()
                 }
+
                 ChangeUsernameEvent.UserNotFound -> {
-                    Toast.makeText(context,
-                        context.getString(R.string.user_not_found), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.user_not_found), Toast.LENGTH_SHORT
+                    ).show()
                 }
+
                 ChangeUsernameEvent.WrongUsername -> {
-                    Toast.makeText(context,
-                        context.getString(R.string.wrong_username), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.wrong_username), Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -95,7 +109,11 @@ private fun ChangeUsernameScreen(state: ChangeUsernameState, onChange: (String) 
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(stringResource(R.string.actual_username), fontSize = 24.sp, textAlign = TextAlign.Center)
+                Text(
+                    stringResource(R.string.actual_username),
+                    fontSize = 24.sp,
+                    textAlign = TextAlign.Center
+                )
                 Spacer(Modifier.height(6.dp))
                 Text(actualUsernameValue, fontSize = 24.sp, textAlign = TextAlign.Center)
 

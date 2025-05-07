@@ -80,7 +80,12 @@ class ProfileViewModel(
                 val deleteProfile = DeleteProfileUseCase(app.localUsersRepository)
                 val logOutUseCase = LogOutUseCase(app.localUsersRepository)
                 val changeUserPhotoUseCase = ChangeUserPhotoUseCase(app.localUsersRepository)
-                return ProfileViewModel(getEnteredUser, deleteProfile, logOutUseCase, changeUserPhotoUseCase) as T
+                return ProfileViewModel(
+                    getEnteredUser,
+                    deleteProfile,
+                    logOutUseCase,
+                    changeUserPhotoUseCase
+                ) as T
             }
         }
     }

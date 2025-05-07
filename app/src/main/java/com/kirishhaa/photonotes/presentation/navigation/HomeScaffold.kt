@@ -8,7 +8,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.kirishhaa.photonotes.MainActivity
@@ -27,7 +26,13 @@ fun HomeScaffold(navController: NavHostController, content: @Composable (Padding
     }
 
     Scaffold(
-        topBar = { HomeTopBar(data?.username ?: "", data?.photoPath, navController = navController) },
+        topBar = {
+            HomeTopBar(
+                data?.username ?: "",
+                data?.photoPath,
+                navController = navController
+            )
+        },
         bottomBar = { HomeBottomBar(navController = navController) },
         containerColor = Color.LightGray
     ) { paddingValues ->

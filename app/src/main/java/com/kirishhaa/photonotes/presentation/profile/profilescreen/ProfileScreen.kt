@@ -111,17 +111,35 @@ private fun ProfileScreen(
         }
 
         Spacer(Modifier.weight(1f))
-        Button(onChangeEmail, modifier = Modifier.width(200.dp)) { Text(stringResource(R.string.change_email)) }
+        Button(
+            onChangeEmail,
+            modifier = Modifier.width(200.dp)
+        ) { Text(stringResource(R.string.change_email)) }
         Spacer(Modifier.height(8.dp))
-        Button(onChangeName, modifier = Modifier.width(200.dp)) { Text(stringResource(R.string.change_username)) }
+        Button(
+            onChangeName,
+            modifier = Modifier.width(200.dp)
+        ) { Text(stringResource(R.string.change_username)) }
         Spacer(Modifier.height(8.dp))
-        Button(onChangePas, modifier = Modifier.width(200.dp)) { Text(stringResource(R.string.change_password)) }
+        Button(
+            onChangePas,
+            modifier = Modifier.width(200.dp)
+        ) { Text(stringResource(R.string.change_password)) }
         Spacer(Modifier.height(8.dp))
-        Button(onChangeLanguage, modifier = Modifier.width(200.dp)) { Text(stringResource(R.string.change_language)) }
+        Button(
+            onChangeLanguage,
+            modifier = Modifier.width(200.dp)
+        ) { Text(stringResource(R.string.change_language)) }
         Spacer(Modifier.height(8.dp))
-        Button(onDelete, modifier = Modifier.width(200.dp)) { Text(stringResource(R.string.delete_profile)) }
+        Button(
+            onDelete,
+            modifier = Modifier.width(200.dp)
+        ) { Text(stringResource(R.string.delete_profile)) }
         Spacer(Modifier.height(8.dp))
-        Button(onLogOut, modifier = Modifier.width(200.dp)) { Text(stringResource(R.string.log_out)) }
+        Button(
+            onLogOut,
+            modifier = Modifier.width(200.dp)
+        ) { Text(stringResource(R.string.log_out)) }
         Spacer(Modifier.height(16.dp))
     }
 }

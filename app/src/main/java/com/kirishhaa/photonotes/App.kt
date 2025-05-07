@@ -31,7 +31,7 @@ class App : Application() {
     private val locationManager get() = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
     val feedbackRepository: FeedbackRepository by lazy {
-        FeedbackRepositoryImpl()
+        FeedbackRepositoryImpl(this)
     }
 
     val locationRepository: LocationRepository by lazy {

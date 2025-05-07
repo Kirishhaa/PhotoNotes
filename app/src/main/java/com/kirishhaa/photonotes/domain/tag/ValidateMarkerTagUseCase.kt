@@ -9,10 +9,11 @@ import kotlinx.coroutines.withContext
 
 class ValidateMarkerTagUseCase {
 
-    suspend fun execute(tag: String, otherTags: List<MarkerTagUI>) = withContext(Dispatchers.Default) {
-        if (tag.trim().isEmpty()) throw EmptyMarkerTagException()
-        if (tag.length > 10) throw TooLargeMarkerTagLengthException()
-        if (otherTags.map { it.name }.contains(tag)) throw CurrentTagExistException()
-    }
+    suspend fun execute(tag: String, otherTags: List<MarkerTagUI>) =
+        withContext(Dispatchers.Default) {
+            if (tag.trim().isEmpty()) throw EmptyMarkerTagException()
+            if (tag.length > 10) throw TooLargeMarkerTagLengthException()
+            if (otherTags.map { it.name }.contains(tag)) throw CurrentTagExistException()
+        }
 
 }

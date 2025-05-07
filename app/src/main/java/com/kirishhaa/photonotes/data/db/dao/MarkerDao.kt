@@ -1,6 +1,5 @@
 package com.kirishhaa.photonotes.data.db.dao
 
-import android.icu.text.CaseMap.Fold
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert

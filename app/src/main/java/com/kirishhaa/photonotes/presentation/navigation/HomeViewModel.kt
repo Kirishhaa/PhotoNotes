@@ -2,7 +2,6 @@ package com.kirishhaa.photonotes.presentation.navigation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.kirishhaa.photonotes.domain.Language
@@ -14,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val getEnteredUserUseCase: GetEnteredUserUseCase
-): ViewModel() {
+) : ViewModel() {
 
     private val _data = MutableStateFlow<HomeData?>(null)
     val data = _data.asStateFlow()
@@ -22,7 +21,11 @@ class HomeViewModel(
     init {
         viewModelScope.launch {
             getEnteredUserUseCase.execute().collect { localUser ->
-                _data.value = if(localUser == null) null else HomeData(localUser.imagePath, localUser.name, localUser.language)
+                _data.value = if (localUser == null) null else HomeData(
+                    localUser.imagePath,
+                    localUser.name,
+                    localUser.language
+                )
             }
         }
     }

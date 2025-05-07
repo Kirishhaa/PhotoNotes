@@ -2,8 +2,8 @@ package com.kirishhaa.photonotes.presentation.profile.changelanguagescreen.langu
 
 sealed interface LanguageEvent {
 
-    data object UserNotFound: LanguageEvent
+    data object UserNotFound : LanguageEvent
 
-    data object ReadWrite: LanguageEvent
+    data object ReadWrite : LanguageEvent
 
 }

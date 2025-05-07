@@ -16,7 +16,7 @@ sealed class BottomNavigationScreen(
 ) {
 
     fun getTitle(context: Context): String {
-        return when(this) {
+        return when (this) {
             Camera -> context.getString(R.string.camera)
             Feedback -> context.getString(R.string.feedback)
             Folders -> context.getString(R.string.folders)

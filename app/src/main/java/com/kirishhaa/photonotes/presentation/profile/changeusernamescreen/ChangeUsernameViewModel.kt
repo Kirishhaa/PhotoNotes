@@ -5,11 +5,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.kirishhaa.photonotes.domain.LocalUser
-import com.kirishhaa.photonotes.domain.exceptions.PasswordsAreNotTheSameException
 import com.kirishhaa.photonotes.domain.exceptions.ReadWriteException
 import com.kirishhaa.photonotes.domain.exceptions.UserAlreadyExistException
 import com.kirishhaa.photonotes.domain.exceptions.UserNotFoundException
-import com.kirishhaa.photonotes.domain.exceptions.WrongPasswordException
 import com.kirishhaa.photonotes.domain.exceptions.WrongUsernameException
 import com.kirishhaa.photonotes.domain.users.ChangeUsernameUseCase
 import com.kirishhaa.photonotes.domain.users.GetEnteredUserUseCase
