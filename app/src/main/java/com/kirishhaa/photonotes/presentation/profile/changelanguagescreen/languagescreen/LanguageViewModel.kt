@@ -34,13 +34,13 @@ class LanguageViewModel(
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         when (throwable) {
             is EnteredUserNotExistException -> {
-                _events.trySend(LanguageEvent.SendMessage("User Not Found"))
+                _events.trySend(LanguageEvent.UserNotFound)
             }
             is UserNotFoundException -> {
-                _events.trySend(LanguageEvent.SendMessage("User Not Found"))
+                _events.trySend(LanguageEvent.UserNotFound)
             }
             is ReadWriteException -> {
-                _events.trySend(LanguageEvent.SendMessage("IO Exception"))
+                _events.trySend(LanguageEvent.ReadWrite)
             }
         }
     }

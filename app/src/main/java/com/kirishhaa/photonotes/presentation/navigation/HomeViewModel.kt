@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.kirishhaa.photonotes.domain.Language
 import com.kirishhaa.photonotes.domain.users.GetEnteredUserUseCase
 import com.kirishhaa.photonotes.toApp
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,14 +22,15 @@ class HomeViewModel(
     init {
         viewModelScope.launch {
             getEnteredUserUseCase.execute().collect { localUser ->
-                _data.value = if(localUser == null) null else HomeData(localUser.imagePath, localUser.name)
+                _data.value = if(localUser == null) null else HomeData(localUser.imagePath, localUser.name, localUser.language)
             }
         }
     }
 
     class HomeData(
         val photoPath: String?,
-        val username: String
+        val username: String,
+        val lang: Language
     )
 
 

@@ -26,8 +26,10 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kirishhaa.photonotes.R
 
 @Composable
 fun AddTagDialog(
@@ -53,7 +55,7 @@ fun AddTagDialog(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Tag name:",
+                text = stringResource(R.string.tag_name),
                 fontSize = 24.sp,
                 color = Color.Black,
             )
@@ -71,10 +73,10 @@ fun AddTagDialog(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Button(onDismiss) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
                 Button({ onAdd(tagValue) }) {
-                    Text("Add")
+                    Text(stringResource(R.string.add))
                 }
             }
         }

@@ -20,11 +20,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kirishhaa.photonotes.R
 
 @SuppressLint("UseCheckPermission")
 @Composable
@@ -143,7 +145,7 @@ private fun CameraScreen(
             }
 
             state.requestCameraPermissionCount == 0 && cameraGranted.not() -> {
-                Text("To take a photo you need a permission")
+                Text(stringResource(R.string.to_take_a_photo_you_need_a_permission))
             }
 
             resumed -> {
@@ -159,7 +161,7 @@ private fun CameraScreen(
                         }
                     }
                 ) {
-                    Text("Take a photo")
+                    Text(stringResource(R.string.take_a_photo))
                 }
             }
         }

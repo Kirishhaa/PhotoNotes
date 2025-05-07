@@ -5,9 +5,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.kirishhaa.photonotes.domain.LocalUser
+import com.kirishhaa.photonotes.domain.exceptions.PasswordsAreNotTheSameException
+import com.kirishhaa.photonotes.domain.exceptions.ReadWriteException
+import com.kirishhaa.photonotes.domain.exceptions.UserAlreadyExistException
+import com.kirishhaa.photonotes.domain.exceptions.UserNotFoundException
+import com.kirishhaa.photonotes.domain.exceptions.WrongPasswordException
+import com.kirishhaa.photonotes.domain.exceptions.WrongUsernameException
 import com.kirishhaa.photonotes.domain.users.ChangeUsernameUseCase
 import com.kirishhaa.photonotes.domain.users.GetEnteredUserUseCase
 import com.kirishhaa.photonotes.toApp
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,6 +35,28 @@ class ChangeUsernameViewModel(
     private val _state = MutableStateFlow(ChangeUsernameState())
     val state = _state.asStateFlow()
 
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        viewModelScope.launch(Dispatchers.IO) {
+            when (throwable) {
+                is UserNotFoundException -> {
+                    _events.send(ChangeUsernameEvent.UserNotFound)
+                }
+
+                is UserAlreadyExistException -> {
+                    _events.send(ChangeUsernameEvent.UserAlreadyExist)
+                }
+
+                is ReadWriteException -> {
+                    _events.send(ChangeUsernameEvent.ReadWrite)
+                }
+
+                is WrongUsernameException -> {
+                    _events.send(ChangeUsernameEvent.WrongUsername)
+                }
+            }
+        }
+    }
+
     init {
         viewModelScope.launch {
             getEnteredUserUseCase.execute().mapNotNull { it }.collect { enteredUser ->
@@ -40,7 +70,7 @@ class ChangeUsernameViewModel(
     }
 
     fun changeName(newName: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             val user = _enteredUser.value ?: return@launch
             _state.value = _state.value.copy(loading = true)
             changeUsernameUseCase.execute(user.id, newName)

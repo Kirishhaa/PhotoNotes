@@ -23,9 +23,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kirishhaa.photonotes.R
 import com.kirishhaa.photonotes.domain.LocalUser
 import com.kirishhaa.photonotes.presentation.auth.localusersscreen.UserImage
 
@@ -109,17 +111,17 @@ private fun ProfileScreen(
         }
 
         Spacer(Modifier.weight(1f))
-        Button(onChangeEmail, modifier = Modifier.width(200.dp)) { Text("Change email") }
+        Button(onChangeEmail, modifier = Modifier.width(200.dp)) { Text(stringResource(R.string.change_email)) }
         Spacer(Modifier.height(8.dp))
-        Button(onChangeName, modifier = Modifier.width(200.dp)) { Text("Change username") }
+        Button(onChangeName, modifier = Modifier.width(200.dp)) { Text(stringResource(R.string.change_username)) }
         Spacer(Modifier.height(8.dp))
-        Button(onChangePas, modifier = Modifier.width(200.dp)) { Text("Change password") }
+        Button(onChangePas, modifier = Modifier.width(200.dp)) { Text(stringResource(R.string.change_password)) }
         Spacer(Modifier.height(8.dp))
-        Button(onChangeLanguage, modifier = Modifier.width(200.dp)) { Text("Change language") }
+        Button(onChangeLanguage, modifier = Modifier.width(200.dp)) { Text(stringResource(R.string.change_language)) }
         Spacer(Modifier.height(8.dp))
-        Button(onDelete, modifier = Modifier.width(200.dp)) { Text("Delete profile") }
+        Button(onDelete, modifier = Modifier.width(200.dp)) { Text(stringResource(R.string.delete_profile)) }
         Spacer(Modifier.height(8.dp))
-        Button(onLogOut, modifier = Modifier.width(200.dp)) { Text("Log out") }
+        Button(onLogOut, modifier = Modifier.width(200.dp)) { Text(stringResource(R.string.log_out)) }
         Spacer(Modifier.height(16.dp))
     }
 }

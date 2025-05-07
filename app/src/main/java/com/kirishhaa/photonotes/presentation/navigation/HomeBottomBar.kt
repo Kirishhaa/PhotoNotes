@@ -7,6 +7,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -38,6 +39,7 @@ private fun RowScope.AddScreen(
     currentDestination: NavDestination?,
     navController: NavHostController
 ) {
+    val context = LocalContext.current
     NavigationBarItem(
         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
         onClick = {
@@ -49,11 +51,11 @@ private fun RowScope.AddScreen(
         icon = {
             Icon(
                 imageVector = screen.icon,
-                contentDescription = screen.title
+                contentDescription = screen.getTitle(context)
             )
         },
         label = {
-            Text(screen.title)
+            Text(screen.getTitle(context))
         }
     )
 }

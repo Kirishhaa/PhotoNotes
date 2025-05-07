@@ -52,16 +52,16 @@ class ChangeEmailViewModel(
                 )
             }
             is EnteredUserNotExistException -> {
-                _events.trySend(ChangeEmailEvents.SendMessage("User Not Found"))
+                _events.trySend(ChangeEmailEvents.UserNotFound)
             }
             is UserNotFoundException -> {
-                _events.trySend(ChangeEmailEvents.SendMessage("User Not Found"))
+                _events.trySend(ChangeEmailEvents.UserNotFound)
             }
             is WrongNewLoginException -> {
-                _events.trySend(ChangeEmailEvents.SendMessage("email must contain '@' and '.'"))
+                _events.trySend(ChangeEmailEvents.WrongEmail)
             }
             is ReadWriteException -> {
-                _events.trySend(ChangeEmailEvents.SendMessage("IO Exception"))
+                _events.trySend(ChangeEmailEvents.ReadWrite)
             }
         }
     }
@@ -88,7 +88,7 @@ class ChangeEmailViewModel(
             _state.value = _state.value.copy(loading = true)
             changeEmailUseCase.execute(enteredUser.id, currentEmail, newEmail, repeatNewEmail)
             _state.value = _state.value.copy(currentEmailError = false, emailsNotSameError = false)
-            _events.trySend(ChangeEmailEvents.SendMessage("Data was changed"))
+            _events.trySend(ChangeEmailEvents.EmailChanged)
         }
     }
 

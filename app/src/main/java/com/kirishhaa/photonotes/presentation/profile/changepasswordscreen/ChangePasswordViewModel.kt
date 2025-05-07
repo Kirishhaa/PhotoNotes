@@ -75,7 +75,7 @@ class ChangePasswordViewModel(
             )
             _state.value =
                 _state.value.copy(currentPasswordError = false, passwordsNotSameError = false)
-            _events.trySend(ChangePasswordEvent.SendMessage("Password was changed"))
+            _events.trySend(ChangePasswordEvent.PasswordChanged)
         }
     }
 

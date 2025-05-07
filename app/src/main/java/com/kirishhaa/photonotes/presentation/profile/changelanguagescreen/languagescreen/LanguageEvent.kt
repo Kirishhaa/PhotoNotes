@@ -2,6 +2,8 @@ package com.kirishhaa.photonotes.presentation.profile.changelanguagescreen.langu
 
 sealed interface LanguageEvent {
 
-    class SendMessage(val message: String): LanguageEvent
+    data object UserNotFound: LanguageEvent
+
+    data object ReadWrite: LanguageEvent
 
 }

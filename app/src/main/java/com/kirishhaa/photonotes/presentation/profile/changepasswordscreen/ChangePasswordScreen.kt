@@ -22,9 +22,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kirishhaa.photonotes.R
 
 @Composable
 fun ChangePasswordScreen() {
@@ -34,8 +36,9 @@ fun ChangePasswordScreen() {
     LaunchedEffect(0) {
         viewmodel.events.collect { event ->
             when (event) {
-                is ChangePasswordEvent.SendMessage -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                is ChangePasswordEvent.PasswordChanged -> {
+                    Toast.makeText(context,
+                        context.getString(R.string.password_was_changed), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -73,7 +76,7 @@ private fun ChangePasswordScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "Change Your Email",
+            text = stringResource(R.string.change_your_password),
             fontSize = 32.sp
         )
         Spacer(Modifier.height(20.dp))
@@ -83,7 +86,7 @@ private fun ChangePasswordScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Current Password",
+                    text = stringResource(R.string.current_password),
                     fontSize = 24.sp
                 )
                 Spacer(Modifier.height(8.dp))
@@ -96,7 +99,7 @@ private fun ChangePasswordScreen(
                 Spacer(Modifier.height(16.dp))
 
                 Text(
-                    text = "New Password",
+                    text = stringResource(R.string.new_password),
                     fontSize = 24.sp
                 )
                 Spacer(Modifier.height(8.dp))
@@ -110,7 +113,7 @@ private fun ChangePasswordScreen(
                 Spacer(Modifier.height(16.dp))
 
                 Text(
-                    text = "Repeat New Password",
+                    text = stringResource(R.string.repeat_new_password),
                     fontSize = 24.sp
                 )
                 Spacer(Modifier.height(8.dp))
@@ -126,7 +129,7 @@ private fun ChangePasswordScreen(
                         onChange(currentPasswordValue, newPasswordValue, repeatNewPasswordValue)
                     }
                 ) {
-                    Text("Change")
+                    Text(stringResource(R.string.change))
                 }
                 Spacer(Modifier.height(16.dp))
             }

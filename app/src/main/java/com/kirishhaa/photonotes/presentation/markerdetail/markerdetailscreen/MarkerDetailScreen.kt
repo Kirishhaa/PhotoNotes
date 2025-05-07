@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -114,8 +115,10 @@ private fun MarkerDetailScreen(
         mutableStateOf(state.marker?.location?.town)
     }
 
+    val descriptionString = stringResource(R.string.description)
+
     var markerDescriptionValue by remember {
-        mutableStateOf(state.marker?.description ?: "Description")
+        mutableStateOf(state.marker?.description ?: descriptionString)
     }
 
     var showDropDownMenu by remember {
@@ -148,7 +151,7 @@ private fun MarkerDetailScreen(
                 verticalArrangement = Arrangement.SpaceAround,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("MarkerName", fontSize = 24.sp, color = Color.Black)
+                Text(stringResource(R.string.markername), fontSize = 24.sp, color = Color.Black)
                 if (state.editing) {
                     TextField(
                         value = markerNameValue ?: "",
@@ -158,7 +161,7 @@ private fun MarkerDetailScreen(
                 } else {
                     Text(markerNameValue ?: "", fontSize = 24.sp)
                 }
-                Text("Country", fontSize = 24.sp, color = Color.Black)
+                Text(stringResource(R.string.country), fontSize = 24.sp, color = Color.Black)
                 if (state.editing) {
                     TextField(
                         value = markerCountryValue ?: "",
@@ -168,7 +171,7 @@ private fun MarkerDetailScreen(
                 } else {
                     Text(markerCountryValue ?: "", fontSize = 20.sp)
                 }
-                Text("Town", fontSize = 24.sp, color = Color.Black)
+                Text(stringResource(R.string.town), fontSize = 24.sp, color = Color.Black)
                 if (state.editing) {
                     TextField(
                         value = markerTownValue ?: "",
@@ -220,7 +223,7 @@ private fun MarkerDetailScreen(
                     ) {
                         Spacer(Modifier.height(4.dp))
                         Text(
-                            text = "add Tag",
+                            text = stringResource(R.string.add_tag),
                             fontSize = 22.sp,
                             color = Color.Black
                         )
@@ -235,7 +238,7 @@ private fun MarkerDetailScreen(
         Spacer(Modifier.height(4.dp))
 
         Text(
-            text = "Description",
+            text = stringResource(R.string.description),
             fontSize = 24.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(0.9f)
@@ -255,7 +258,7 @@ private fun MarkerDetailScreen(
         }
         Spacer(Modifier.height(8.dp))
         Text(
-            text = "Folder",
+            text = stringResource(R.string.folder),
             fontSize = 24.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(0.9f)
@@ -273,7 +276,7 @@ private fun MarkerDetailScreen(
                 ),
             contentAlignment = Alignment.Center
         ) {
-            val text = state.marker?.folderName ?: "None"
+            val text = state.marker?.folderName ?: stringResource(R.string.none)
             Text(
                 text = text,
                 fontSize = 18.sp,
@@ -302,7 +305,7 @@ private fun MarkerDetailScreen(
             Button(
                 onClick = { onRemoveFromFolder() }
             ) {
-                Text("Remove From Folder")
+                Text(stringResource(R.string.remove_from_folder))
             }
         }
 
@@ -322,12 +325,12 @@ private fun MarkerDetailScreen(
                         )
                     }
                 ) {
-                    Text("Save")
+                    Text(stringResource(R.string.save))
                 }
                 Button(
                     onClick = { onDelete() }
                 ) {
-                    Text("Delete")
+                    Text(stringResource(R.string.delete))
                 }
             }
         }

@@ -21,9 +21,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kirishhaa.photonotes.R
 
 @Composable
 fun RemoveTagDialog(
@@ -47,7 +49,7 @@ fun RemoveTagDialog(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Dou you like to remove this tag?",
+                text = stringResource(R.string.dou_you_like_to_remove_this_tag),
                 fontSize = 24.sp,
                 textAlign = TextAlign.Center,
                 color = Color.Black,
@@ -65,10 +67,10 @@ fun RemoveTagDialog(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Button(onDismiss) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
                 Button({ onRemove(tag) }) {
-                    Text("Remove")
+                    Text(stringResource(R.string.remove))
                 }
             }
         }

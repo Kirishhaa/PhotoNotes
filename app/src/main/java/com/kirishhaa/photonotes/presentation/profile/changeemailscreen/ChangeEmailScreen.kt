@@ -22,9 +22,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kirishhaa.photonotes.R
 
 @Composable
 fun ChangeEmailScreen() {
@@ -34,8 +36,19 @@ fun ChangeEmailScreen() {
     LaunchedEffect(0) {
         viewmodel.events.collect { event ->
             when (event) {
-                is ChangeEmailEvents.SendMessage -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                ChangeEmailEvents.EmailChanged -> {
+                    Toast.makeText(context,
+                        context.getString(R.string.email_was_changed), Toast.LENGTH_SHORT).show()
+                }
+                ChangeEmailEvents.ReadWrite -> {
+                    Toast.makeText(context, context.getString(R.string.read_write_exception), Toast.LENGTH_SHORT).show()
+                }
+                ChangeEmailEvents.UserNotFound -> {
+                    Toast.makeText(context, context.getString(R.string.user_not_found), Toast.LENGTH_SHORT).show()
+                }
+                ChangeEmailEvents.WrongEmail -> {
+                    Toast.makeText(context,
+                        context.getString(R.string.wrong_email), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -71,7 +84,7 @@ private fun ChangeEmailScreen(state: ChangeEmailState, onChange: (String, String
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "Change Your Email",
+            text = stringResource(R.string.change_your_email),
             fontSize = 32.sp
         )
         Spacer(Modifier.height(20.dp))
@@ -81,7 +94,7 @@ private fun ChangeEmailScreen(state: ChangeEmailState, onChange: (String, String
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Current Email",
+                    text = stringResource(R.string.current_email),
                     fontSize = 24.sp
                 )
                 Spacer(Modifier.height(8.dp))
@@ -94,7 +107,7 @@ private fun ChangeEmailScreen(state: ChangeEmailState, onChange: (String, String
                 Spacer(Modifier.height(16.dp))
 
                 Text(
-                    text = "New Email",
+                    text = stringResource(R.string.new_email),
                     fontSize = 24.sp
                 )
                 Spacer(Modifier.height(8.dp))
@@ -108,7 +121,7 @@ private fun ChangeEmailScreen(state: ChangeEmailState, onChange: (String, String
                 Spacer(Modifier.height(16.dp))
 
                 Text(
-                    text = "Repeat New Email",
+                    text = stringResource(R.string.repeat_new_email),
                     fontSize = 24.sp
                 )
                 Spacer(Modifier.height(8.dp))
@@ -124,7 +137,7 @@ private fun ChangeEmailScreen(state: ChangeEmailState, onChange: (String, String
                         onChange(currentEmailValue, newEmailValue, repeatNewEmailValue)
                     }
                 ) {
-                    Text("Change")
+                    Text(stringResource(R.string.change))
                 }
                 Spacer(Modifier.height(16.dp))
             }

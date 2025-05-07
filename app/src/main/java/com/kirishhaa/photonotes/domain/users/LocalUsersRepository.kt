@@ -40,6 +40,11 @@ interface LocalUsersRepository {
         repeatNewEmail: String
     )
 
+    //throws
+    //UserNotFoundException
+    //UserAlreadyExistException
+    //ReadWriteException
+    //WrongUsernameException
     suspend fun changeUsername(userId: Int, newUsername: String)
 
     //throws
@@ -58,6 +63,9 @@ interface LocalUsersRepository {
 
     suspend fun selectPreviousLanguage(userId: Int)
 
+    //throws
+    //UserNotFoundException
+    //ReadWriteException
     suspend fun deleteProfile(userId: Int)
 
     suspend fun logOut(userId: Int)

@@ -20,8 +20,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kirishhaa.photonotes.R
 import com.kirishhaa.photonotes.clickeffects.pulsateClick
 import com.kirishhaa.photonotes.presentation.EditButton
 
@@ -83,7 +85,7 @@ private fun FoldersScreen(
                     Button(
                         onClick = onRemoveFolder,
                     ) {
-                        Text("Remove Folder")
+                        Text(stringResource(R.string.remove_folder))
                     }
                 }
             }

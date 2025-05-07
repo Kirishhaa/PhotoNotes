@@ -22,8 +22,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kirishhaa.photonotes.R
 
 @Composable
 fun AddFolderDialog(
@@ -40,7 +42,7 @@ fun AddFolderDialog(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text("Add New Folder", fontSize = 24.sp)
+            Text(stringResource(R.string.add_new_folder), fontSize = 24.sp)
             Spacer(Modifier.height(20.dp))
             TextField(
                 value = folderNameValue,
@@ -54,7 +56,7 @@ fun AddFolderDialog(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(onClick = onDismiss) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
                 Button(
                     onClick = {
@@ -63,13 +65,13 @@ fun AddFolderDialog(
                         } else {
                             Toast.makeText(
                                 context,
-                                "Folder name cannot be empty",
+                                context.getString(R.string.folder_name_cannot_be_empty),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
                     }
                 ) {
-                    Text("Add")
+                    Text(stringResource(R.string.add))
                 }
             }
         }
