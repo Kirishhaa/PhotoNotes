@@ -10,10 +10,27 @@ import com.kirishhaa.photonotes.data.db.entity.FolderEntity
 import com.kirishhaa.photonotes.data.db.entity.LocationEntity
 import com.kirishhaa.photonotes.data.db.entity.MarkerEntity
 import com.kirishhaa.photonotes.data.db.entity.MarkerTagEntity
+import com.kirishhaa.photonotes.domain.DomainLocation
+import com.kirishhaa.photonotes.domain.exceptions.ReadWriteException
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MarkerDao {
+
+    @Transaction
+    suspend fun createMarkerTransaction(markerEntity: MarkerEntity, filePath: String, location: DomainLocation) {
+        insertMarker(markerEntity)
+        val entity = getMarkerByFilePath(markerEntity.userId, filePath) ?: throw ReadWriteException()
+        val markerId = entity.id
+        val locationEntity = LocationEntity(
+            id = markerId,
+            latitude = location.latitude,
+            longitude = location.longitude,
+            country = location.country,
+            town = location.town
+        )
+        insertLocation(locationEntity)
+    }
 
     @Query("SELECT * FROM photo WHERE user_id = :userId")
     fun getUserMarkers(userId: Int): Flow<List<MarkerEntity>>

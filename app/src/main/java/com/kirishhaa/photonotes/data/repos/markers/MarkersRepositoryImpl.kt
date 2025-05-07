@@ -65,18 +65,7 @@ class MarkersRepositoryImpl(
                     description = null
                 )
                 val location = locationRepository.getCurrentLocation() ?: DomainLocation.NONE
-                markerDao.insertMarker(markerEntity)
-                val entity =
-                    markerDao.getMarkerByFilePath(userId, filePath) ?: throw ReadWriteException()
-                val markerId = entity.id
-                val locationEntity = LocationEntity(
-                    id = markerId,
-                    latitude = location.latitude,
-                    longitude = location.longitude,
-                    country = location.country,
-                    town = location.town
-                )
-                markerDao.insertLocation(locationEntity)
+                markerDao.createMarkerTransaction(markerEntity, filePath, location)
             },
             catchBlock = { throw ReadWriteException() }
         )

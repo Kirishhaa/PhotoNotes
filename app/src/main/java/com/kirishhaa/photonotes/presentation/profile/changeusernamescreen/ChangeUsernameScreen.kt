@@ -97,7 +97,7 @@ fun ChangeUsernameScreen() {
 
 @Composable
 private fun ChangeUsernameScreen(state: ChangeUsernameState, onChange: (String) -> Unit) {
-    val actualUsernameValue by remember {
+    val actualUsernameValue by remember(state.currentUsername) {
         mutableStateOf(state.currentUsername)
     }
     var newUsernameValue by remember {
