@@ -94,18 +94,12 @@ fun SignInUserDialog(
                         "Login",
                         error = stateUI.errorLogin,
                         value = loginValue,
-                        onValueChanged = {
-                            val valid = loginValue.length < 10
-                            if (valid) loginValue = it
-                        })
+                        onValueChanged = { loginValue = it })
                     TextFieldInfo(
                         "Password",
                         error = stateUI.errorPassword,
                         value = passwordValue,
-                        onValueChanged = {
-                            val valid = passwordValue.length < 10
-                            if (valid) passwordValue = it
-                        })
+                        onValueChanged = { passwordValue = it })
                 }
             }
         }

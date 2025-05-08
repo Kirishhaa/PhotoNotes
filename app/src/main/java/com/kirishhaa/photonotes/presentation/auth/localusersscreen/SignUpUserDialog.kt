@@ -108,26 +108,17 @@ fun SignUpUserDialog(
                         "Username",
                         error = state.errorUsername,
                         value = usernameValue,
-                        onValueChanged = {
-                            val valid = usernameValue.length < 10
-                            if (valid) usernameValue = it
-                        })
+                        onValueChanged = { usernameValue = it })
                     TextFieldInfo(
                         "Login",
                         error = state.errorLogin,
                         value = loginValue,
-                        onValueChanged = {
-                            val valid = loginValue.length < 10
-                            if (valid) loginValue = it
-                        })
+                        onValueChanged = { loginValue = it })
                     TextFieldInfo(
                         "Password",
                         error = state.errorPassword,
                         value = passwordValue,
-                        onValueChanged = {
-                            val valid = passwordValue.length < 10
-                            if (valid) passwordValue = it
-                        })
+                        onValueChanged = { passwordValue = it })
                 }
             }
             Spacer(Modifier.height(8.dp))
