@@ -86,7 +86,9 @@ private fun FoldersScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn(
-            modifier = Modifier.fillMaxWidth().weight(1f)
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
         ) {
             state.selectedFolder?.let { folder ->
                 item {
@@ -155,7 +157,7 @@ private fun FoldersScreen(
                         )
                 ) {
                     Text(
-                        text = "New Folder",
+                        text = stringResource(R.string.new_folder),
                         fontFamily = FontFamily(Font(R.font.comic)),
                         fontSize = 24.sp,
                         color = Color.White

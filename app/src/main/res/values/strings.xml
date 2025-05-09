@@ -57,4 +57,5 @@
     <string name="folders">Folders</string>
     <string name="google_map">Map</string>
     <string name="folder_name">Folder name</string>
+    <string name="new_folder">New Folder</string>
 </resources>
