@@ -145,7 +145,7 @@ class MarkersRepositoryImpl(
                         name = tag.name
                     )
                 }
-                markerDao.updateMarkerAndSetTags(markerEntity, markerTagsEntity)
+                markerDao.updateMarkerAndSetTagsAndSetLocation(markerEntity, marker.location, markerTagsEntity)
             },
             catchBlock = {
                 it.printStackTrace()

@@ -13,6 +13,7 @@ import com.kirishhaa.photonotes.data.db.entity.MarkerTagEntity
 import com.kirishhaa.photonotes.domain.DomainLocation
 import com.kirishhaa.photonotes.domain.exceptions.ReadWriteException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 
 @Dao
 interface MarkerDao {
@@ -42,14 +43,27 @@ interface MarkerDao {
     suspend fun getMarkerByFilePath(userId: Int, filePath: String): MarkerEntity?
 
     @Transaction
-    suspend fun updateMarkerAndSetTags(
+    suspend fun updateMarkerAndSetTagsAndSetLocation(
         markerEntity: MarkerEntity,
+        location: DomainLocation,
         markerTagsEntity: List<MarkerTagEntity>
     ) {
+        val locationEntity = getMarkerLocation(markerEntity.id).first() ?: throw IllegalStateException()
+        val newEntity = LocationEntity(
+            id =locationEntity.id,
+            country = location.country,
+            town = location.town,
+            latitude = location.latitude,
+            longitude = location.longitude
+        )
         clearTags(markerEntity.id)
         insertTags(markerTagsEntity)
         updateMarker(markerEntity)
+        updateLocation(newEntity)
     }
+
+    @Update
+    suspend fun updateLocation(locationEntity: LocationEntity)
 
     @Update
     suspend fun updateMarker(markerEntity: MarkerEntity)
